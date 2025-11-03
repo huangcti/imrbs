@@ -1,0 +1,19 @@
+# Node.js
+node_modules/
+dist/
+coverage/
+
+# Build
+dist/
+build/
+*.min.js
+
+# Testing
+coverage/
+.nyc_output/
+cypress/videos/
+cypress/screenshots/
+
+# Misc
+*.log
+.env*

@@ -1,5 +1,7 @@
 # Feature Specification: [FEATURE NAME]
 
+> 必要注意事項：本專案所有規格文件 MUST 使用中文撰寫。若規格涉及資料儲存，請在 Storage/Requirements 區段明確說明是否採用 JSON 作為持久化格式及其結構。
+
 **Feature Branch**: `[###-feature-name]`  
 **Created**: [DATE]  
 **Status**: Draft  

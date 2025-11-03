@@ -1,0 +1,28 @@
+# Application Settings
+spring:
+  application:
+    name: imrbs
+  jackson:
+    default-property-inclusion: non_null
+    time-zone: Asia/Taipei
+  mail:
+    host: ${SMTP_HOST:localhost}
+    port: ${SMTP_PORT:25}
+    username: ${SMTP_USER:}
+    password: ${SMTP_PASS:}
+    properties:
+      mail.smtp.auth: ${SMTP_AUTH:false}
+      mail.smtp.starttls.enable: ${SMTP_TLS:false}
+
+# Server Configuration
+server:
+  port: 8080
+  servlet:
+    context-path: /api
+
+# Application Home Directory
+app:
+  home: ${APP_HOME:${user.home}/.imrbs}
+  data:
+    rooms: ${app.home}/data/rooms.json
+    reservations: ${app.home}/data/reservations.json

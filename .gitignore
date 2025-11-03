@@ -1,0 +1,40 @@
+# Java
+target/
+*.class
+*.jar
+.gradle/
+build/
+
+# Node.js
+node_modules/
+dist/
+coverage/
+*.log
+.env*
+
+# IDE
+.idea/
+.vscode/
+*.iml
+*.iws
+*.ipr
+
+# OS
+.DS_Store
+Thumbs.db
+*.tmp
+*.swp
+
+# Testing
+coverage/
+.nyc_output/
+junit/
+cypress/videos/
+cypress/screenshots/
+
+# Misc
+*.bak
+*.log
+.env*
+temp/
+tmp/
