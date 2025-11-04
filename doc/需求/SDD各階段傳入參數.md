@@ -139,3 +139,37 @@ Focus on **what the system does** and **why**, not tech stack. Generate clear, t
 
 ### sample2
 
+
+
+
+
+千泰使用傳入參數
+
+/speckit.constitution
+
+會議室預約系統製定開發原則，重點關注：簡潔的程式碼、全面的測試、美觀的富用戶介面、持久化的 JSON 儲存。本專案所有規格都需要採用中文。
+ 
+/speckit.specify 建立一個名為「imrbs」的會議室預約系統應用程式。功能包括：
+
+1. 會議室預約登錄及修改，會議室地點包含板橋與民生；板橋有3間會議室：6樓太平洋會議室、7樓711會議室、7樓701會議室。民生有2間會議室：301會議室、310會議室。
+
+2. 會議室清單與預約狀態顯示。
+
+3. 會議室預約衝突檢查。
+
+4. 預約成功，系統發送email至預約者的信箱。
+
+5. 會議室管理功能。
+ 
+/speckit.plan 使用Java21、套件管理用Maven，前端使用Vue3，後端使用Springboot，使用版本為最新的穩定版本。程序專案位於 imrbs/pom.xml。網站程式置於imrbs/imrbs-web/，共用實體及服務置/imrbs/imrbs-core/。測試位於各自的tests/ 目錄。JSON資料儲存在應用程式主目錄中。
+ 
+/speckit.tasks
+ 
+/speckit.implement
+
+ 
+不過中間我有下一些動作沒記錄到  下次我用簡單的技術線html+node.js試試，應該會更快   這次中間有很多ai產生的指令出錯，但他自己矯正重試到正確為止，我只要一直同意給他權限執行就好。
+ 
+specs:
+ 1-imrbs-app 
+
