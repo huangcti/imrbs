@@ -1,0 +1,45 @@
+{
+  "schema_version": "1",
+  "rooms": [
+    {
+      "id": "room-001",
+      "name": "太平洋會議室",
+      "location": "板橋",
+      "floor": "6樓",
+      "capacity": 20,
+      "metadata": "{}"
+    },
+    {
+      "id": "room-002",
+      "name": "711會議室",
+      "location": "板橋",
+      "floor": "7樓",
+      "capacity": 15,
+      "metadata": "{}"
+    },
+    {
+      "id": "room-003",
+      "name": "701會議室",
+      "location": "板橋",
+      "floor": "7樓",
+      "capacity": 10,
+      "metadata": "{}"
+    },
+    {
+      "id": "room-004",
+      "name": "301會議室",
+      "location": "民生",
+      "floor": "3樓",
+      "capacity": 12,
+      "metadata": "{}"
+    },
+    {
+      "id": "room-005",
+      "name": "310會議室",
+      "location": "民生",
+      "floor": "3樓",
+      "capacity": 8,
+      "metadata": "{}"
+    }
+  ]
+}
