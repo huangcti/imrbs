@@ -1,0 +1,22 @@
+spring:
+  config:
+    activate:
+      on-profile: infra
+
+  # Flyway Configuration
+  flyway:
+    enabled: true
+    baseline-on-migrate: true
+    baseline-version: 0
+    locations: classpath:db/migration
+    encoding: UTF-8
+    validate-on-migrate: true
+    clean-disabled: true
+
+# Infrastructure-specific logging
+logging:
+  level:
+    org.flywaydb: INFO
+    org.hibernate: INFO
+    org.springframework.orm.jpa: DEBUG
+    org.springframework.transaction: DEBUG

@@ -50,14 +50,14 @@
 
 ### 資料庫基礎設施
 
-- [ ] T008 配置 Flyway 資料庫遷移（imrbs-infrastructure/src/main/resources/application-infra.yml）
-- [ ] T009 [P] 建立 User 資料表遷移腳本（imrbs-infrastructure/src/main/resources/db/migration/V1__create_users_table.sql）
-- [ ] T010 [P] 建立 Room 資料表遷移腳本（imrbs-infrastructure/src/main/resources/db/migration/V2__create_rooms_table.sql）
-- [ ] T011 [P] 建立 Reservation 資料表遷移腳本（imrbs-infrastructure/src/main/resources/db/migration/V3__create_reservations_table.sql）
-- [ ] T012 [P] 建立 MaintenanceSchedule 資料表遷移腳本（imrbs-infrastructure/src/main/resources/db/migration/V4__create_maintenance_schedules_table.sql）
-- [ ] T013 [P] 建立 Notification 資料表遷移腳本（imrbs-infrastructure/src/main/resources/db/migration/V5__create_notifications_table.sql）
-- [ ] T014 [P] 建立 GuestReservationRequest 資料表遷移腳本（imrbs-infrastructure/src/main/resources/db/migration/V6__create_guest_reservation_requests_table.sql）
-- [ ] T015 [P] 建立種子資料遷移腳本（V7: 測試使用者與會議室）（imrbs-infrastructure/src/main/resources/db/migration/V7__seed_data.sql）
+- [X] T008 配置 Flyway 資料庫遷移（imrbs-infrastructure/src/main/resources/application-infra.yml）
+- [X] T009 [P] 建立 User 資料表遷移腳本（imrbs-infrastructure/src/main/resources/db/migration/V1__create_users_table.sql）
+- [X] T010 [P] 建立 Room 資料表遷移腳本（imrbs-infrastructure/src/main/resources/db/migration/V2__create_rooms_table.sql）
+- [X] T011 [P] 建立 Reservation 資料表遷移腳本（imrbs-infrastructure/src/main/resources/db/migration/V3__create_reservations_table.sql）
+- [X] T012 [P] 建立 MaintenanceSchedule 資料表遷移腳本（imrbs-infrastructure/src/main/resources/db/migration/V4__create_maintenance_schedules_table.sql）
+- [X] T013 [P] 建立 Notification 資料表遷移腳本（imrbs-infrastructure/src/main/resources/db/migration/V5__create_notifications_table.sql）
+- [X] T014 [P] 建立 GuestReservationRequest 資料表遷移腳本（imrbs-infrastructure/src/main/resources/db/migration/V6__create_guest_reservation_requests_table.sql）
+- [X] T015 [P] 建立種子資料遷移腳本（V7: 測試使用者與會議室）（imrbs-infrastructure/src/main/resources/db/migration/V7__seed_data.sql）
 
 ### 領域模型層（Domain）
 
