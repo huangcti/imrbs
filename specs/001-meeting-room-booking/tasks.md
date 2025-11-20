@@ -125,10 +125,10 @@
 
 ### 測試任務（US1）- 先寫測試，確保 RED 狀態
 
-- [ ] T050 [P] [US1] 撰寫會議室查詢 API 合約測試（imrbs-web/src/test/java/tw/huangcti/imrbs/web/controller/RoomControllerTest.java: testGetAvailableRooms）
-- [ ] T051 [P] [US1] 撰寫預約創建 API 合約測試（imrbs-web/src/test/java/tw/huangcti/imrbs/web/controller/ReservationControllerTest.java: testCreateReservation）
-- [ ] T052 [P] [US1] 撰寫衝突檢測單元測試（imrbs-core/src/test/java/tw/huangcti/imrbs/domain/service/ConflictDetectionServiceTest.java）
-- [ ] T053 [P] [US1] 撰寫通知發送整合測試（imrbs-infrastructure/src/test/java/tw/huangcti/imrbs/infrastructure/messaging/NotificationServiceTest.java）
+- [X] T050 [P] [US1] 撰寫會議室查詢 API 合約測試（imrbs-web/src/test/java/tw/huangcti/imrbs/web/controller/RoomControllerTest.java: testGetAvailableRooms）
+- [X] T051 [P] [US1] 撰寫預約創建 API 合約測試（imrbs-web/src/test/java/tw/huangcti/imrbs/web/controller/ReservationControllerTest.java: testCreateReservation）
+- [X] T052 [P] [US1] 撰寫衝突檢測單元測試（imrbs-core/src/test/java/tw/huangcti/imrbs/domain/service/ConflictDetectionServiceTest.java）
+- [X] T053 [P] [US1] 撰寫通知發送整合測試（imrbs-infrastructure/src/test/java/tw/huangcti/imrbs/infrastructure/messaging/NotificationServiceTest.java）
 - [ ] T054 [P] [US1] 撰寫前端預約表單 E2E 測試（imrbs-frontend/tests/e2e/specs/reservation.cy.ts）
 
 ### 後端實作（US1）
