@@ -43,13 +43,13 @@ public class RoomController {
     @Operation(summary = "查詢可用會議室", description = "根據時間與容量篩選可用會議室")
     public ResponseEntity<Map<String, Object>> getAvailableRooms(
             @Parameter(description = "開始時間", required = true)
-            @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime startTime,
+            @RequestParam("startTime") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime startTime,
             
             @Parameter(description = "結束時間", required = true)
-            @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime endTime,
+            @RequestParam("endTime") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime endTime,
             
             @Parameter(description = "最小容量")
-            @RequestParam(required = false) Integer minCapacity
+            @RequestParam(value = "minCapacity", required = false) Integer minCapacity
     ) {
         List<Room> rooms = roomAvailabilityService.findAvailableRooms(startTime, endTime, minCapacity);
         List<RoomDTO> roomDTOs = roomMapper.toDTOList(rooms);
@@ -86,10 +86,10 @@ public class RoomController {
     @Operation(summary = "查詢會議室可用時段", description = "取得指定日期的可用時段 (8am-6pm)")
     public ResponseEntity<Map<String, Object>> getRoomAvailability(
             @Parameter(description = "會議室 ID", required = true)
-            @PathVariable Long id,
+            @PathVariable("id") Long id,
             
             @Parameter(description = "查詢日期", required = true, example = "2025-12-01")
-            @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate date
+            @RequestParam("date") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate date
     ) {
         List<RoomAvailabilityService.TimeSlot> timeSlots = 
                 roomAvailabilityService.getAvailableTimeSlots(id, date);
