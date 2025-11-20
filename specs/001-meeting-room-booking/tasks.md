@@ -70,12 +70,12 @@
 
 ### Repository 介面（Domain）
 
-- [ ] T022 [P] 定義 UserRepository 介面（imrbs-core/src/main/java/tw/huangcti/imrbs/domain/repository/UserRepository.java）
-- [ ] T023 [P] 定義 RoomRepository 介面（imrbs-core/src/main/java/tw/huangcti/imrbs/domain/repository/RoomRepository.java）
-- [ ] T024 [P] 定義 ReservationRepository 介面（imrbs-core/src/main/java/tw/huangcti/imrbs/domain/repository/ReservationRepository.java）
-- [ ] T025 [P] 定義 MaintenanceScheduleRepository 介面（imrbs-core/src/main/java/tw/huangcti/imrbs/domain/repository/MaintenanceScheduleRepository.java）
-- [ ] T026 [P] 定義 NotificationRepository 介面（imrbs-core/src/main/java/tw/huangcti/imrbs/domain/repository/NotificationRepository.java）
-- [ ] T027 [P] 定義 GuestReservationRequestRepository 介面（imrbs-core/src/main/java/tw/huangcti/imrbs/domain/repository/GuestReservationRequestRepository.java）
+- [X] T022 [P] 定義 UserRepository 介面（imrbs-core/src/main/java/tw/huangcti/imrbs/domain/repository/UserRepository.java）
+- [X] T023 [P] 定義 RoomRepository 介面（imrbs-core/src/main/java/tw/huangcti/imrbs/domain/repository/RoomRepository.java）
+- [X] T024 [P] 定義 ReservationRepository 介面（imrbs-core/src/main/java/tw/huangcti/imrbs/domain/repository/ReservationRepository.java）
+- [X] T025 [P] 定義 MaintenanceScheduleRepository 介面（imrbs-core/src/main/java/tw/huangcti/imrbs/domain/repository/MaintenanceScheduleRepository.java）
+- [X] T026 [P] 定義 NotificationRepository 介面（imrbs-core/src/main/java/tw/huangcti/imrbs/domain/repository/NotificationRepository.java）
+- [X] T027 [P] 定義 GuestReservationRequestRepository 介面（imrbs-core/src/main/java/tw/huangcti/imrbs/domain/repository/GuestReservationRequestRepository.java）
 
 ### JPA 實體與 Repository 實作（Infrastructure）
 
