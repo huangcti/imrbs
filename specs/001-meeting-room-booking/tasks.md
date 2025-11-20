@@ -135,14 +135,14 @@
 
 - [X] T055 [P] [US1] 實作會議室可用性查詢服務（imrbs-core/src/main/java/tw/huangcti/imrbs/domain/service/RoomAvailabilityService.java）
 - [X] T056 [P] [US1] 實作預約衝突檢測服務（imrbs-core/src/main/java/tw/huangcti/imrbs/domain/service/ConflictDetectionService.java）
-- [ ] T057 [US1] 實作創建預約 Use Case（imrbs-core/src/main/java/tw/huangcti/imrbs/application/usecase/CreateReservationUseCase.java，依賴 T055, T056）
-- [ ] T058 [P] [US1] 實作 RoomController GET /rooms 端點（imrbs-web/src/main/java/tw/huangcti/imrbs/web/controller/RoomController.java）
-- [ ] T059 [P] [US1] 實作 RoomController GET /rooms/{id} 端點（imrbs-web/src/main/java/tw/huangcti/imrbs/web/controller/RoomController.java）
-- [ ] T060 [P] [US1] 實作 RoomController GET /rooms/{id}/availability 端點（imrbs-web/src/main/java/tw/huangcti/imrbs/web/controller/RoomController.java）
-- [ ] T061 [US1] 實作 ReservationController POST /reservations 端點（imrbs-web/src/main/java/tw/huangcti/imrbs/web/controller/ReservationController.java，依賴 T057）
-- [ ] T062 [P] [US1] 實作 DTO 映射器（RoomMapper, ReservationMapper）（imrbs-web/src/main/java/tw/huangcti/imrbs/web/mapper/RoomMapper.java, ReservationMapper.java）
-- [ ] T063 [P] [US1] 實作 Email 通知服務（imrbs-infrastructure/src/main/java/tw/huangcti/imrbs/infrastructure/integration/email/EmailService.java）
-- [ ] T064 [US1] 實作 RabbitMQ 預約確認事件監聽器（imrbs-infrastructure/src/main/java/tw/huangcti/imrbs/infrastructure/messaging/listener/ReservationConfirmedListener.java，依賴 T063）
+- [X] T057 [US1] 實作創建預約 Use Case（imrbs-core/src/main/java/tw/huangcti/imrbs/application/usecase/CreateReservationUseCase.java，依賴 T055, T056）
+- [X] T058 [P] [US1] 實作 RoomController GET /rooms 端點（imrbs-web/src/main/java/tw/huangcti/imrbs/web/controller/RoomController.java）
+- [X] T059 [P] [US1] 實作 RoomController GET /rooms/{id} 端點（imrbs-web/src/main/java/tw/huangcti/imrbs/web/controller/RoomController.java）
+- [X] T060 [P] [US1] 實作 RoomController GET /rooms/{id}/availability 端點（imrbs-web/src/main/java/tw/huangcti/imrbs/web/controller/RoomController.java）
+- [X] T061 [US1] 實作 ReservationController POST /reservations 端點（imrbs-web/src/main/java/tw/huangcti/imrbs/web/controller/ReservationController.java，依賴 T057）
+- [X] T062 [P] [US1] 實作 DTO 映射器（RoomMapper, ReservationMapper）（imrbs-web/src/main/java/tw/huangcti/imrbs/web/mapper/RoomMapper.java, ReservationMapper.java）
+- [X] T063 [P] [US1] 實作 Email 通知服務（imrbs-infrastructure/src/main/java/tw/huangcti/imrbs/infrastructure/integration/email/EmailService.java）
+- [X] T064 [US1] 實作 RabbitMQ 預約確認事件監聽器（imrbs-infrastructure/src/main/java/tw/huangcti/imrbs/infrastructure/messaging/listener/ReservationConfirmedListener.java，依賴 T063）
 
 ### 前端實作（US1）
 
