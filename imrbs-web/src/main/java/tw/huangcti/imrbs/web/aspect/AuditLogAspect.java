@@ -10,8 +10,8 @@ import org.aspectj.lang.reflect.MethodSignature;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
+import tw.huangcti.imrbs.web.security.Audited;
 
-import java.lang.annotation.*;
 import java.time.LocalDateTime;
 import java.util.Arrays;
 
@@ -95,32 +95,4 @@ public class AuditLogAspect {
         
         return "anonymous";
     }
-}
-
-/**
- * 審計日誌註解
- * 
- * 使用範例:
- * @Audited(action = "CREATE_RESERVATION", resource = "Reservation")
- * public Reservation createReservation(ReservationRequest request) { ... }
- */
-@Target(ElementType.METHOD)
-@Retention(RetentionPolicy.RUNTIME)
-@Documented
-public @interface Audited {
-    
-    /**
-     * 操作類型 (CREATE, UPDATE, DELETE, APPROVE, REJECT, etc.)
-     */
-    String action();
-    
-    /**
-     * 操作的資源類型 (Reservation, Room, User, etc.)
-     */
-    String resource() default "";
-    
-    /**
-     * 額外描述
-     */
-    String description() default "";
 }

@@ -53,13 +53,14 @@ public class SsoIntegrationService {
             User user = existingUser.get();
             boolean updated = false;
             
-            if (!name.equals(user.getName())) {
-                user = user.toBuilder().name(name).build();
+            // User 模型無 toBuilder() 方法,需直接設置
+            if (!name.equals(user.getFullName())) {
+                user.setFullName(name);
                 updated = true;
             }
             
             if (department != null && !department.equals(user.getDepartment())) {
-                user = user.toBuilder().department(department).build();
+                user.setDepartment(department);
                 updated = true;
             }
             
@@ -73,10 +74,10 @@ public class SsoIntegrationService {
             // 自動建立新使用者
             User newUser = User.builder()
                     .employeeId(employeeId)
-                    .name(name)
+                    .fullName(name)
                     .email(email)
                     .department(department)
-                    .role(User.Role.EMPLOYEE) // 預設角色
+                    .role(User.UserRole.EMPLOYEE) // 預設角色
                     .isActive(true)
                     .build();
             

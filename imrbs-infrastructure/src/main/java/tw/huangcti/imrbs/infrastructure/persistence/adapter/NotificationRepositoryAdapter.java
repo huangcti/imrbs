@@ -64,7 +64,6 @@ public class NotificationRepositoryAdapter implements NotificationRepository {
                 .collect(Collectors.toList());
     }
     
-    @Override
     public List<Notification> findPendingNotificationsForRetry() {
         return jpaRepository.findPendingNotificationsForRetry(
                 Notification.NotificationStatus.FAILED, 
@@ -72,17 +71,54 @@ public class NotificationRepositoryAdapter implements NotificationRepository {
                 .map(NotificationJpaEntity::toDomain)
                 .collect(Collectors.toList());
     }
-    
-    @Override
+
     public List<Notification> findRecentNotificationsByEmail(String email, int days) {
         LocalDateTime fromDate = LocalDateTime.now().minusDays(days);
         return jpaRepository.findRecentNotificationsByEmail(email, fromDate).stream()
                 .map(NotificationJpaEntity::toDomain)
                 .collect(Collectors.toList());
-    }
-    
-    @Override
+    }    @Override
     public void deleteById(Long id) {
         jpaRepository.deleteById(id);
+    }
+
+    @Override
+    public List<Notification> findAll() {
+        return jpaRepository.findAll().stream()
+                .map(NotificationJpaEntity::toDomain)
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public List<Notification> findPendingNotifications() {
+        return findByStatus(Notification.NotificationStatus.PENDING);
+    }
+
+    @Override
+    public List<Notification> findNotificationsForRetry() {
+        return findPendingNotificationsForRetry();
+    }
+
+    @Override
+    public List<Notification> findByCreatedAtBetween(LocalDateTime startTime, LocalDateTime endTime) {
+        return jpaRepository.findAll().stream()
+                .map(NotificationJpaEntity::toDomain)
+                .filter(n -> n.getCreatedAt().isAfter(startTime) && n.getCreatedAt().isBefore(endTime))
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public List<Notification> findFailedNotifications() {
+        return findByStatus(Notification.NotificationStatus.FAILED);
+    }
+
+    @Override
+    public int deleteOldNotifications(LocalDateTime beforeDate) {
+        List<NotificationJpaEntity> oldNotifications = jpaRepository.findAll().stream()
+                .filter(n -> n.getStatus() == Notification.NotificationStatus.SENT)
+                .filter(n -> n.getCreatedAt().isBefore(beforeDate))
+                .collect(Collectors.toList());
+        jpaRepository.deleteAll(oldNotifications);
+        return oldNotifications.size();
     }
 }

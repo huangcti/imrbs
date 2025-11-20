@@ -23,23 +23,23 @@ public class RoomMapper {
             return null;
         }
 
-        return RoomDTO.builder()
-                .id(room.getId())
-                .name(room.getName())
-                .capacity(room.getCapacity())
-                .location(room.getLocation())
-                .building(room.getBuilding())
-                .floor(room.getFloor())
-                .status(room.getStatus().name())
-                .equipment(room.getEquipment() != null 
+        return new RoomDTO(
+                room.getId(),
+                room.getName(),
+                room.getCapacity(),
+                room.getLocationDescription(),
+                room.getBuilding(),
+                room.getFloor(),
+                room.getStatus().name(),
+                room.getEquipment() != null 
                         ? room.getEquipment().stream()
-                                .map(eq -> eq.name() + "(" + eq.quantity() + ")")
+                                .map(eq -> eq.getName() + "(" + eq.getQuantity() + ")")
                                 .collect(Collectors.toList())
-                        : List.of())
-                .features(room.getFeatures())
-                .photos(room.getPhotos())
-                .bookingRule(toBookingRuleDTO(room.getBookingRule()))
-                .build();
+                        : List.of(),
+                room.getFeatures(),
+                room.getPhotos(),
+                toBookingRuleDTO(room.getBookingRule())
+        );
     }
 
     /**
@@ -56,19 +56,20 @@ public class RoomMapper {
 
     /**
      * BookingRule → BookingRuleDTO
+     * 注意:Domain BookingRule 欄位名與 DTO 不完全對應
      */
     private RoomDTO.BookingRuleDTO toBookingRuleDTO(Room.BookingRule rule) {
         if (rule == null) {
             return null;
         }
 
-        return RoomDTO.BookingRuleDTO.builder()
-                .maxHoursPerReservation(rule.maxHoursPerReservation())
-                .minAdvanceBookingHours(rule.minAdvanceBookingHours())
-                .maxAdvanceBookingDays(rule.maxAdvanceBookingDays())
-                .allowRecurring(rule.allowRecurring())
-                .requiresApproval(rule.requiresApproval())
-                .build();
+        return new RoomDTO.BookingRuleDTO(
+                rule.getMaxDurationHours(),           // maxHoursPerReservation
+                rule.getMinBookingMinutes(),          // minAdvanceBookingHours (語意不同,需檢查)
+                rule.getAdvanceBookingDays(),         // maxAdvanceBookingDays
+                false,                                 // allowRecurring (BookingRule沒有此欄位)
+                false                                  // requiresApproval (BookingRule沒有此欄位)
+        );
     }
 
     /**
@@ -79,11 +80,11 @@ public class RoomMapper {
             return null;
         }
 
-        return TimeSlotDTO.builder()
-                .startTime(timeSlot.startTime())
-                .endTime(timeSlot.endTime())
-                .available(timeSlot.available())
-                .build();
+        return new TimeSlotDTO(
+                timeSlot.startTime(),
+                timeSlot.endTime(),
+                timeSlot.available()
+        );
     }
 
     /**

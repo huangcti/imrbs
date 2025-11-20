@@ -47,6 +47,14 @@ public class GuestReservationRequestRepositoryAdapter implements GuestReservatio
                 .map(GuestReservationRequestJpaEntity::toDomain)
                 .collect(Collectors.toList());
     }
+
+    @Override
+    public List<GuestReservationRequest> findByReviewedBy(Long reviewedBy) {
+        return jpaRepository.findAll().stream()
+                .map(GuestReservationRequestJpaEntity::toDomain)
+                .filter(r -> reviewedBy.equals(r.getReviewedBy()))
+                .collect(Collectors.toList());
+    }
     
     @Override
     public List<GuestReservationRequest> findByRoomId(Long roomId) {
@@ -68,23 +76,44 @@ public class GuestReservationRequestRepositoryAdapter implements GuestReservatio
                 .collect(Collectors.toList());
     }
     
-    @Override
     public List<GuestReservationRequest> findRecentRequestsByEmail(String email, int days) {
         LocalDateTime fromDate = LocalDateTime.now().minusDays(days);
         return jpaRepository.findRecentRequestsByEmail(email, fromDate).stream()
                 .map(GuestReservationRequestJpaEntity::toDomain)
                 .collect(Collectors.toList());
     }
-    
-    @Override
+
     public List<GuestReservationRequest> findPendingRequestsInTimeRange(Long roomId, LocalDateTime startTime, LocalDateTime endTime) {
         return jpaRepository.findPendingRequestsInTimeRange(roomId, startTime, endTime).stream()
                 .map(GuestReservationRequestJpaEntity::toDomain)
                 .collect(Collectors.toList());
-    }
-    
-    @Override
+    }    @Override
     public void deleteById(Long id) {
         jpaRepository.deleteById(id);
+    }
+
+    @Override
+    public List<GuestReservationRequest> findAll() {
+        return jpaRepository.findAll().stream()
+                .map(GuestReservationRequestJpaEntity::toDomain)
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public List<GuestReservationRequest> findByRequestedTimeRange(LocalDateTime startTime, LocalDateTime endTime) {
+        return jpaRepository.findAll().stream()
+                .map(GuestReservationRequestJpaEntity::toDomain)
+                .filter(r -> !r.getRequestedStartTime().isBefore(startTime) && !r.getRequestedEndTime().isAfter(endTime))
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public List<GuestReservationRequest> findExpiredPendingRequests() {
+        LocalDateTime now = LocalDateTime.now();
+        return jpaRepository.findAll().stream()
+                .map(GuestReservationRequestJpaEntity::toDomain)
+                .filter(r -> r.getStatus() == GuestReservationRequest.RequestStatus.PENDING)
+                .filter(r -> r.getRequestedStartTime().isBefore(now))
+                .collect(Collectors.toList());
     }
 }
