@@ -1,0 +1,15 @@
+package tw.huangcti.imrbs.domain.exception;
+
+/**
+ * Not Found Exception - 資源不存在異常
+ */
+public class NotFoundException extends DomainException {
+    
+    public NotFoundException(String message) {
+        super(message);
+    }
+    
+    public NotFoundException(String message, Throwable cause) {
+        super(message, cause);
+    }
+}

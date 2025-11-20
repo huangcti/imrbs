@@ -1,7 +1,6 @@
 package tw.huangcti.imrbs.domain.service;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Service;
 import tw.huangcti.imrbs.domain.exception.ConflictException;
 import tw.huangcti.imrbs.domain.model.MaintenanceSchedule;
 import tw.huangcti.imrbs.domain.model.Reservation;
@@ -12,9 +11,8 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 /**
- * ConflictDetectionService - 預約衝突檢測服務
+ * 預約衝突檢測服務 (Domain Service - Framework Agnostic)
  */
-@Service
 @RequiredArgsConstructor
 public class ConflictDetectionService {
     

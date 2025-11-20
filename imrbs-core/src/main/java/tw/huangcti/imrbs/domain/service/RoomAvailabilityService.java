@@ -1,7 +1,6 @@
 package tw.huangcti.imrbs.domain.service;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Service;
 import tw.huangcti.imrbs.domain.model.Room;
 import tw.huangcti.imrbs.domain.repository.MaintenanceScheduleRepository;
 import tw.huangcti.imrbs.domain.repository.ReservationRepository;
@@ -16,9 +15,8 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 /**
- * RoomAvailabilityService - 會議室可用性查詢服務
+ * RoomAvailabilityService - 會議室可用性查詢服務 (Domain Service - Framework Agnostic)
  */
-@Service
 @RequiredArgsConstructor
 public class RoomAvailabilityService {
     

@@ -7,11 +7,13 @@ import org.springframework.amqp.rabbit.annotation.RabbitListener;
 import org.springframework.stereotype.Component;
 import tw.huangcti.imrbs.domain.model.Notification;
 import tw.huangcti.imrbs.domain.model.Reservation;
+import tw.huangcti.imrbs.domain.model.Room;
+import tw.huangcti.imrbs.domain.model.User;
 import tw.huangcti.imrbs.domain.repository.NotificationRepository;
 import tw.huangcti.imrbs.domain.repository.ReservationRepository;
+import tw.huangcti.imrbs.domain.repository.RoomRepository;
+import tw.huangcti.imrbs.domain.repository.UserRepository;
 import tw.huangcti.imrbs.infrastructure.integration.email.EmailService;
-
-import java.time.LocalDateTime;
 
 /**
  * 預約確認事件監聽器
@@ -24,6 +26,8 @@ public class ReservationConfirmedListener {
 
     private final EmailService emailService;
     private final ReservationRepository reservationRepository;
+    private final RoomRepository roomRepository;
+    private final UserRepository userRepository;
     private final NotificationRepository notificationRepository;
     private final ObjectMapper objectMapper;
 
@@ -44,13 +48,19 @@ public class ReservationConfirmedListener {
             Reservation reservation = reservationRepository.findById(notificationMsg.reservationId())
                     .orElseThrow(() -> new RuntimeException("預約不存在: " + notificationMsg.reservationId()));
 
+            // 查詢 Room 和 User
+            Room room = roomRepository.findById(reservation.getRoomId())
+                    .orElseThrow(() -> new RuntimeException("會議室不存在: " + reservation.getRoomId()));
+            User user = userRepository.findById(reservation.getUserId())
+                    .orElseThrow(() -> new RuntimeException("使用者不存在: " + reservation.getUserId()));
+
             // 發送 Email
-            String recipientEmail = reservation.getUser().getEmail();
+            String recipientEmail = user.getEmail();
             
             if ("CONFIRMATION".equals(notificationMsg.type())) {
-                emailService.sendReservationConfirmation(reservation, recipientEmail);
+                emailService.sendReservationConfirmation(reservation, room.getName(), user.getFullName(), recipientEmail);
             } else if ("CANCELLATION".equals(notificationMsg.type())) {
-                emailService.sendReservationCancellation(reservation, recipientEmail, notificationMsg.reason());
+                emailService.sendReservationCancellation(reservation, room.getName(), user.getFullName(), recipientEmail, notificationMsg.reason());
             }
 
             // 更新通知狀態
@@ -93,15 +103,21 @@ public class ReservationConfirmedListener {
                 return;
             }
 
+            // 查詢 Room 和 User
+            Room room = roomRepository.findById(reservation.getRoomId())
+                    .orElseThrow(() -> new RuntimeException("會議室不存在: " + reservation.getRoomId()));
+            User user = userRepository.findById(reservation.getUserId())
+                    .orElseThrow(() -> new RuntimeException("使用者不存在: " + reservation.getUserId()));
+
             // 發送提醒 Email
-            String recipientEmail = reservation.getUser().getEmail();
-            emailService.sendMeetingReminder(reservation, recipientEmail);
+            String recipientEmail = user.getEmail();
+            emailService.sendMeetingReminder(reservation, room.getName(), user.getFullName(), recipientEmail);
 
             // 如果有參與者,也發送給他們
             if (reservation.getParticipants() != null && !reservation.getParticipants().isEmpty()) {
                 String[] participantEmails = reservation.getParticipants().split(",");
                 for (String email : participantEmails) {
-                    emailService.sendMeetingReminder(reservation, email.trim());
+                    emailService.sendMeetingReminder(reservation, room.getName(), user.getFullName(), email.trim());
                 }
             }
 
@@ -117,15 +133,16 @@ public class ReservationConfirmedListener {
      */
     private void updateNotificationStatus(Long reservationId, Notification.NotificationStatus status) {
         try {
-            notificationRepository.findByReservationId(reservationId)
-                    .ifPresent(notification -> {
-                        if (status == Notification.NotificationStatus.SENT) {
-                            notification.markAsSent();
-                        } else if (status == Notification.NotificationStatus.FAILED) {
-                            notification.markAsFailed("Email 發送失敗");
-                        }
-                        notificationRepository.save(notification);
-                    });
+            var notifications = notificationRepository.findByReservationId(reservationId);
+            if (!notifications.isEmpty()) {
+                Notification notification = notifications.get(0);
+                if (status == Notification.NotificationStatus.SENT) {
+                    notification.markAsSent();
+                } else if (status == Notification.NotificationStatus.FAILED) {
+                    notification.markAsFailed("電子郵件發送失敗");
+                }
+                notificationRepository.save(notification);
+            }
         } catch (Exception e) {
             log.error("更新通知狀態失敗: reservationId={}, status={}", reservationId, status, e);
         }

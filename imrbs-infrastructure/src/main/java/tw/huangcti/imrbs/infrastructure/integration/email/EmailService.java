@@ -30,10 +30,10 @@ public class EmailService {
     /**
      * 發送預約確認通知
      */
-    public void sendReservationConfirmation(Reservation reservation, String recipientEmail) {
+    public void sendReservationConfirmation(Reservation reservation, String roomName, String userName, String recipientEmail) {
         try {
             String subject = "會議室預約確認 - " + reservation.getMeetingTitle();
-            String body = buildConfirmationEmailBody(reservation);
+            String body = buildConfirmationEmailBody(reservation, roomName, userName);
 
             sendEmail(recipientEmail, subject, body);
             log.info("預約確認通知已發送: reservationId={}, recipient={}", 
@@ -48,10 +48,10 @@ public class EmailService {
     /**
      * 發送預約取消通知
      */
-    public void sendReservationCancellation(Reservation reservation, String recipientEmail, String reason) {
+    public void sendReservationCancellation(Reservation reservation, String roomName, String userName, String recipientEmail, String reason) {
         try {
             String subject = "會議室預約取消 - " + reservation.getMeetingTitle();
-            String body = buildCancellationEmailBody(reservation, reason);
+            String body = buildCancellationEmailBody(reservation, roomName, userName, reason);
 
             sendEmail(recipientEmail, subject, body);
             log.info("預約取消通知已發送: reservationId={}, recipient={}", 
@@ -66,10 +66,10 @@ public class EmailService {
     /**
      * 發送會議提醒 (30 分鐘前)
      */
-    public void sendMeetingReminder(Reservation reservation, String recipientEmail) {
+    public void sendMeetingReminder(Reservation reservation, String roomName, String userName, String recipientEmail) {
         try {
             String subject = "會議提醒 - " + reservation.getMeetingTitle();
-            String body = buildReminderEmailBody(reservation);
+            String body = buildReminderEmailBody(reservation, roomName, userName);
 
             sendEmail(recipientEmail, subject, body);
             log.info("會議提醒已發送: reservationId={}, recipient={}", 
@@ -97,7 +97,7 @@ public class EmailService {
     /**
      * 構建預約確認 Email 內容
      */
-    private String buildConfirmationEmailBody(Reservation reservation) {
+    private String buildConfirmationEmailBody(Reservation reservation, String roomName, String userName) {
         return String.format("""
                 您好,%s
                 
@@ -117,9 +117,9 @@ public class EmailService {
                 
                 此為系統自動發送,請勿直接回覆。
                 """,
-                reservation.getUser().getName(),
+                userName,
                 reservation.getMeetingTitle(),
-                reservation.getRoom().getName(),
+                roomName,
                 reservation.getStartTime().format(DATE_TIME_FORMAT),
                 reservation.getEndTime().format(DATE_TIME_FORMAT),
                 reservation.getParticipants() != null ? reservation.getParticipants() : "無",
@@ -130,7 +130,7 @@ public class EmailService {
     /**
      * 構建預約取消 Email 內容
      */
-    private String buildCancellationEmailBody(Reservation reservation, String reason) {
+    private String buildCancellationEmailBody(Reservation reservation, String roomName, String userName, String reason) {
         return String.format("""
                 您好,%s
                 
@@ -149,9 +149,9 @@ public class EmailService {
                 
                 此為系統自動發送,請勿直接回覆。
                 """,
-                reservation.getUser().getName(),
+                userName,
                 reservation.getMeetingTitle(),
-                reservation.getRoom().getName(),
+                roomName,
                 reservation.getStartTime().format(DATE_TIME_FORMAT),
                 reservation.getEndTime().format(DATE_TIME_FORMAT),
                 reservation.getId(),
@@ -162,7 +162,7 @@ public class EmailService {
     /**
      * 構建會議提醒 Email 內容
      */
-    private String buildReminderEmailBody(Reservation reservation) {
+    private String buildReminderEmailBody(Reservation reservation, String roomName, String userName) {
         return String.format("""
                 您好,%s
                 
@@ -170,7 +170,7 @@ public class EmailService {
                 
                 === 會議資訊 ===
                 會議主題: %s
-                會議室: %s (%s)
+                會議室: %s
                 開始時間: %s
                 結束時間: %s
                 參與者: %s
@@ -179,10 +179,9 @@ public class EmailService {
                 
                 此為系統自動發送,請勿直接回覆。
                 """,
-                reservation.getUser().getName(),
+                userName,
                 reservation.getMeetingTitle(),
-                reservation.getRoom().getName(),
-                reservation.getRoom().getLocation(),
+                roomName,
                 reservation.getStartTime().format(DATE_TIME_FORMAT),
                 reservation.getEndTime().format(DATE_TIME_FORMAT),
                 reservation.getParticipants() != null ? reservation.getParticipants() : "無"

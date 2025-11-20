@@ -1,8 +1,8 @@
 package tw.huangcti.imrbs.application.usecase;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
+import tw.huangcti.imrbs.domain.exception.NotFoundException;
+import tw.huangcti.imrbs.domain.exception.ValidationException;
 import tw.huangcti.imrbs.domain.model.Reservation;
 import tw.huangcti.imrbs.domain.model.Room;
 import tw.huangcti.imrbs.domain.model.User;
@@ -10,17 +10,14 @@ import tw.huangcti.imrbs.domain.repository.ReservationRepository;
 import tw.huangcti.imrbs.domain.repository.RoomRepository;
 import tw.huangcti.imrbs.domain.repository.UserRepository;
 import tw.huangcti.imrbs.domain.service.ConflictDetectionService;
-import tw.huangcti.imrbs.exception.NotFoundException;
-import tw.huangcti.imrbs.exception.ValidationException;
 
 import java.time.LocalDateTime;
-import java.util.List;
 
 /**
- * 創建預約用例
+ * 創建預約用例 (Application Use Case - Framework Agnostic)
  * 職責: 編排預約創建流程，包含驗證、衝突檢測、儲存
+ * 注意: 此類別為 POJO，由基礎設施層 (Infrastructure) 使用 @Service 包裝
  */
-@Service
 @RequiredArgsConstructor
 public class CreateReservationUseCase {
 
@@ -36,9 +33,8 @@ public class CreateReservationUseCase {
      * @return 創建的預約
      * @throws NotFoundException 會議室或使用者不存在
      * @throws ValidationException 驗證失敗
-     * @throws tw.huangcti.imrbs.exception.ConflictException 時段衝突
+     * @throws tw.huangcti.imrbs.domain.exception.ConflictException 時段衝突
      */
-    @Transactional
     public Reservation execute(CreateReservationCommand command) {
         // 1. 驗證輸入
         validateCommand(command);
@@ -72,8 +68,8 @@ public class CreateReservationUseCase {
 
         // 5. 創建預約
         Reservation reservation = Reservation.builder()
-                .room(room)
-                .user(user)
+                .roomId(room.getId())
+                .userId(user.getId())
                 .meetingTitle(command.meetingTitle())
                 .startTime(command.startTime())
                 .endTime(command.endTime())
