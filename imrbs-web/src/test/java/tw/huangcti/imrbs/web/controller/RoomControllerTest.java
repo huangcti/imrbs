@@ -30,7 +30,11 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
  * - GET /api/v1/rooms/{id} - 查詢單一會議室詳情
  * - GET /api/v1/rooms/{id}/availability - 查詢會議室可用時段
  */
-@WebMvcTest(RoomController.class)
+@WebMvcTest(controllers = {
+        RoomController.class,
+        tw.huangcti.imrbs.web.exception.GlobalExceptionHandler.class
+})
+@org.springframework.context.annotation.Import(TestSecurityConfig.class)
 @DisplayName("US1: 會議室查詢 API 測試")
 class RoomControllerTest {
     
@@ -42,6 +46,9 @@ class RoomControllerTest {
     
     @MockBean
     private RoomAvailabilityService roomAvailabilityService;
+    
+    @MockBean
+    private tw.huangcti.imrbs.web.mapper.RoomMapper roomMapper;
     
     private Room testRoom;
     
@@ -70,6 +77,15 @@ class RoomControllerTest {
         // Given
         when(roomAvailabilityService.findAvailableRooms(any(), any(), anyInt()))
                 .thenReturn(List.of(testRoom));
+        
+        tw.huangcti.imrbs.web.dto.RoomDTO roomDTO = tw.huangcti.imrbs.web.dto.RoomDTO.builder()
+                .id(1L)
+                .name("會議室 A")
+                .capacity(10)
+                .status("AVAILABLE")
+                .build();
+        when(roomMapper.toDTO(any(Room.class)))
+                .thenReturn(roomDTO);
         
         // When & Then
         mockMvc.perform(get("/api/v1/rooms")
