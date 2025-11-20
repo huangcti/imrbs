@@ -33,12 +33,12 @@
 **目的**: 建立專案結構與基礎配置
 
 - [X] T001 根據 plan.md 建立 Clean Architecture 多模組結構（imrbs-core, imrbs-infrastructure, imrbs-web, imrbs-frontend）
-- [ ] T002 [P] 配置後端 Maven 根 POM 與子模組依賴（pom.xml, imrbs-core/pom.xml, imrbs-infrastructure/pom.xml, imrbs-web/pom.xml）
-- [ ] T003 [P] 初始化前端 Vue 3 專案（imrbs-frontend/package.json, vite.config.ts, tsconfig.json）
-- [ ] T004 [P] 配置 Checkstyle、Prettier、ESLint（.checkstyle.xml, .prettierrc, .eslintrc.js）
-- [ ] T005 [P] 配置 Docker Compose 開發環境（docker/docker-compose.yml: PostgreSQL, Redis, RabbitMQ）
-- [ ] T006 [P] 配置 GitHub Actions CI/CD 工作流程（.github/workflows/backend-ci.yml, frontend-ci.yml）
-- [ ] T007 建立 Spring Boot 主應用程式類別（imrbs-web/src/main/java/tw/huangcti/imrbs/ImrbsApplication.java）
+- [X] T002 [P] 配置後端 Maven 根 POM 與子模組依賴（pom.xml, imrbs-core/pom.xml, imrbs-infrastructure/pom.xml, imrbs-web/pom.xml）
+- [X] T003 [P] 初始化前端 Vue 3 專案（imrbs-frontend/package.json, vite.config.ts, tsconfig.json）
+- [X] T004 [P] 配置 Checkstyle、Prettier、ESLint（.checkstyle.xml, .prettierrc, .eslintrc.js）
+- [X] T005 [P] 配置 Docker Compose 開發環境（docker/docker-compose.yml: PostgreSQL, Redis, RabbitMQ）
+- [X] T006 [P] 配置 GitHub Actions CI/CD 工作流程（.github/workflows/backend-ci.yml, frontend-ci.yml）
+- [X] T007 建立 Spring Boot 主應用程式類別（imrbs-web/src/main/java/tw/huangcti/imrbs/ImrbsApplication.java）
 
 ---
 

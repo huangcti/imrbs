@@ -1,0 +1,31 @@
+spring:
+  config:
+    activate:
+      on-profile: test
+
+  # Database (use H2 or Test containers)
+  datasource:
+    url: jdbc:postgresql://localhost:5432/imrbs_test
+    username: test_user
+    password: test_pass
+
+  # Redis
+  data:
+    redis:
+      host: localhost
+      port: 6379
+
+  # RabbitMQ (disabled for unit tests)
+  rabbitmq:
+    host: localhost
+    port: 5672
+
+  # JPA
+  jpa:
+    hibernate:
+      ddl-auto: create-drop
+    show-sql: true
+
+logging:
+  level:
+    tw.huangcti.imrbs: DEBUG

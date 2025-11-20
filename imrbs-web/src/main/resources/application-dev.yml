@@ -1,0 +1,35 @@
+spring:
+  config:
+    activate:
+      on-profile: dev
+
+  # Database
+  datasource:
+    url: jdbc:postgresql://localhost:5432/imrbs
+    username: imrbs_user
+    password: imrbs_pass
+
+  # Redis
+  data:
+    redis:
+      host: localhost
+      port: 6379
+      password: imrbs_redis_pass
+
+  # RabbitMQ
+  rabbitmq:
+    host: localhost
+    port: 5672
+    username: imrbs_user
+    password: imrbs_pass
+    virtual-host: /imrbs
+
+  # JPA
+  jpa:
+    show-sql: true
+
+logging:
+  level:
+    tw.huangcti.imrbs: DEBUG
+    org.hibernate.SQL: DEBUG
+    org.hibernate.type.descriptor.sql.BasicBinder: TRACE
