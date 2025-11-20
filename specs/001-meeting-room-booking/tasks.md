@@ -95,11 +95,11 @@
 
 ### 共用基礎設施
 
-- [ ] T038 [P] 配置 Redis 快取（imrbs-infrastructure/src/main/java/tw/huangcti/imrbs/infrastructure/config/RedisConfig.java）
-- [ ] T039 [P] 配置 RabbitMQ 訊息佇列（imrbs-infrastructure/src/main/java/tw/huangcti/imrbs/infrastructure/config/RabbitMQConfig.java）
-- [ ] T040 [P] 實作全域異常處理器（imrbs-web/src/main/java/tw/huangcti/imrbs/web/exception/GlobalExceptionHandler.java）
-- [ ] T041 [P] 配置 SpringDoc OpenAPI（imrbs-web/src/main/resources/application.yml）
-- [ ] T042 [P] 實作審計日誌 AOP（imrbs-web/src/main/java/tw/huangcti/imrbs/web/aspect/AuditLogAspect.java）
+- [X] T038 [P] 配置 Redis 快取（imrbs-infrastructure/src/main/java/tw/huangcti/imrbs/infrastructure/config/RedisConfig.java）
+- [X] T039 [P] 配置 RabbitMQ 訊息佇列（imrbs-infrastructure/src/main/java/tw/huangcti/imrbs/infrastructure/config/RabbitMQConfig.java）
+- [X] T040 [P] 實作全域異常處理器（imrbs-web/src/main/java/tw/huangcti/imrbs/web/exception/GlobalExceptionHandler.java）
+- [X] T041 [P] 配置 SpringDoc OpenAPI（imrbs-web/src/main/resources/application.yml + imrbs-web/src/main/java/tw/huangcti/imrbs/web/config/OpenApiConfig.java）
+- [X] T042 [P] 實作審計日誌 AOP（imrbs-web/src/main/java/tw/huangcti/imrbs/web/aspect/AuditLogAspect.java）
 
 ### 前端基礎架構
 

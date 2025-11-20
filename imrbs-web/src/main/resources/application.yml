@@ -103,10 +103,18 @@ logging:
 springdoc:
   api-docs:
     path: /api-docs
+    enabled: true
   swagger-ui:
     path: /swagger-ui.html
     enabled: true
+    operationsSorter: method
+    tagsSorter: alpha
+    tryItOutEnabled: true
   show-actuator: true
+  default-consumes-media-type: application/json
+  default-produces-media-type: application/json
+  packages-to-scan: tw.huangcti.imrbs.web.controller
+  pathsToMatch: /api/v1/**
 
 # Application Configuration
 app:
