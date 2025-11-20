@@ -79,7 +79,7 @@
 
 ### JPA 實體與 Repository 實作（Infrastructure）
 
-- [ ] T028 [P] 實作 UserJpaEntity 與 UserJpaRepository（imrbs-infrastructure/src/main/java/tw/huangcti/imrbs/infrastructure/persistence/jpa/entity/UserJpaEntity.java, repository/UserJpaRepository.java）
+- [X] T028 [P] 實作 UserJpaEntity 與 UserJpaRepository（imrbs-infrastructure/src/main/java/tw/huangcti/imrbs/infrastructure/persistence/jpa/entity/UserJpaEntity.java, repository/UserJpaRepository.java）
 - [ ] T029 [P] 實作 RoomJpaEntity 與 RoomJpaRepository（imrbs-infrastructure/src/main/java/tw/huangcti/imrbs/infrastructure/persistence/jpa/entity/RoomJpaEntity.java, repository/RoomJpaRepository.java）
 - [ ] T030 [P] 實作 ReservationJpaEntity 與 ReservationJpaRepository（imrbs-infrastructure/src/main/java/tw/huangcti/imrbs/infrastructure/persistence/jpa/entity/ReservationJpaEntity.java, repository/ReservationJpaRepository.java）
 - [ ] T031 [P] 實作 MaintenanceScheduleJpaEntity 與 Repository（imrbs-infrastructure/src/main/java/tw/huangcti/imrbs/infrastructure/persistence/jpa/entity/MaintenanceScheduleJpaEntity.java, repository/MaintenanceScheduleJpaRepository.java）
