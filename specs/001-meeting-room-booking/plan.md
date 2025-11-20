@@ -18,13 +18,13 @@
 **Primary Dependencies**: 
 - 前端: PrimeVue (UI元件庫), Tailwind CSS (樣式框架), Pinia (狀態管理), Vue Router (路由), vue-i18n (多語系), Vite (建置工具)
 - 後端: Spring Data JPA (資料存取), Hibernate (ORM), Spring Security (認證授權), SpringDoc OpenAPI (API文檔), Spring Cache (快取抽象)
-- 微前端: Single-SPA 或 Module Federation (Webpack 5) - NEEDS CLARIFICATION
-- 訊息佇列: RabbitMQ 或 Kafka (spring-boot-starter-amqp 或 spring-kafka) - NEEDS CLARIFICATION
+- 微前端: MVP 階段使用單一 Vue 3 SPA，未來可擴展至 Module Federation（已決定，參考 research.md）
+- 訊息佇列: RabbitMQ 3.13 (spring-boot-starter-amqp)（已決定，參考 research.md）
 
 **Storage**: 
-- 主資料庫: PostgreSQL 或 SQL Server - **NEEDS CLARIFICATION** (需選定其中之一,兩者皆支援 Spring Data JPA)
-- 快取層: Redis (搭配 spring-boot-starter-data-redis, Spring Cache 抽象 @Cacheable/@CacheEvict)
-- 訊息佇列: RabbitMQ 或 Kafka (用於非同步通知、日曆同步事件)
+- 主資料庫: PostgreSQL 16（已決定，參考 research.md - 開源免費、JSONB 支援、Docker 友善、跨平台）
+- 快取層: Redis 7 (搭配 spring-boot-starter-data-redis, Spring Cache 抽象 @Cacheable/@CacheEvict)
+- 訊息佇列: RabbitMQ 3.13（已決定，參考 research.md - 簡單易用、Dead Letter Exchange 支援 30 分鐘提醒、適合本專案規模）
 
 **Testing**: 
 - 前端: Jest (單元測試) + Vue Test Utils (元件測試) + Cypress (E2E測試)
@@ -136,9 +136,9 @@
 ### VIII. 技術棧 (Technology Stack) - ✅ 符合
 - ✅ 前端: Vue 3.x Composition API, TypeScript 5.x, PrimeVue, Tailwind CSS, Vite, Pinia
 - ✅ 後端: Spring Boot 4.x, Java 25, Spring Security, Spring Data JPA, Hibernate
-- ✅ 資料庫: SQL Server 或 PostgreSQL (NEEDS CLARIFICATION - 需選定)
-- ✅ 快取: Redis
-- ✅ 訊息佇列: RabbitMQ 或 Kafka (NEEDS CLARIFICATION - 需選定)
+- ✅ 資料庫: PostgreSQL 16（已決定 - 開源、JSONB 支援、Docker 友善）
+- ✅ 快取: Redis 7
+- ✅ 訊息佇列: RabbitMQ 3.13（已決定 - 簡單易用、適合專案規模）
 - ✅ 基礎設施: Docker, Kubernetes, GitHub Actions/GitLab CI, Prometheus + Grafana, ELK Stack
 
 ### IX. 平台整合 (Platform Integration) - ✅ 符合
@@ -159,15 +159,10 @@
 
 ### 憲章檢查結果: ✅ 通過 (10/10 原則符合)
 
-**需要釐清 (NEEDS CLARIFICATION) 的技術選型:**
-1. 主資料庫: PostgreSQL 或 SQL Server (兩者皆支援, 需根據企業現有基礎設施決定)
-2. 訊息佇列: RabbitMQ 或 Kafka (RabbitMQ 簡單易用, Kafka 高吞吐量)
-3. 微前端框架: Single-SPA 或 Module Federation (Single-SPA 成熟穩定, Module Federation 原生整合)
-
-**Phase 0 research.md 需解決的問題:**
-- 評估企業現有資料庫授權與維運能力 (PostgreSQL vs SQL Server)
-- 評估訊息量與延遲要求 (RabbitMQ vs Kafka)
-- 評估前端團隊技術棧與未來擴展計畫 (Single-SPA vs Module Federation)
+**技術選型決策（已完成，參考 research.md）:**
+1. ✅ 主資料庫: **PostgreSQL 16** - 理由：開源免費、JSONB 支援會議室設備清單、Docker 容器化友善（~300MB vs SQL Server 1.5GB）、跨平台、社群活躍、Kubernetes Postgres Operator 支援
+2. ✅ 訊息佇列: **RabbitMQ 3.13** - 理由：簡單易用、AMQP 協議、Spring Boot 整合良好、Dead Letter Exchange 支援延遲提醒、適合本專案規模（~20,000 訊息/月 ≈ 0.01 QPS），Kafka 過於複雜
+3. ✅ 微前端架構: **MVP 使用單一 Vue 3 SPA，保留 Module Federation 擴展** - 理由：團隊規模小（<5 人）、需求單一、避免過度設計，未來需要時再升級為微前端
 
 ## Project Structure
 
