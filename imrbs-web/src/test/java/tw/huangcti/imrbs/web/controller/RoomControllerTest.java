@@ -84,8 +84,8 @@ class RoomControllerTest {
                 .capacity(10)
                 .status("AVAILABLE")
                 .build();
-        when(roomMapper.toDTO(any(Room.class)))
-                .thenReturn(roomDTO);
+        when(roomMapper.toDTOList(anyList()))
+                .thenReturn(List.of(roomDTO));
         
         // When & Then
         mockMvc.perform(get("/api/v1/rooms")
@@ -94,10 +94,11 @@ class RoomControllerTest {
                         .param("capacity", "8")
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$[0].id").value(1))
-                .andExpect(jsonPath("$[0].name").value("會議室 A"))
-                .andExpect(jsonPath("$[0].capacity").value(10))
-                .andExpect(jsonPath("$[0].status").value("AVAILABLE"));
+                .andExpect(jsonPath("$.total").value(1))
+                .andExpect(jsonPath("$.data[0].id").value(1))
+                .andExpect(jsonPath("$.data[0].name").value("會議室 A"))
+                .andExpect(jsonPath("$.data[0].capacity").value(10))
+                .andExpect(jsonPath("$.data[0].status").value("AVAILABLE"));
     }
     
     @Test
@@ -127,7 +128,7 @@ class RoomControllerTest {
                 .andExpect(jsonPath("$.name").value("會議室 A"))
                 .andExpect(jsonPath("$.building").value("總部大樓"))
                 .andExpect(jsonPath("$.floor").value("3F"))
-                .andExpect(jsonPath("$.equipment[0].name").value("投影機"))
+                .andExpect(jsonPath("$.equipment[0]").value("投影機"))
                 .andExpect(jsonPath("$.features[0]").value("視訊會議"));
     }
     
@@ -186,9 +187,11 @@ class RoomControllerTest {
                         .param("date", "2025-11-21")
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$[0].startTime").exists())
-                .andExpect(jsonPath("$[0].endTime").exists())
-                .andExpect(jsonPath("$[0].available").value(true));
+                .andExpect(jsonPath("$.date").value("2025-11-21"))
+                .andExpect(jsonPath("$.roomId").value(1))
+                .andExpect(jsonPath("$.availableSlots[0].startTime").exists())
+                .andExpect(jsonPath("$.availableSlots[0].endTime").exists())
+                .andExpect(jsonPath("$.availableSlots[0].available").value(true));
     }
     
     @Test
@@ -226,10 +229,13 @@ class RoomControllerTest {
         when(roomMapper.toDTOList(anyList()))
                 .thenReturn(List.of(roomDTO));
         
-        // When & Then - 沒有參數也應該成功
+        // When & Then - 提供必要參數
         mockMvc.perform(get("/api/v1/rooms")
+                        .param("startTime", "2025-11-21T09:00:00")
+                        .param("endTime", "2025-11-21T10:00:00")
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.total").value(1));
+                .andExpect(jsonPath("$.total").value(1))
+                .andExpect(jsonPath("$.data[0].id").value(1));
     }
 }

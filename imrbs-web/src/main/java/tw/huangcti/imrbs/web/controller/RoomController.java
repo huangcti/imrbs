@@ -69,7 +69,7 @@ public class RoomController {
     @Operation(summary = "查詢會議室詳情", description = "取得指定會議室的詳細資訊")
     public ResponseEntity<RoomDTO> getRoomById(
             @Parameter(description = "會議室 ID", required = true)
-            @PathVariable Long id
+            @PathVariable("id") Long id
     ) {
         Room room = roomAvailabilityService.findRoomById(id)
                 .orElseThrow(() -> new tw.huangcti.imrbs.domain.exception.NotFoundException("會議室不存在"));
