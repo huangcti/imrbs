@@ -50,15 +50,15 @@ class ReservationControllerTest {
     
     @BeforeEach
     void setUp() {
-        testRequest = new CreateReservationRequest(
-                1L, // roomId
-                "emp001", // userId
-                LocalDateTime.of(2025, 11, 21, 9, 0),
-                LocalDateTime.of(2025, 11, 21, 10, 0),
-                "團隊週會",
-                List.of("user1@example.com", "user2@example.com"),
-                null // 非週期性預約
-        );
+        testRequest = CreateReservationRequest.builder()
+                .roomId(1L)
+                .userId(1001L)
+                .meetingTitle("團隊週會")
+                .startTime(LocalDateTime.of(2025, 11, 21, 9, 0))
+                .endTime(LocalDateTime.of(2025, 11, 21, 10, 0))
+                .participants("user1@example.com,user2@example.com")
+                .recurringRule(null)
+                .build();
     }
     
     @Test
@@ -69,7 +69,7 @@ class ReservationControllerTest {
         Reservation createdReservation = Reservation.builder()
                 .id(1L)
                 .roomId(1L)
-                .userId("emp001")
+                .userId(1001L) // 修正為 Long 類型
                 .startTime(testRequest.startTime())
                 .endTime(testRequest.endTime())
                 .meetingTitle(testRequest.meetingTitle())
@@ -87,7 +87,7 @@ class ReservationControllerTest {
                 .andExpect(status().isCreated())
                 .andExpect(jsonPath("$.id").value(1))
                 .andExpect(jsonPath("$.roomId").value(1))
-                .andExpect(jsonPath("$.userId").value("emp001"))
+                .andExpect(jsonPath("$.userId").value(1001))
                 .andExpect(jsonPath("$.status").value("CONFIRMED"))
                 .andExpect(header().exists("Location"));
     }
@@ -131,15 +131,15 @@ class ReservationControllerTest {
     @DisplayName("T051-4: 缺少必填欄位應該回傳 400")
     void testCreateReservation_MissingRequiredFields() throws Exception {
         // Given
-        CreateReservationRequest invalidRequest = new CreateReservationRequest(
-                null, // roomId 必填
-                "emp001",
-                LocalDateTime.now(),
-                LocalDateTime.now().plusHours(1),
-                "測試會議",
-                List.of(),
-                null
-        );
+        CreateReservationRequest invalidRequest = CreateReservationRequest.builder()
+                .roomId(null) // 必填欄位為 null
+                .userId(1001L)
+                .meetingTitle("測試會議")
+                .startTime(LocalDateTime.now())
+                .endTime(LocalDateTime.now().plusHours(1))
+                .participants("")
+                .recurringRule(null)
+                .build();
         
         // When & Then
         mockMvc.perform(post("/api/v1/reservations")
@@ -154,15 +154,15 @@ class ReservationControllerTest {
     @DisplayName("T051-5: 結束時間早於開始時間應該回傳 400")
     void testCreateReservation_InvalidTimeRange() throws Exception {
         // Given
-        CreateReservationRequest invalidRequest = new CreateReservationRequest(
-                1L,
-                "emp001",
-                LocalDateTime.of(2025, 11, 21, 10, 0),
-                LocalDateTime.of(2025, 11, 21, 9, 0), // 結束時間早於開始時間
-                "測試會議",
-                List.of(),
-                null
-        );
+        CreateReservationRequest invalidRequest = CreateReservationRequest.builder()
+                .roomId(1L)
+                .userId(1001L)
+                .meetingTitle("測試會議")
+                .startTime(LocalDateTime.of(2025, 11, 21, 10, 0))
+                .endTime(LocalDateTime.of(2025, 11, 21, 9, 0)) // 早於 startTime
+                .participants("")
+                .recurringRule(null)
+                .build();
         
         when(createReservationUseCase.execute(any()))
                 .thenThrow(new ValidationException("結束時間必須晚於開始時間"));
