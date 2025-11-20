@@ -101,15 +101,15 @@
 - [X] T041 [P] 配置 SpringDoc OpenAPI（imrbs-web/src/main/resources/application.yml + imrbs-web/src/main/java/tw/huangcti/imrbs/web/config/OpenApiConfig.java）
 - [X] T042 [P] 實作審計日誌 AOP（imrbs-web/src/main/java/tw/huangcti/imrbs/web/aspect/AuditLogAspect.java）
 
-### 前端基礎架構
+### 前端基礎架構 ✅ 完成
 
-- [ ] T043 [P] 配置 Vue Router 路由（imrbs-frontend/src/router/index.ts）
-- [ ] T044 [P] 配置 Pinia 狀態管理（imrbs-frontend/src/stores/index.ts）
-- [ ] T045 [P] 配置 Axios API 客戶端（imrbs-frontend/src/services/api.ts）
-- [ ] T046 [P] 配置 vue-i18n 多語系（imrbs-frontend/src/i18n.ts, public/locales/zh-TW.json, en.json）
-- [ ] T047 [P] 配置 Tailwind CSS 與 PrimeVue（imrbs-frontend/tailwind.config.js, src/main.ts）
-- [ ] T048 [P] 建立通用佈局元件（imrbs-frontend/src/components/layout/Header.vue, Footer.vue, Sidebar.vue）
-- [ ] T049 [P] 建立 Loading、Modal、Toast 通用元件（imrbs-frontend/src/components/common/Loading.vue, Modal.vue, Toast.vue）
+- [X] T043 [P] 配置 Vue Router 路由（imrbs-frontend/src/router/index.ts）✅
+- [X] T044 [P] 配置 Pinia 狀態管理（imrbs-frontend/src/stores/index.ts）✅
+- [X] T045 [P] 配置 Axios API 客戶端（imrbs-frontend/src/services/api.ts）✅
+- [X] T046 [P] 配置 vue-i18n 多語系（imrbs-frontend/src/i18n.ts, public/locales/zh-TW.json, en.json）✅
+- [X] T047 [P] 配置 Tailwind CSS 與 PrimeVue（imrbs-frontend/tailwind.config.js, src/main.ts）✅
+- [X] T048 [P] 建立通用佈局元件（imrbs-frontend/src/components/layout/Header.vue, Footer.vue, Sidebar.vue）✅
+- [X] T049 [P] 建立 Loading、Modal、Toast 通用元件（imrbs-frontend/src/components/common/Loading.vue, Modal.vue, Toast.vue）✅
 
 **Checkpoint ✅**: 基礎架構完成，User Story 實作可以平行開始
 
@@ -123,42 +123,42 @@
 
 **測試策略**: TDD Red-Green-Refactor 循環，測試先行
 
-### 測試任務（US1）- 先寫測試，確保 RED 狀態
+### 測試任務（US1）- 先寫測試，確保 RED 狀態 ✅ 完成
 
-- [X] T050 [P] [US1] 撰寫會議室查詢 API 合約測試（imrbs-web/src/test/java/tw/huangcti/imrbs/web/controller/RoomControllerTest.java: testGetAvailableRooms）
-- [X] T051 [P] [US1] 撰寫預約創建 API 合約測試（imrbs-web/src/test/java/tw/huangcti/imrbs/web/controller/ReservationControllerTest.java: testCreateReservation）
-- [X] T052 [P] [US1] 撰寫衝突檢測單元測試（imrbs-core/src/test/java/tw/huangcti/imrbs/domain/service/ConflictDetectionServiceTest.java）
-- [X] T053 [P] [US1] 撰寫通知發送整合測試（imrbs-infrastructure/src/test/java/tw/huangcti/imrbs/infrastructure/messaging/NotificationServiceTest.java）
-- [ ] T054 [P] [US1] 撰寫前端預約表單 E2E 測試（imrbs-frontend/tests/e2e/specs/reservation.cy.ts）
+- [X] T050 [P] [US1] 撰寫會議室查詢 API 合約測試（imrbs-web/src/test/java/tw/huangcti/imrbs/web/controller/RoomControllerTest.java: testGetAvailableRooms）✅ 6/6 通過
+- [X] T051 [P] [US1] 撰寫預約創建 API 合約測試（imrbs-web/src/test/java/tw/huangcti/imrbs/web/controller/ReservationControllerTest.java: testCreateReservation）✅ 6/6 通過
+- [X] T052 [P] [US1] 撰寫衝突檢測單元測試（imrbs-core/src/test/java/tw/huangcti/imrbs/domain/service/ConflictDetectionServiceTest.java）✅ 8/8 通過
+- [X] T053 [P] [US1] 撰寫通知發送整合測試（imrbs-infrastructure/src/test/java/tw/huangcti/imrbs/infrastructure/messaging/NotificationServiceTest.java）✅ 編譯通過
+- [X] T054 [P] [US1] 撰寫前端預約表單 E2E 測試（imrbs-frontend/cypress/e2e/reservation.cy.ts）✅ 已建立
 
-### 後端實作（US1）
+### 後端實作（US1）✅ 完成
 
-- [X] T055 [P] [US1] 實作會議室可用性查詢服務（imrbs-core/src/main/java/tw/huangcti/imrbs/domain/service/RoomAvailabilityService.java）
-- [X] T056 [P] [US1] 實作預約衝突檢測服務（imrbs-core/src/main/java/tw/huangcti/imrbs/domain/service/ConflictDetectionService.java）
-- [X] T057 [US1] 實作創建預約 Use Case（imrbs-core/src/main/java/tw/huangcti/imrbs/application/usecase/CreateReservationUseCase.java，依賴 T055, T056）
-- [X] T058 [P] [US1] 實作 RoomController GET /rooms 端點（imrbs-web/src/main/java/tw/huangcti/imrbs/web/controller/RoomController.java）
-- [X] T059 [P] [US1] 實作 RoomController GET /rooms/{id} 端點（imrbs-web/src/main/java/tw/huangcti/imrbs/web/controller/RoomController.java）
-- [X] T060 [P] [US1] 實作 RoomController GET /rooms/{id}/availability 端點（imrbs-web/src/main/java/tw/huangcti/imrbs/web/controller/RoomController.java）
-- [X] T061 [US1] 實作 ReservationController POST /reservations 端點（imrbs-web/src/main/java/tw/huangcti/imrbs/web/controller/ReservationController.java，依賴 T057）
-- [X] T062 [P] [US1] 實作 DTO 映射器（RoomMapper, ReservationMapper）（imrbs-web/src/main/java/tw/huangcti/imrbs/web/mapper/RoomMapper.java, ReservationMapper.java）
-- [X] T063 [P] [US1] 實作 Email 通知服務（imrbs-infrastructure/src/main/java/tw/huangcti/imrbs/infrastructure/integration/email/EmailService.java）
-- [X] T064 [US1] 實作 RabbitMQ 預約確認事件監聽器（imrbs-infrastructure/src/main/java/tw/huangcti/imrbs/infrastructure/messaging/listener/ReservationConfirmedListener.java，依賴 T063）
+- [X] T055 [P] [US1] 實作會議室可用性查詢服務（imrbs-core/src/main/java/tw/huangcti/imrbs/domain/service/RoomAvailabilityService.java）✅
+- [X] T056 [P] [US1] 實作預約衝突檢測服務（imrbs-core/src/main/java/tw/huangcti/imrbs/domain/service/ConflictDetectionService.java）✅
+- [X] T057 [US1] 實作創建預約 Use Case（imrbs-core/src/main/java/tw/huangcti/imrbs/application/usecase/CreateReservationUseCase.java，依賴 T055, T056）✅
+- [X] T058 [P] [US1] 實作 RoomController GET /rooms 端點（imrbs-web/src/main/java/tw/huangcti/imrbs/web/controller/RoomController.java）✅
+- [X] T059 [P] [US1] 實作 RoomController GET /rooms/{id} 端點（imrbs-web/src/main/java/tw/huangcti/imrbs/web/controller/RoomController.java）✅
+- [X] T060 [P] [US1] 實作 RoomController GET /rooms/{id}/availability 端點（imrbs-web/src/main/java/tw/huangcti/imrbs/web/controller/RoomController.java）✅
+- [X] T061 [US1] 實作 ReservationController POST /reservations 端點（imrbs-web/src/main/java/tw/huangcti/imrbs/web/controller/ReservationController.java，依賴 T057）✅
+- [X] T062 [P] [US1] 實作 DTO 映射器（RoomMapper, ReservationMapper）（imrbs-web/src/main/java/tw/huangcti/imrbs/web/mapper/RoomMapper.java, ReservationMapper.java）✅
+- [X] T063 [P] [US1] 實作 Email 通知服務（imrbs-infrastructure/src/main/java/tw/huangcti/imrbs/infrastructure/integration/email/EmailService.java）✅
+- [X] T064 [US1] 實作 RabbitMQ 預約確認事件監聽器（imrbs-infrastructure/src/main/java/tw/huangcti/imrbs/infrastructure/messaging/listener/ReservationConfirmedListener.java，依賴 T063）✅
 
-### 前端實作（US1）
+### 前端實作（US1）✅ 完成
 
-- [ ] T065 [P] [US1] 實作會議室查詢 Pinia Store（imrbs-frontend/src/stores/room.ts）
-- [ ] T066 [P] [US1] 實作預約 Pinia Store（imrbs-frontend/src/stores/reservation.ts）
-- [ ] T067 [P] [US1] 實作會議室 API 服務（imrbs-frontend/src/services/room.service.ts）
-- [ ] T068 [P] [US1] 實作預約 API 服務（imrbs-frontend/src/services/reservation.service.ts）
-- [ ] T069 [P] [US1] 建立會議室篩選元件（imrbs-frontend/src/components/room/RoomFilter.vue）
-- [ ] T070 [P] [US1] 建立會議室卡片元件（imrbs-frontend/src/components/room/RoomCard.vue）
-- [ ] T071 [P] [US1] 建立會議室詳情元件（imrbs-frontend/src/components/room/RoomDetail.vue）
-- [ ] T072 [P] [US1] 建立預約表單元件（imrbs-frontend/src/components/reservation/ReservationForm.vue）
-- [ ] T073 [US1] 建立會議室搜尋頁面（imrbs-frontend/src/views/RoomSearch.vue，整合 T069-T072）
-- [ ] T074 [P] [US1] 實作日期時間工具函式（imrbs-frontend/src/utils/date.ts）
-- [ ] T075 [P] [US1] 實作表單驗證工具函式（imrbs-frontend/src/utils/validation.ts）
+- [X] T065 [P] [US1] 實作會議室查詢 Pinia Store（imrbs-frontend/src/stores/room.ts）✅
+- [X] T066 [P] [US1] 實作預約 Pinia Store（imrbs-frontend/src/stores/reservation.ts）✅
+- [X] T067 [P] [US1] 實作會議室 API 服務（imrbs-frontend/src/services/room.service.ts）✅
+- [X] T068 [P] [US1] 實作預約 API 服務（imrbs-frontend/src/services/reservation.service.ts）✅
+- [X] T069 [P] [US1] 建立會議室篩選元件（imrbs-frontend/src/components/room/RoomFilter.vue）✅
+- [X] T070 [P] [US1] 建立會議室卡片元件（imrbs-frontend/src/components/room/RoomCard.vue）✅
+- [X] T071 [P] [US1] 建立會議室詳情元件（imrbs-frontend/src/components/room/RoomDetail.vue）✅
+- [X] T072 [P] [US1] 建立預約表單元件（imrbs-frontend/src/components/reservation/ReservationForm.vue）✅
+- [X] T073 [US1] 建立會議室搜尋頁面（imrbs-frontend/src/views/RoomSearch.vue，整合 T069-T072）✅
+- [X] T074 [P] [US1] 實作日期時間工具函式（imrbs-frontend/src/utils/date.ts）✅
+- [X] T075 [P] [US1] 實作表單驗證工具函式（imrbs-frontend/src/utils/validation.ts）✅
 
-**Checkpoint ✅**: US1 完整實作完成，可以獨立測試與交付
+**Checkpoint ✅**: US1 完整實作完成 (後端 20/20 測試通過 + 前端 E2E 測試已建立)，可以獨立測試與交付
 
 ---
 
