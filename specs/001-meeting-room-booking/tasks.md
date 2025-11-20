@@ -61,12 +61,12 @@
 
 ### 領域模型層（Domain）
 
-- [ ] T016 [P] 建立 User 領域模型（imrbs-core/src/main/java/tw/huangcti/imrbs/domain/model/User.java）
-- [ ] T017 [P] 建立 Room 領域模型（imrbs-core/src/main/java/tw/huangcti/imrbs/domain/model/Room.java）
-- [ ] T018 [P] 建立 Reservation 領域模型（imrbs-core/src/main/java/tw/huangcti/imrbs/domain/model/Reservation.java）
-- [ ] T019 [P] 建立 MaintenanceSchedule 領域模型（imrbs-core/src/main/java/tw/huangcti/imrbs/domain/model/MaintenanceSchedule.java）
-- [ ] T020 [P] 建立 Notification 領域模型（imrbs-core/src/main/java/tw/huangcti/imrbs/domain/model/Notification.java）
-- [ ] T021 [P] 建立 GuestReservationRequest 領域模型（imrbs-core/src/main/java/tw/huangcti/imrbs/domain/model/GuestReservationRequest.java）
+- [X] T016 [P] 建立 User 領域模型（imrbs-core/src/main/java/tw/huangcti/imrbs/domain/model/User.java）
+- [X] T017 [P] 建立 Room 領域模型（imrbs-core/src/main/java/tw/huangcti/imrbs/domain/model/Room.java）
+- [X] T018 [P] 建立 Reservation 領域模型（imrbs-core/src/main/java/tw/huangcti/imrbs/domain/model/Reservation.java）
+- [X] T019 [P] 建立 MaintenanceSchedule 領域模型（imrbs-core/src/main/java/tw/huangcti/imrbs/domain/model/MaintenanceSchedule.java）
+- [X] T020 [P] 建立 Notification 領域模型（imrbs-core/src/main/java/tw/huangcti/imrbs/domain/model/Notification.java）
+- [X] T021 [P] 建立 GuestReservationRequest 領域模型（imrbs-core/src/main/java/tw/huangcti/imrbs/domain/model/GuestReservationRequest.java）
 
 ### Repository 介面（Domain）
 
