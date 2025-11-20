@@ -133,8 +133,8 @@
 
 ### 後端實作（US1）
 
-- [ ] T055 [P] [US1] 實作會議室可用性查詢服務（imrbs-core/src/main/java/tw/huangcti/imrbs/domain/service/RoomAvailabilityService.java）
-- [ ] T056 [P] [US1] 實作預約衝突檢測服務（imrbs-core/src/main/java/tw/huangcti/imrbs/domain/service/ConflictDetectionService.java）
+- [X] T055 [P] [US1] 實作會議室可用性查詢服務（imrbs-core/src/main/java/tw/huangcti/imrbs/domain/service/RoomAvailabilityService.java）
+- [X] T056 [P] [US1] 實作預約衝突檢測服務（imrbs-core/src/main/java/tw/huangcti/imrbs/domain/service/ConflictDetectionService.java）
 - [ ] T057 [US1] 實作創建預約 Use Case（imrbs-core/src/main/java/tw/huangcti/imrbs/application/usecase/CreateReservationUseCase.java，依賴 T055, T056）
 - [ ] T058 [P] [US1] 實作 RoomController GET /rooms 端點（imrbs-web/src/main/java/tw/huangcti/imrbs/web/controller/RoomController.java）
 - [ ] T059 [P] [US1] 實作 RoomController GET /rooms/{id} 端點（imrbs-web/src/main/java/tw/huangcti/imrbs/web/controller/RoomController.java）
