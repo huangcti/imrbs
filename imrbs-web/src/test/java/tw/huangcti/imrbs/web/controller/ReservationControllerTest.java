@@ -14,6 +14,7 @@ import tw.huangcti.imrbs.application.usecase.CreateReservationUseCase;
 import tw.huangcti.imrbs.domain.exception.ConflictException;
 import tw.huangcti.imrbs.domain.exception.ValidationException;
 import tw.huangcti.imrbs.domain.model.Reservation;
+import tw.huangcti.imrbs.web.dto.CreateReservationRequest;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -50,15 +51,15 @@ class ReservationControllerTest {
     
     @BeforeEach
     void setUp() {
-        testRequest = CreateReservationRequest.builder()
-                .roomId(1L)
-                .userId(1001L)
-                .meetingTitle("團隊週會")
-                .startTime(LocalDateTime.of(2025, 11, 21, 9, 0))
-                .endTime(LocalDateTime.of(2025, 11, 21, 10, 0))
-                .participants("user1@example.com,user2@example.com")
-                .recurringRule(null)
-                .build();
+        testRequest = new CreateReservationRequest(
+                Long.valueOf(1), // roomId
+                Long.valueOf(1001), // userId
+                "團隊週會", // meetingTitle
+                LocalDateTime.of(2025, 11, 21, 9, 0), // startTime
+                LocalDateTime.of(2025, 11, 21, 10, 0), // endTime
+                "user1@example.com,user2@example.com", // participants
+                null // recurringRule
+        );
     }
     
     @Test
@@ -131,15 +132,15 @@ class ReservationControllerTest {
     @DisplayName("T051-4: 缺少必填欄位應該回傳 400")
     void testCreateReservation_MissingRequiredFields() throws Exception {
         // Given
-        CreateReservationRequest invalidRequest = CreateReservationRequest.builder()
-                .roomId(null) // 必填欄位為 null
-                .userId(1001L)
-                .meetingTitle("測試會議")
-                .startTime(LocalDateTime.now())
-                .endTime(LocalDateTime.now().plusHours(1))
-                .participants("")
-                .recurringRule(null)
-                .build();
+        CreateReservationRequest invalidRequest = new CreateReservationRequest(
+                null, // roomId 必填欄位為 null
+                Long.valueOf(1001), // userId
+                "測試會議", // meetingTitle
+                LocalDateTime.now(), // startTime
+                LocalDateTime.now().plusHours(1), // endTime
+                "", // participants
+                null // recurringRule
+        );
         
         // When & Then
         mockMvc.perform(post("/api/v1/reservations")
@@ -154,15 +155,15 @@ class ReservationControllerTest {
     @DisplayName("T051-5: 結束時間早於開始時間應該回傳 400")
     void testCreateReservation_InvalidTimeRange() throws Exception {
         // Given
-        CreateReservationRequest invalidRequest = CreateReservationRequest.builder()
-                .roomId(1L)
-                .userId(1001L)
-                .meetingTitle("測試會議")
-                .startTime(LocalDateTime.of(2025, 11, 21, 10, 0))
-                .endTime(LocalDateTime.of(2025, 11, 21, 9, 0)) // 早於 startTime
-                .participants("")
-                .recurringRule(null)
-                .build();
+        CreateReservationRequest invalidRequest = new CreateReservationRequest(
+                Long.valueOf(1), // roomId
+                Long.valueOf(1001), // userId
+                "測試會議", // meetingTitle
+                LocalDateTime.of(2025, 11, 21, 10, 0), // startTime
+                LocalDateTime.of(2025, 11, 21, 9, 0), // endTime (早於 startTime)
+                "", // participants
+                null // recurringRule
+        );
         
         when(createReservationUseCase.execute(any()))
                 .thenThrow(new ValidationException("結束時間必須晚於開始時間"));
@@ -186,22 +187,4 @@ class ReservationControllerTest {
                 .andExpect(status().isUnauthorized());
     }
     
-    /**
-     * 創建預約請求 DTO
-     */
-    record CreateReservationRequest(
-            Long roomId,
-            String userId,
-            LocalDateTime startTime,
-            LocalDateTime endTime,
-            String meetingTitle,
-            List<String> participants,
-            RecurringRuleDto recurringRule
-    ) {}
-    
-    record RecurringRuleDto(
-            String frequency,
-            Integer interval,
-            LocalDateTime until
-    ) {}
 }
