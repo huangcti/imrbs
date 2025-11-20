@@ -1,77 +1,50 @@
-<!--
-Sync Impact Report
-
-Version change: 未設定 -> 1.0.0 (舊版本未知)
-Modified principles:
-- [PRINCIPLE_1_NAME] -> 簡潔程式碼
-- [PRINCIPLE_2_NAME] -> 全面測試
-- [PRINCIPLE_3_NAME] -> 美觀且豐富的使用者介面
-- [PRINCIPLE_4_NAME] -> 持久化 JSON 儲存
-- [PRINCIPLE_5_NAME] -> 規格須為中文
-Added sections:
-- 明確的修訂與版本政策於 Governance
-Removed sections:
-- (無) - 模板中的佔位符已被替換
-Templates requiring updates:
-- .specify/templates/plan-template.md ✅ updated
-- .specify/templates/spec-template.md ✅ updated
-- .specify/templates/tasks-template.md ✅ updated
-- .specify/templates/commands/*.md ⚠ pending (無 commands 目錄)
-Follow-up TODOs:
-- RATIFICATION_DATE 未知，已標記 TODO(RATIFICATION_DATE)
--->
-
-# 會議室預約系統 Constitution
+# [PROJECT_NAME] Constitution
+<!-- Example: Spec Constitution, TaskFlow Constitution, etc. -->
 
 ## Core Principles
 
-### 簡潔程式碼
-程式碼必須保持簡潔、可讀且易於維護。所有新功能實作前，應先評估是否能以最少的抽象與依賴完成需求。對於複雜度增加的決定，實作者必須在變更文件中說明必要性與替代方案。
+### [PRINCIPLE_1_NAME]
+<!-- Example: I. Library-First -->
+[PRINCIPLE_1_DESCRIPTION]
+<!-- Example: Every feature starts as a standalone library; Libraries must be self-contained, independently testable, documented; Clear purpose required - no organizational-only libraries -->
 
-理由：簡潔能降低維護成本與錯誤率，並促進快速迭代與審查。
+### [PRINCIPLE_2_NAME]
+<!-- Example: II. CLI Interface -->
+[PRINCIPLE_2_DESCRIPTION]
+<!-- Example: Every library exposes functionality via CLI; Text in/out protocol: stdin/args → stdout, errors → stderr; Support JSON + human-readable formats -->
 
-### 全面測試
-測試為強制性要求。所有功能在合併前必須具備單元測試（unit tests），且重要使用情境須包含整合測試或端到端測試。測試應遵循先寫測試（Test-First）或至少在提交修正前由作者撰寫能覆蓋核心流程的測試用例。
+### [PRINCIPLE_3_NAME]
+<!-- Example: III. Test-First (NON-NEGOTIABLE) -->
+[PRINCIPLE_3_DESCRIPTION]
+<!-- Example: TDD mandatory: Tests written → User approved → Tests fail → Then implement; Red-Green-Refactor cycle strictly enforced -->
 
-理由：測試保證功能正確、降低回歸風險，並使重構能在可控範圍內進行。
+### [PRINCIPLE_4_NAME]
+<!-- Example: IV. Integration Testing -->
+[PRINCIPLE_4_DESCRIPTION]
+<!-- Example: Focus areas requiring integration tests: New library contract tests, Contract changes, Inter-service communication, Shared schemas -->
 
-### 美觀且豐富的使用者介面
-使用者介面應兼顧美觀與可用性，提供清晰的互動流程與視覺回饋。對於需要展示的交互（如預約、衝突提示、時間選取），介面設計必須包含視覺稿或互動原型，並在規格中說明無障礙考量（基礎對比、鍵盤操作、語意標記）。
+### [PRINCIPLE_5_NAME]
+<!-- Example: V. Observability, VI. Versioning & Breaking Changes, VII. Simplicity -->
+[PRINCIPLE_5_DESCRIPTION]
+<!-- Example: Text I/O ensures debuggability; Structured logging required; Or: MAJOR.MINOR.BUILD format; Or: Start simple, YAGNI principles -->
 
-理由：良好的 UI 可提升使用者效率與滿意度，減少操作錯誤與支援成本。
+## [SECTION_2_NAME]
+<!-- Example: Additional Constraints, Security Requirements, Performance Standards, etc. -->
 
-### 持久化 JSON 儲存
-專案的持久化層以 JSON 為首選存儲格式（local file 或相容的檔案系統/Blob），除非明確在規格中說明需使用其他儲存方案並提供理由。儲存時需考量資料一致性與簡單的遷移機制（版本字段、備份/還原指引）。
+[SECTION_2_CONTENT]
+<!-- Example: Technology stack requirements, compliance standards, deployment policies, etc. -->
 
-理由：JSON 儲存簡潔、人可讀，易於快速部署與備份，對會議室預約此類結構化但規模有限的資料適用。
+## [SECTION_3_NAME]
+<!-- Example: Development Workflow, Review Process, Quality Gates, etc. -->
 
-### 規格須為中文
-所有專案規格、使用者故事、檢驗標準與相關文件必須以中文撰寫。文件中若引用外文原文，應提供中文摘要或完整翻譯。
-
-理由：保持團隊共識與溝通效率，降低語言理解差異導致的實作錯誤。
-
-## 額外約束
-1. 安全與隱私：不得在未經使用者同意下儲存敏感個資；若需記錄，必須在規格中標明最小化原則與保護措施。
-2. 可觀察性：關鍵流程需有可追溯的日誌（結構化），錯誤與重要事件必須可被測試驗證。
-
-## 開發流程與品質門檻
-1. 所有 PR 必須包含對應測試或說明為何測試暫不可用（例如 UI prototype 之可驗證替代步驟）。
-2. 所有規格/需求文件需以中文撰寫並在 PR 中作為變更附件或連結。
-3. 若功能涉及儲存，spec 必須說明 JSON 結構、版本欄位與遷移策略。
-4. UI 相關變更需附上視覺稿或 prototype 的連結（設計工具導出的靜態圖或可互動 prototype 均可）。
+[SECTION_3_CONTENT]
+<!-- Example: Code review requirements, testing gates, deployment approval process, etc. -->
 
 ## Governance
-修訂與執行規則：
+<!-- Example: Constitution supersedes all other practices; Amendments require documentation, approval, migration plan -->
 
-- 修訂程序：任何對本憲章的變更必須提出 Pull Request，說明變更內容、理由與影響範圍；至少兩位不同領域的項目成員（例如：後端、前端或測試）同意後方可合併。若變更屬於重大治理改動（見下），需建立遷移計畫並公告至少 7 天。
+[GOVERNANCE_RULES]
+<!-- Example: All PRs/reviews must verify compliance; Complexity must be justified; Use [GUIDANCE_FILE] for runtime development guidance -->
 
-- 版本政策（採用語義化版本）：
-  - MAJOR（重大）：當治理原則或既有原則被移除或以不相容方式重定義時，提升 MAJOR（例如 1.x.x -> 2.0.0）。這類變更應伴隨遷移計畫。
-  - MINOR（次要）：新增原則或在不破壞相容性的前提下實質擴充指導時，提升 MINOR（例如 1.0.0 -> 1.1.0）。
-  - PATCH（修訂）：語句修正、範例補充或文字清晰化等非功能性修改，提升 PATCH（例如 1.0.0 -> 1.0.1）。
-
-- 合規檢查：所有主要分支合併流程必須包含「Constitution Check」—確認 PR 與本憲章不衝突（規格語言、測試覆蓋、儲存格式等）。若發現衝突，審查者應將 PR 標記為需修正，並在說明中引用憲章相關條款。
-
-**Version**: 1.0.0 | **Ratified**: TODO(RATIFICATION_DATE) | **Last Amended**: 2025-11-03
-
-***
+**Version**: [CONSTITUTION_VERSION] | **Ratified**: [RATIFICATION_DATE] | **Last Amended**: [LAST_AMENDED_DATE]
+<!-- Example: Version: 2.1.1 | Ratified: 2025-06-13 | Last Amended: 2025-07-16 -->

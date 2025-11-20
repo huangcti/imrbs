@@ -31,15 +31,7 @@
 
 *GATE: Must pass before Phase 0 research. Re-check after Phase 1 design.*
 
-以下為依據憲章必須檢核的項目（本專案通用）：
-
-- 規格語言：所有 spec 與需求文件 MUST 使用中文；Plan/Spec 中不得僅以英文描述核心驗收條件。
-- 測試覆蓋：涉及業務邏輯的變更 MUST 附帶單元測試；重要使用情境 MUST 附整合或 E2E 測試。
-- 儲存方案：若功能涉及資料持久化，Plan MUST 說明採用 JSON 儲存或明確理由為何改採其他方案，並描述遷移策略。
-- UI 要求：若屬 UI 功能，Plan MUST 附上視覺稿或 prototype 連結，並說明無障礙（accessibility）考量。
-- 簡潔性檢核：對新增架構或重大複雜度增加的決策，Plan MUST 包含必要性說明與簡化替代方案比較。
-
-以上任一檢核未通過，該 Plan 不可進入 Phase 0 研究或應先補齊說明。
+[Gates determined based on constitution file]
 
 ## Project Structure
 
