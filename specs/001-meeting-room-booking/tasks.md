@@ -88,10 +88,10 @@
 
 ### 安全認證基礎設施
 
-- [ ] T034 配置 Spring Security OAuth 2.0/OIDC（imrbs-web/src/main/java/tw/huangcti/imrbs/web/security/SecurityConfig.java）
-- [ ] T035 實作 JWT 認證過濾器（imrbs-web/src/main/java/tw/huangcti/imrbs/web/security/JwtAuthenticationFilter.java）
-- [ ] T036 實作 SSO 整合服務（imrbs-web/src/main/java/tw/huangcti/imrbs/web/security/SsoIntegration.java）
-- [ ] T037 配置 RBAC 權限註解支援（imrbs-web/src/main/java/tw/huangcti/imrbs/web/security/RoleBasedAccessControl.java）
+- [X] T034 配置 Spring Security OAuth 2.0/OIDC（imrbs-web/src/main/java/tw/huangcti/imrbs/web/security/SecurityConfig.java）
+- [X] T035 實作 JWT 認證過濾器（imrbs-web/src/main/java/tw/huangcti/imrbs/web/security/JwtAuthenticationFilter.java）
+- [X] T036 實作 SSO 整合服務（imrbs-web/src/main/java/tw/huangcti/imrbs/web/security/SsoIntegrationService.java）
+- [X] T037 配置 RBAC 權限註解支援（imrbs-web/src/main/java/tw/huangcti/imrbs/web/security/RoleBasedAccessControl.java）
 
 ### 共用基礎設施
 
