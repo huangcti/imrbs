@@ -25,6 +25,14 @@ public interface UserRepository {
     Optional<User> findById(Long id);
     
     /**
+     * 根據使用者名稱查詢使用者 (SSO 登入用)
+     * 
+     * @param username 使用者名稱
+     * @return Optional<User>
+     */
+    Optional<User> findByUsername(String username);
+    
+    /**
      * 根據員工編號查詢使用者 (SSO 登入用)
      * 
      * @param employeeId 員工編號

@@ -98,4 +98,94 @@ public class RoomMapper {
                 .map(this::toTimeSlotDTO)
                 .collect(Collectors.toList());
     }
+    
+    /**
+     * RoomDTO → Domain Room
+     * 用於創建/更新會議室
+     */
+    public Room toEntity(RoomDTO dto) {
+        if (dto == null) {
+            return null;
+        }
+        
+        return Room.builder()
+                .id(dto.id())
+                .name(dto.name())
+                .capacity(dto.capacity())
+                .locationDescription(dto.location())
+                .building(dto.building())
+                .floor(dto.floor())
+                .status(dto.status() != null 
+                        ? Room.RoomStatus.valueOf(dto.status()) 
+                        : Room.RoomStatus.AVAILABLE)
+                .equipment(toEquipmentList(dto.equipment()))
+                .features(dto.features() != null ? dto.features() : List.of())
+                .photos(dto.photos() != null ? dto.photos() : List.of())
+                .bookingRule(toBookingRule(dto.bookingRule()))
+                .build();
+    }
+    
+    /**
+     * List<String> → List<Equipment>
+     * 解析設備字串清單 (格式: "設備名稱(數量)")
+     */
+    private List<Room.Equipment> toEquipmentList(List<String> equipmentStrings) {
+        if (equipmentStrings == null || equipmentStrings.isEmpty()) {
+            return List.of();
+        }
+        
+        return equipmentStrings.stream()
+                .map(this::parseEquipment)
+                .collect(Collectors.toList());
+    }
+    
+    /**
+     * 解析單一設備字串
+     * 格式: "設備名稱(數量)" 或 "設備名稱"
+     */
+    private Room.Equipment parseEquipment(String equipmentStr) {
+        if (equipmentStr == null || equipmentStr.isBlank()) {
+            return Room.Equipment.builder().name("").quantity(1).build();
+        }
+        
+        // 嘗試解析格式: "設備名稱(數量)"
+        int parenStart = equipmentStr.lastIndexOf('(');
+        int parenEnd = equipmentStr.lastIndexOf(')');
+        
+        if (parenStart > 0 && parenEnd > parenStart) {
+            String name = equipmentStr.substring(0, parenStart).trim();
+            String quantityStr = equipmentStr.substring(parenStart + 1, parenEnd).trim();
+            try {
+                int quantity = Integer.parseInt(quantityStr);
+                return Room.Equipment.builder()
+                        .name(name)
+                        .quantity(quantity)
+                        .build();
+            } catch (NumberFormatException e) {
+                // 如果數量解析失敗，把整個字串當作名稱
+            }
+        }
+        
+        // 沒有數量標記，預設數量為 1
+        return Room.Equipment.builder()
+                .name(equipmentStr.trim())
+                .quantity(1)
+                .build();
+    }
+    
+    /**
+     * BookingRuleDTO → Domain BookingRule
+     */
+    private Room.BookingRule toBookingRule(RoomDTO.BookingRuleDTO dto) {
+        if (dto == null) {
+            return null;
+        }
+        
+        return Room.BookingRule.builder()
+                .maxDurationHours(dto.maxHoursPerReservation())
+                .minBookingMinutes(dto.minAdvanceBookingHours() != null 
+                        ? dto.minAdvanceBookingHours() * 60 : null)  // 小時轉分鐘
+                .advanceBookingDays(dto.maxAdvanceBookingDays())
+                .build();
+    }
 }

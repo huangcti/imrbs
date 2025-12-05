@@ -1,0 +1,272 @@
+{
+  "common": {
+    "hours": "hours",
+    "count": "times",
+    "selectAll": "Select All",
+    "clear": "Clear",
+    "loading": "Loading...",
+    "loadingMore": "Loading more...",
+    "allLoaded": "All loaded",
+    "noData": "No data",
+    "save": "Save",
+    "cancel": "Cancel",
+    "confirm": "Confirm",
+    "delete": "Delete",
+    "edit": "Edit",
+    "add": "Add",
+    "search": "Search",
+    "export": "Export",
+    "import": "Import",
+    "back": "Back",
+    "next": "Next",
+    "previous": "Previous",
+    "submit": "Submit",
+    "reset": "Reset",
+    "close": "Close",
+    "refresh": "Refresh",
+    "submitting": "Submitting...",
+    "processing": "Processing...",
+    "required": "Required",
+    "approve": "Approve",
+    "reject": "Reject",
+    "reason": "Reason",
+    "status": "Status",
+    "person": "person"
+  },
+  "app": {
+    "title": "Meeting Room Booking",
+    "description": "Smart Meeting Room Booking Platform"
+  },
+  "language": {
+    "title": "Language",
+    "zhTW": "繁體中文",
+    "en": "English",
+    "switchSuccess": "Language changed to English",
+    "switchFailed": "Failed to change language"
+  },
+  "nav": {
+    "home": "Home",
+    "rooms": "Rooms",
+    "myReservations": "My Reservations",
+    "admin": "Admin",
+    "reports": "Reports",
+    "settings": "Settings",
+    "logout": "Logout"
+  },
+  "report": {
+    "title": "Meeting Room Usage Report",
+    "subtitle": "View meeting room usage statistics to help resource allocation decisions",
+    "reportPeriod": "Report Period",
+    "peakHours": "Peak Hours",
+    "offPeakHours": "Off-Peak Hours",
+    "noPeakHours": "No peak hours",
+    "noOffPeakHours": "No off-peak hours",
+    "exporting": "Exporting...",
+    "filter": {
+      "title": "Filter",
+      "periodType": "Report Type",
+      "startDate": "Start Date",
+      "endDate": "End Date",
+      "rooms": "Rooms",
+      "search": "Search",
+      "exportExcel": "Export Excel",
+      "invalidDateRange": "End date cannot be earlier than start date"
+    },
+    "periodType": {
+      "daily": "Daily",
+      "weekly": "Weekly",
+      "monthly": "Monthly",
+      "custom": "Custom Range"
+    },
+    "chart": {
+      "roomUsage": "Room Usage",
+      "hourlyTrend": "Hourly Trend",
+      "dayDistribution": "Day Distribution",
+      "overallUsageRate": "Overall Usage Rate",
+      "roomUsageTitle": "Usage Rate by Room",
+      "hourlyTrendTitle": "Hourly Booking Trend",
+      "dayDistributionTitle": "Weekly Booking Distribution",
+      "usageRate": "Usage Rate",
+      "usageRatePercent": "Usage Rate (%)",
+      "roomName": "Room",
+      "bookingCount": "Bookings",
+      "reservationCount": "Reservations",
+      "timeSlot": "Time Slot",
+      "peakHour": "Peak Hour",
+      "noData": "No data available"
+    },
+    "table": {
+      "title": "Room Usage Statistics",
+      "roomName": "Room Name",
+      "location": "Location",
+      "usageRate": "Usage Rate",
+      "usageHours": "Usage Hours",
+      "reservations": "Reservations",
+      "totalRooms": "Total Rooms",
+      "totalHours": "Total Usage Hours",
+      "totalReservations": "Total Reservations",
+      "noData": "No statistics available"
+    },
+    "error": {
+      "loadFailed": "Failed to load report",
+      "exportFailed": "Export failed",
+      "selectDateRange": "Please select a date range"
+    },
+    "success": {
+      "exported": "Report exported successfully"
+    }
+  },
+  "room": {
+    "title": "Room List",
+    "search": "Search rooms",
+    "capacity": "Capacity",
+    "location": "Location",
+    "equipment": "Equipment",
+    "available": "Available",
+    "unavailable": "Unavailable",
+    "details": "View Details",
+    "book": "Book Now",
+    "people": "people",
+    "noRoomsFound": "No rooms found",
+    "tryDifferentCriteria": "Try different search criteria",
+    "status": {
+      "available": "Available",
+      "maintenance": "Under Maintenance",
+      "unavailable": "Unavailable"
+    }
+  },
+  "reservation": {
+    "title": "Reservation Management",
+    "myReservations": "My Reservations",
+    "newReservation": "New Reservation",
+    "editReservation": "Edit Reservation",
+    "meetingTitle": "Meeting Title",
+    "date": "Date",
+    "startTime": "Start Time",
+    "endTime": "End Time",
+    "attendees": "Attendees",
+    "notes": "Notes",
+    "status": {
+      "confirmed": "Confirmed",
+      "pending": "Pending",
+      "cancelled": "Cancelled"
+    }
+  },
+  "auth": {
+    "login": "Login",
+    "logout": "Logout",
+    "ssoLogin": "Login with Company Account",
+    "welcome": "Welcome back"
+  },
+  "admin": {
+    "title": "System Administration",
+    "roomManagement": "Room Management",
+    "reports": "Usage Reports",
+    "guestApproval": {
+      "title": "Guest Request Approval",
+      "subtitle": "Manage external guest meeting room requests",
+      "tabs": {
+        "pending": "Pending",
+        "all": "All Requests"
+      },
+      "stats": {
+        "pending": "Pending",
+        "approved": "Approved",
+        "rejected": "Rejected"
+      }
+    },
+    "guestRequests": {
+      "filter": {
+        "status": "Status",
+        "all": "All"
+      },
+      "empty": "No guest requests at this time",
+      "guestName": "Guest Name",
+      "guestEmail": "Guest Email",
+      "company": "Company",
+      "requestTime": "Request Time",
+      "submittedAt": "Submitted At",
+      "rejectionReason": "Rejection Reason",
+      "approve": "Approve",
+      "reject": "Reject",
+      "approveSuccess": "Request approved",
+      "approveError": "Failed to approve",
+      "rejectSuccess": "Request rejected",
+      "rejectError": "Failed to reject",
+      "loadError": "Failed to load requests",
+      "rejectDialog": {
+        "title": "Reject Guest Request",
+        "reasonLabel": "Reason",
+        "reasonPlaceholder": "Enter rejection reason...",
+        "reasonRequired": "Please provide a reason"
+      }
+    }
+  },
+  "guest": {
+    "page": {
+      "title": "Guest Room Booking",
+      "subtitle": "Welcome external guests to book our meeting rooms",
+      "submitSuccess": "Your request has been submitted successfully!",
+      "requestId": "Request ID",
+      "statusPending": "Your request is under review. We will notify you by email once processed.",
+      "submitAnother": "Submit another request",
+      "checkStatus": "Check Request Status",
+      "requestIdLabel": "Request ID",
+      "requestIdPlaceholder": "Enter request ID",
+      "emailLabel": "Email",
+      "emailPlaceholder": "Enter the email used in request",
+      "checkButton": "Check",
+      "requestDetails": "Request Details",
+      "status": "Status",
+      "meetingTitle": "Meeting Title",
+      "requestTime": "Request Time",
+      "rejectionReason": "Rejection Reason",
+      "requestNotFound": "Request not found",
+      "emailNotMatch": "Email does not match",
+      "checkError": "Check failed",
+      "footer": "© 2024 Smart Meeting Room Booking System. All rights reserved."
+    },
+    "requestForm": {
+      "title": "Guest Booking Request Form",
+      "guestInfo": "Guest Information",
+      "meetingInfo": "Meeting Information",
+      "guestName": "Name",
+      "guestNamePlaceholder": "Enter your name",
+      "guestEmail": "Email",
+      "guestEmailPlaceholder": "Enter your email",
+      "guestPhone": "Phone",
+      "guestPhonePlaceholder": "Enter phone number",
+      "guestCompany": "Company",
+      "guestCompanyPlaceholder": "Enter company name",
+      "room": "Room",
+      "selectRoom": "Select a room",
+      "capacity": "Capacity",
+      "meetingTitle": "Meeting Title",
+      "meetingTitlePlaceholder": "Enter meeting title",
+      "startTime": "Start Time",
+      "endTime": "End Time",
+      "attendeeCount": "Expected Attendees",
+      "purpose": "Purpose",
+      "purposePlaceholder": "Briefly describe the meeting purpose...",
+      "submit": "Submit Request",
+      "submitSuccess": "Request submitted successfully!",
+      "submitError": "Submission failed, please try again",
+      "errors": {
+        "guestNameRequired": "Name is required",
+        "guestEmailRequired": "Email is required",
+        "guestEmailInvalid": "Invalid email format",
+        "roomRequired": "Please select a room",
+        "meetingTitleRequired": "Meeting title is required",
+        "startTimeRequired": "Start time is required",
+        "endTimeRequired": "End time is required",
+        "endTimeInvalid": "End time must be after start time",
+        "timeConflict": "Time slot is already booked, please select another"
+      }
+    },
+    "status": {
+      "pending": "Pending",
+      "approved": "Approved",
+      "rejected": "Rejected"
+    }
+  }
+}

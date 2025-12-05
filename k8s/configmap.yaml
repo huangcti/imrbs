@@ -1,0 +1,70 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: imrbs-config
+  namespace: imrbs
+  labels:
+    app.kubernetes.io/name: imrbs
+    app.kubernetes.io/component: config
+data:
+  # Spring 配置
+  SPRING_PROFILES_ACTIVE: "prod"
+  SERVER_PORT: "8080"
+  
+  # 資料庫配置 (敏感資訊使用 Secret)
+  SPRING_DATASOURCE_DRIVER_CLASS_NAME: "org.postgresql.Driver"
+  SPRING_DATASOURCE_HIKARI_MAXIMUM_POOL_SIZE: "10"
+  SPRING_DATASOURCE_HIKARI_MINIMUM_IDLE: "5"
+  SPRING_JPA_HIBERNATE_DDL_AUTO: "validate"
+  SPRING_JPA_SHOW_SQL: "false"
+  
+  # Redis 配置
+  SPRING_DATA_REDIS_TIMEOUT: "2000"
+  
+  # Flyway 配置
+  SPRING_FLYWAY_ENABLED: "true"
+  SPRING_FLYWAY_BASELINE_ON_MIGRATE: "true"
+  
+  # Actuator 配置
+  MANAGEMENT_ENDPOINTS_WEB_EXPOSURE_INCLUDE: "health,info,metrics,prometheus"
+  MANAGEMENT_ENDPOINT_HEALTH_SHOW_DETAILS: "when-authorized"
+  MANAGEMENT_METRICS_EXPORT_PROMETHEUS_ENABLED: "true"
+  
+  # 日誌配置
+  LOGGING_LEVEL_ROOT: "INFO"
+  LOGGING_LEVEL_TW_HUANGCTI_IMRBS: "INFO"
+  LOG_PATH: "/var/log/imrbs"
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: imrbs-secrets
+  namespace: imrbs
+  labels:
+    app.kubernetes.io/name: imrbs
+    app.kubernetes.io/component: secrets
+type: Opaque
+stringData:
+  # 資料庫連線 (請替換為實際值)
+  SPRING_DATASOURCE_URL: "jdbc:postgresql://postgres-service:5432/imrbs"
+  SPRING_DATASOURCE_USERNAME: "imrbs_user"
+  SPRING_DATASOURCE_PASSWORD: "CHANGE_ME_IN_PRODUCTION"
+  
+  # Redis 連線
+  SPRING_DATA_REDIS_HOST: "redis-service"
+  SPRING_DATA_REDIS_PORT: "6379"
+  SPRING_DATA_REDIS_PASSWORD: "CHANGE_ME_IN_PRODUCTION"
+  
+  # RabbitMQ 連線
+  SPRING_RABBITMQ_HOST: "rabbitmq-service"
+  SPRING_RABBITMQ_PORT: "5672"
+  SPRING_RABBITMQ_USERNAME: "imrbs_user"
+  SPRING_RABBITMQ_PASSWORD: "CHANGE_ME_IN_PRODUCTION"
+  
+  # JWT 配置
+  JWT_SECRET: "CHANGE_ME_TO_A_SECURE_256_BIT_SECRET_KEY_IN_PRODUCTION"
+  
+  # OAuth 2.0 配置
+  OAUTH2_CLIENT_ID: "imrbs-client"
+  OAUTH2_CLIENT_SECRET: "CHANGE_ME_IN_PRODUCTION"
+  OAUTH2_ISSUER_URI: "https://keycloak.example.com/realms/imrbs"

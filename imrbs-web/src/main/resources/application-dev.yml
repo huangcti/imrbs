@@ -9,20 +9,29 @@ spring:
     username: imrbs_user
     password: imrbs_pass
 
-  # Redis
+  # Cache (開發環境使用 simple cache 而非 Redis)
+  cache:
+    type: simple
+
+  # Redis (開發環境暫時禁用)
   data:
     redis:
-      host: localhost
-      port: 6379
-      password: imrbs_redis_pass
+      repositories:
+        enabled: false
 
-  # RabbitMQ
-  rabbitmq:
-    host: localhost
-    port: 5672
-    username: imrbs_user
-    password: imrbs_pass
-    virtual-host: /imrbs
+  # RabbitMQ (開發環境暫時禁用)
+  # rabbitmq:
+  #   host: localhost
+  #   port: 5672
+  #   username: imrbs_user
+  #   password: imrbs_pass
+  #   virtual-host: /imrbs
+  
+  autoconfigure:
+    exclude:
+      - org.springframework.boot.autoconfigure.data.redis.RedisAutoConfiguration
+      - org.springframework.boot.autoconfigure.amqp.RabbitAutoConfiguration
+      - org.springframework.boot.autoconfigure.security.oauth2.client.servlet.OAuth2ClientAutoConfiguration
 
   # JPA
   jpa:

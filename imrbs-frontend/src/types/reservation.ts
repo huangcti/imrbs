@@ -31,3 +31,14 @@ export interface CreateReservationResponse {
   id: number
   message: string
 }
+
+export interface UpdateReservationRequest {
+  meetingTitle: string
+  startTime: string
+  endTime: string
+  participants: string
+}
+
+export interface CancelReservationRequest {
+  cancellationReason: string
+}

@@ -14,19 +14,32 @@ import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 import tw.huangcti.imrbs.application.usecase.CreateReservationUseCase;
+import tw.huangcti.imrbs.application.usecase.UpdateReservationUseCase;
+import tw.huangcti.imrbs.application.usecase.CancelReservationUseCase;
+import tw.huangcti.imrbs.application.usecase.GetReservationUseCase;
 import tw.huangcti.imrbs.domain.exception.ConflictException;
 import tw.huangcti.imrbs.domain.exception.ValidationException;
+import tw.huangcti.imrbs.domain.exception.NotFoundException;
+import tw.huangcti.imrbs.domain.exception.ForbiddenException;
 import tw.huangcti.imrbs.domain.model.Reservation;
 import tw.huangcti.imrbs.web.dto.CreateReservationRequest;
+import tw.huangcti.imrbs.web.dto.UpdateReservationRequest;
+import tw.huangcti.imrbs.web.dto.CancelReservationRequest;
 import tw.huangcti.imrbs.web.mapper.ReservationMapper;
 
 import java.time.LocalDateTime;
 import java.util.List;
 
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.doNothing;
+import static org.mockito.Mockito.doThrow;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 /**
@@ -73,7 +86,19 @@ class ReservationControllerTest {
     private CreateReservationUseCase createReservationUseCase;
 
     @MockBean
-    private ReservationMapper reservationMapper;    private CreateReservationRequest testRequest;
+    private UpdateReservationUseCase updateReservationUseCase;
+
+    @MockBean
+    private CancelReservationUseCase cancelReservationUseCase;
+
+    @MockBean
+    private GetReservationUseCase getReservationUseCase;
+
+    @MockBean
+    private ReservationMapper reservationMapper;
+
+    private CreateReservationRequest testRequest;
+    private UpdateReservationRequest updateRequest;
     
     @BeforeEach
     void setUp() {
@@ -235,6 +260,227 @@ class ReservationControllerTest {
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(testRequest)))
                 .andExpect(status().isInternalServerError());
+    }
+    
+    // ===== T076: 修改預約 API 合約測試 (US2) =====
+    
+    @Test
+    @WithMockUser(username = "emp001", roles = "EMPLOYEE")
+    @DisplayName("T076-1: 應該成功修改預約")
+    void testUpdateReservation_Success() throws Exception {
+        // Given
+        Long reservationId = 1L;
+        UpdateReservationRequest updateReq = new UpdateReservationRequest(
+                "更新的會議標題",
+                LocalDateTime.of(2025, 11, 21, 14, 0),
+                LocalDateTime.of(2025, 11, 21, 15, 30),
+                "user1@example.com,user2@example.com,user3@example.com"
+        );
+        
+        Reservation updatedReservation = Reservation.builder()
+                .id(reservationId)
+                .roomId(1L)
+                .userId(1001L)
+                .startTime(updateReq.startTime())
+                .endTime(updateReq.endTime())
+                .meetingTitle(updateReq.meetingTitle())
+                .status(Reservation.ReservationStatus.CONFIRMED)
+                .build();
+        
+        tw.huangcti.imrbs.web.dto.ReservationDTO reservationDTO = 
+                new tw.huangcti.imrbs.web.dto.ReservationDTO(
+                        reservationId,
+                        1L,
+                        "Conference Room A",
+                        1001L,
+                        "emp001",
+                        updateReq.meetingTitle(),
+                        updateReq.startTime(),
+                        updateReq.endTime(),
+                        updateReq.participants(),
+                        "CONFIRMED",
+                        false,
+                        null,
+                        LocalDateTime.now()
+                );
+        
+        when(updateReservationUseCase.execute(eq(reservationId), any()))
+                .thenReturn(updatedReservation);
+        when(reservationMapper.toDTO(any(Reservation.class)))
+                .thenReturn(reservationDTO);
+        
+        // When & Then
+        mockMvc.perform(put("/api/v1/reservations/{id}", reservationId)
+                        .with(csrf())
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(updateReq)))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.id").value(reservationId))
+                .andExpect(jsonPath("$.meetingTitle").value(updateReq.meetingTitle()))
+                .andExpect(jsonPath("$.status").value("CONFIRMED"));
+    }
+    
+    @Test
+    @WithMockUser(username = "emp001", roles = "EMPLOYEE")
+    @DisplayName("T076-2: 修改不存在的預約應該回傳 404")
+    void testUpdateReservation_NotFound() throws Exception {
+        // Given
+        Long reservationId = 999L;
+        UpdateReservationRequest updateReq = new UpdateReservationRequest(
+                "更新的會議標題",
+                LocalDateTime.of(2025, 11, 21, 14, 0),
+                LocalDateTime.of(2025, 11, 21, 15, 30),
+                "user1@example.com"
+        );
+        
+        when(updateReservationUseCase.execute(eq(reservationId), any()))
+                .thenThrow(new NotFoundException("預約不存在"));
+        
+        // When & Then
+        mockMvc.perform(put("/api/v1/reservations/{id}", reservationId)
+                        .with(csrf())
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(updateReq)))
+                .andExpect(status().isNotFound())
+                .andExpect(jsonPath("$.message").value("預約不存在"));
+    }
+    
+    @Test
+    @WithMockUser(username = "emp001", roles = "EMPLOYEE")
+    @DisplayName("T076-3: 修改他人預約應該回傳 403")
+    void testUpdateReservation_Forbidden() throws Exception {
+        // Given
+        Long reservationId = 1L;
+        UpdateReservationRequest updateReq = new UpdateReservationRequest(
+                "更新的會議標題",
+                LocalDateTime.of(2025, 11, 21, 14, 0),
+                LocalDateTime.of(2025, 11, 21, 15, 30),
+                "user1@example.com"
+        );
+        
+        when(updateReservationUseCase.execute(eq(reservationId), any()))
+                .thenThrow(new ForbiddenException("無權限修改此預約"));
+        
+        // When & Then
+        mockMvc.perform(put("/api/v1/reservations/{id}", reservationId)
+                        .with(csrf())
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(updateReq)))
+                .andExpect(status().isForbidden())
+                .andExpect(jsonPath("$.message").value("無權限修改此預約"));
+    }
+    
+    @Test
+    @WithMockUser(username = "emp001", roles = "EMPLOYEE")
+    @DisplayName("T076-4: 修改後時段衝突應該回傳 409")
+    void testUpdateReservation_Conflict() throws Exception {
+        // Given
+        Long reservationId = 1L;
+        UpdateReservationRequest updateReq = new UpdateReservationRequest(
+                "更新的會議標題",
+                LocalDateTime.of(2025, 11, 21, 14, 0),
+                LocalDateTime.of(2025, 11, 21, 15, 30),
+                "user1@example.com"
+        );
+        
+        when(updateReservationUseCase.execute(eq(reservationId), any()))
+                .thenThrow(new ConflictException("新時段與其他預約衝突"));
+        
+        // When & Then
+        mockMvc.perform(put("/api/v1/reservations/{id}", reservationId)
+                        .with(csrf())
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(updateReq)))
+                .andExpect(status().isConflict())
+                .andExpect(jsonPath("$.message").value("新時段與其他預約衝突"));
+    }
+    
+    // ===== T077: 取消預約 API 合約測試 (US2) =====
+    
+    @Test
+    @WithMockUser(username = "emp001", roles = "EMPLOYEE")
+    @DisplayName("T077-1: 應該成功取消預約")
+    void testCancelReservation_Success() throws Exception {
+        // Given
+        Long reservationId = 1L;
+        CancelReservationRequest cancelReq = new CancelReservationRequest(
+                "會議延期"
+        );
+        
+        doNothing().when(cancelReservationUseCase).execute(eq(reservationId), any(), any());
+        
+        // When & Then
+        mockMvc.perform(delete("/api/v1/reservations/{id}", reservationId)
+                        .with(csrf())
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(cancelReq)))
+                .andExpect(status().isNoContent());
+    }
+    
+    @Test
+    @WithMockUser(username = "emp001", roles = "EMPLOYEE")
+    @DisplayName("T077-2: 取消不存在的預約應該回傳 404")
+    void testCancelReservation_NotFound() throws Exception {
+        // Given
+        Long reservationId = 999L;
+        CancelReservationRequest cancelReq = new CancelReservationRequest(
+                "會議取消"
+        );
+        
+        doThrow(new NotFoundException("預約不存在"))
+                .when(cancelReservationUseCase).execute(eq(reservationId), any(), any());
+        
+        // When & Then
+        mockMvc.perform(delete("/api/v1/reservations/{id}", reservationId)
+                        .with(csrf())
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(cancelReq)))
+                .andExpect(status().isNotFound())
+                .andExpect(jsonPath("$.message").value("預約不存在"));
+    }
+    
+    @Test
+    @WithMockUser(username = "emp001", roles = "EMPLOYEE")
+    @DisplayName("T077-3: 違反 24 小時取消規則應該回傳 400")
+    void testCancelReservation_ViolatesPolicy() throws Exception {
+        // Given
+        Long reservationId = 1L;
+        CancelReservationRequest cancelReq = new CancelReservationRequest(
+                "臨時取消"
+        );
+        
+        doThrow(new ValidationException("無法取消:距離會議開始不足 24 小時"))
+                .when(cancelReservationUseCase).execute(eq(reservationId), any(), any());
+        
+        // When & Then
+        mockMvc.perform(delete("/api/v1/reservations/{id}", reservationId)
+                        .with(csrf())
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(cancelReq)))
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.message").value("無法取消:距離會議開始不足 24 小時"));
+    }
+    
+    @Test
+    @WithMockUser(username = "emp001", roles = "EMPLOYEE")
+    @DisplayName("T077-4: 取消他人預約應該回傳 403")
+    void testCancelReservation_Forbidden() throws Exception {
+        // Given
+        Long reservationId = 1L;
+        CancelReservationRequest cancelReq = new CancelReservationRequest(
+                "會議取消"
+        );
+        
+        doThrow(new ForbiddenException("無權限取消此預約"))
+                .when(cancelReservationUseCase).execute(eq(reservationId), any(), any());
+        
+        // When & Then
+        mockMvc.perform(delete("/api/v1/reservations/{id}", reservationId)
+                        .with(csrf())
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(cancelReq)))
+                .andExpect(status().isForbidden())
+                .andExpect(jsonPath("$.message").value("無權限取消此預約"));
     }
     
 }

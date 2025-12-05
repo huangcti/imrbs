@@ -22,6 +22,7 @@ import tw.huangcti.imrbs.infrastructure.integration.email.EmailService;
 @Component
 @RequiredArgsConstructor
 @Slf4j
+@org.springframework.boot.autoconfigure.condition.ConditionalOnBean(EmailService.class)
 public class ReservationConfirmedListener {
 
     private final EmailService emailService;

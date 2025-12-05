@@ -18,7 +18,7 @@ import java.time.LocalDateTime;
  * - 僅 ROOM_ADMIN 與 SYSTEM_ADMIN 可創建維護時程
  */
 @Data
-@Builder
+@Builder(toBuilder = true)
 @NoArgsConstructor
 @AllArgsConstructor
 public class MaintenanceSchedule {

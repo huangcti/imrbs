@@ -17,6 +17,7 @@ import java.time.format.DateTimeFormatter;
 @Service
 @RequiredArgsConstructor
 @Slf4j
+@org.springframework.boot.autoconfigure.condition.ConditionalOnBean(JavaMailSender.class)
 public class EmailService {
 
     private final JavaMailSender mailSender;

@@ -22,7 +22,7 @@ import java.util.Map;
  * - 軟刪除: status = DISABLED (保留歷史預約記錄)
  */
 @Data
-@Builder
+@Builder(toBuilder = true)
 @NoArgsConstructor
 @AllArgsConstructor
 public class Room {

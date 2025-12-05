@@ -1,0 +1,56 @@
+# =============================================================================
+# IMRBS Frontend Dockerfile
+# Multi-stage build with Nginx
+# =============================================================================
+
+# -----------------------------------------------------------------------------
+# Stage 1: Build
+# -----------------------------------------------------------------------------
+FROM node:20-alpine AS builder
+
+WORKDIR /app
+
+# Copy package files
+COPY imrbs-frontend/package*.json ./
+
+# Install dependencies
+RUN npm ci
+
+# Copy source code
+COPY imrbs-frontend/ .
+
+# Build for production
+RUN npm run build
+
+# -----------------------------------------------------------------------------
+# Stage 2: Runtime (Nginx)
+# -----------------------------------------------------------------------------
+FROM nginx:alpine AS runtime
+
+# Security: Remove default nginx user and use nobody
+RUN rm -rf /usr/share/nginx/html/*
+
+# Copy custom nginx configuration
+COPY docker/nginx.conf /etc/nginx/nginx.conf
+COPY docker/default.conf /etc/nginx/conf.d/default.conf
+
+# Copy built static files
+COPY --from=builder /app/dist /usr/share/nginx/html
+
+# Create necessary directories with correct permissions
+RUN mkdir -p /var/cache/nginx /var/run && \
+    chown -R nginx:nginx /var/cache/nginx /var/run /usr/share/nginx/html && \
+    chmod -R 755 /usr/share/nginx/html
+
+# Expose port
+EXPOSE 80
+
+# Health check
+HEALTHCHECK --interval=30s --timeout=5s --start-period=5s --retries=3 \
+    CMD wget --no-verbose --tries=1 --spider http://localhost/ || exit 1
+
+# Use nginx user
+USER nginx
+
+# Start nginx
+CMD ["nginx", "-g", "daemon off;"]

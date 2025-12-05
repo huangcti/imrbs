@@ -92,4 +92,11 @@ public class UserRepositoryAdapter implements UserRepository {
     public boolean existsByEmail(String email) {
         return jpaRepository.existsByEmail(email);
     }
+    
+    @Override
+    public Optional<User> findByUsername(String username) {
+        // 使用 employeeId 作為 username (對應 SSO 登入)
+        return jpaRepository.findByEmployeeId(username)
+                .map(UserJpaEntity::toDomain);
+    }
 }

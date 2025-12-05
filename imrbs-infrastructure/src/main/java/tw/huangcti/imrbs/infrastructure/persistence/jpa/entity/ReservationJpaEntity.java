@@ -84,6 +84,10 @@ public class ReservationJpaEntity {
     @Column(name = "cancelled_at")
     private LocalDateTime cancelledAt;
     
+    @Column(name = "reminder_sent", nullable = false)
+    @Builder.Default
+    private Boolean reminderSent = false;
+    
     @PrePersist
     protected void onCreate() {
         if (createdAt == null) {
@@ -128,6 +132,7 @@ public class ReservationJpaEntity {
                 .createdAt(createdAt)
                 .updatedAt(updatedAt)
                 .cancelledAt(cancelledAt)
+                .reminderSent(reminderSent)
                 .build();
     }
     
@@ -155,6 +160,7 @@ public class ReservationJpaEntity {
                 .createdAt(reservation.getCreatedAt())
                 .updatedAt(reservation.getUpdatedAt())
                 .cancelledAt(reservation.getCancelledAt())
+                .reminderSent(reservation.getReminderSent())
                 .build();
     }
 }

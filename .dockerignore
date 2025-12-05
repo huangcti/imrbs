@@ -1,0 +1,54 @@
+# Git
+.git
+.gitignore
+
+# IDE
+.idea
+.vscode
+*.iml
+
+# Build outputs
+**/target
+**/dist
+**/build
+**/node_modules
+
+# Logs
+**/*.log
+logs/
+
+# Test files
+**/*Test.java
+**/*Tests.java
+**/test
+
+# Documentation
+*.md
+doc/
+specs/
+
+# Development files
+docker-compose*.yml
+*.local
+.env*
+!.env.example
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Temporary files
+*.tmp
+*.swp
+*~
+
+# Coverage reports
+coverage/
+.nyc_output/
+
+# Cypress
+cypress/videos
+cypress/screenshots
+
+# K8s configs (not needed in image)
+k8s/

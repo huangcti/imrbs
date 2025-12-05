@@ -821,6 +821,380 @@ volumes:
 
 ---
 
+## 4. SSO 認證與安全策略 (US3 技術決策)
+
+### 決策日期: 2025-11-24
+
+本節記錄 User Story 3 (SSO 單一登入整合) 實作前的關鍵技術決策。
+
+---
+
+### 4.1 SSO 測試環境模擬策略
+
+#### 決策 (Decision)
+
+**推薦: 分層測試策略 (WireMock + Keycloak Testcontainers + MSW)**
+
+#### 理由 (Rationale)
+
+根據憲章 Article II 要求 95%+ 測試覆蓋率,需在不同測試層級採用適當的模擬工具:
+
+| 測試層級 | 工具 | 用途 | 執行頻率 |
+|---------|------|------|----------|
+| **單元測試** | Mockito | JwtService, RoleBasedAccessControl | 每次提交 |
+| **整合測試** | WireMock | 模擬 OIDC Provider token endpoint | 每次提交 |
+| **Controller 測試** | Spring Security Test | MockMvc + @WithMockUser | 每次提交 |
+| **E2E 測試 (後端)** | Keycloak Testcontainers | 完整 OAuth 2.0 流程 | Pre-commit / CI |
+| **E2E 測試 (前端)** | Cypress + MSW | 攔截 /auth/* API 請求 | 每次提交 |
+
+#### WireMock 範例配置
+
+```java
+@SpringBootTest
+@AutoConfigureWireMock(port = 0)
+class OAuth2ServiceTest {
+    @Test
+    void shouldExchangeAuthorizationCode() {
+        stubFor(post("/oauth2/token")
+            .willReturn(okJson("""
+                {
+                  "access_token": "mock_access_token",
+                  "token_type": "Bearer",
+                  "expires_in": 900,
+                  "refresh_token": "mock_refresh_token",
+                  "id_token": "mock_id_token"
+                }
+            """)));
+        
+        TokenResponse response = oauth2Service.exchangeCode("auth_code");
+        assertThat(response.getAccessToken()).isEqualTo("mock_access_token");
+    }
+}
+```
+
+#### Cypress MSW 範例配置
+
+```typescript
+// imrbs-frontend/tests/e2e/specs/login.cy.ts
+beforeEach(() => {
+  cy.intercept('POST', '/api/v1/auth/login', {
+    statusCode: 200,
+    body: {
+      access_token: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...',
+      expires_in: 900
+    }
+  }).as('login')
+})
+```
+
+#### 考慮的替代方案
+
+| 方案 | 優點 | 缺點 | 拒絕理由 |
+|------|------|------|----------|
+| 僅用真實 IdP | 100% 真實場景 | 需網路、慢、CI 不穩定 | 不適合自動化測試 |
+| 僅用 Mockito | 輕量快速 | 覆蓋不完整,缺乏整合驗證 | 違反 95%+ 覆蓋率要求 |
+| Spring Cloud Contract | 契約測試強大 | 學習曲線陡,過度設計 | 違反 YAGNI 原則 |
+
+---
+
+### 4.2 JWT Secret 管理方案
+
+#### 決策 (Decision)
+
+**推薦: 環境變數 (MVP) + 保留 Vault 升級路徑**
+
+#### 理由 (Rationale)
+
+根據憲章 Article V (安全性與合規性) 要求防範 OWASP Top 10,JWT Secret 管理必須滿足:
+1. ❌ 絕不硬編碼或提交到 Git
+2. ✅ 長度 >= 256 bits (HS256 演算法要求)
+3. ✅ 支援定期輪換
+4. ✅ 審計日誌記錄存取
+
+**MVP 階段方案 (環境變數)**:
+- 開發環境: `.env` 文件 (加入 .gitignore)
+- SIT/UAT: Kubernetes Secrets
+- 生產環境: AWS Secrets Manager / Azure Key Vault
+
+**未來升級路徑 (HashiCorp Vault)**:
+- 動態 Secret 生成 (每小時自動輪換)
+- 細粒度存取控制 (IAM 整合)
+- 完整審計日誌
+- 高可用性 (HA 叢集)
+
+#### 實作細節
+
+**application.yml 配置**:
+```yaml
+jwt:
+  secret: ${JWT_SECRET}  # 強制從環境變數讀取
+  expiration: 900  # 15 分鐘 (Access Token)
+  refresh-expiration: 86400  # 24 小時 (Refresh Token)
+  issuer: imrbs-api
+  audience: imrbs-web
+```
+
+**JwtService 啟動驗證**:
+```java
+@Service
+public class JwtService {
+    @Value("${jwt.secret}")
+    private String secret;
+    
+    @PostConstruct
+    public void validateSecret() {
+        if (secret == null || secret.length() < 32) {
+            throw new IllegalStateException(
+                "JWT_SECRET 環境變數未設定或長度不足 32 字元 (256 bits)"
+            );
+        }
+        log.info("JWT Secret 驗證通過,長度: {} 字元", secret.length());
+    }
+}
+```
+
+**Secret 生成腳本** (scripts/generate-jwt-secret.ps1):
+```powershell
+# 生成符合 HS256 要求的 256-bit Secret
+$bytes = New-Object byte[] 32
+[Security.Cryptography.RandomNumberGenerator]::Fill($bytes)
+$secret = [Convert]::ToBase64String($bytes)
+Write-Host "請將以下內容加入環境變數或 .env 文件:"
+Write-Host "JWT_SECRET=$secret"
+```
+
+**Kubernetes Secret 範例**:
+```yaml
+apiVersion: v1
+kind: Secret
+metadata:
+  name: imrbs-jwt-secret
+  namespace: imrbs-prod
+type: Opaque
+data:
+  JWT_SECRET: <base64-encoded-random-secret>
+```
+
+#### 安全檢查清單
+
+- ✅ `.env` 已加入 .gitignore
+- ✅ Secret 長度 >= 32 字元 (256 bits)
+- ✅ 啟動時驗證 Secret 存在且有效
+- ✅ CI/CD 使用 GitHub Secrets 注入
+- ✅ 每季度定期輪換 Secret
+- ✅ 審計日誌記錄 Token 生成與驗證失敗
+
+#### 考慮的替代方案
+
+| 方案 | 優點 | 缺點 | 拒絕理由 |
+|------|------|------|----------|
+| 硬編碼 | 實作簡單 | 極度不安全,Git 洩露風險 | 違反安全原則 |
+| Spring Cloud Config | 集中管理,版本控制 | 需額外服務,複雜度增加 | MVP 過度設計 |
+| HashiCorp Vault | 動態 Secret,企業級 | 運維成本高,學習曲線陡 | 保留未來升級 |
+
+---
+
+### 4.3 Refresh Token 儲存策略
+
+#### 決策 (Decision)
+
+**推薦: HttpOnly Cookie (前端) + Redis 驗證 (後端)**
+
+#### 理由 (Rationale)
+
+根據 OWASP 安全最佳實務,Refresh Token 儲存必須防範:
+1. **XSS 攻擊**: JavaScript 竊取 Token
+2. **CSRF 攻擊**: 偽造請求
+3. **重放攻擊**: Token 被重複使用
+4. **會話劫持**: Token 洩露後無法撤銷
+
+**架構設計**:
+
+```
+┌─────────────┐         ┌─────────────┐         ┌─────────────┐
+│   Browser   │         │  Spring API │         │    Redis    │
+└─────────────┘         └─────────────┘         └─────────────┘
+       │                       │                       │
+       │  POST /auth/login     │                       │
+       │──────────────────────>│                       │
+       │                       │  HSET refresh_tokens  │
+       │                       │  :{userId}:{tokenId}  │
+       │                       │──────────────────────>│
+       │                       │                       │
+       │  Set-Cookie:          │                       │
+       │  refresh_token={jwt}; │                       │
+       │  HttpOnly; Secure;    │                       │
+       │  SameSite=Strict      │                       │
+       │<──────────────────────│                       │
+```
+
+#### 實作細節
+
+**JwtService 生成 Refresh Token**:
+```java
+public RefreshTokenResponse generateRefreshToken(Long userId, String ipAddress) {
+    String tokenId = UUID.randomUUID().toString();
+    LocalDateTime expiresAt = LocalDateTime.now().plusDays(1);
+    
+    // 生成 JWT
+    String token = Jwts.builder()
+        .setSubject(userId.toString())
+        .setId(tokenId)  // jti (JWT ID)
+        .setIssuedAt(new Date())
+        .setExpiration(Date.from(expiresAt.atZone(ZoneId.systemDefault()).toInstant()))
+        .claim("type", "refresh")
+        .signWith(getSigningKey(), SignatureAlgorithm.HS256)
+        .compact();
+    
+    // 儲存元數據到 Redis (用於撤銷與審計)
+    RefreshTokenMetadata metadata = RefreshTokenMetadata.builder()
+        .userId(userId)
+        .tokenId(tokenId)
+        .issuedAt(LocalDateTime.now())
+        .expiresAt(expiresAt)
+        .ipAddress(ipAddress)
+        .build();
+    
+    redisTemplate.opsForHash().put(
+        "refresh_tokens:" + userId,
+        tokenId,
+        objectMapper.writeValueAsString(metadata)
+    );
+    
+    // 設定 TTL (24 小時自動過期)
+    redisTemplate.expire("refresh_tokens:" + userId, Duration.ofDays(1));
+    
+    return new RefreshTokenResponse(token, expiresAt);
+}
+```
+
+**AuthController 設定 HttpOnly Cookie**:
+```java
+@PostMapping("/login")
+public ResponseEntity<LoginResponse> login(@RequestBody LoginRequest request) {
+    // OAuth 2.0 流程...
+    User user = oauth2Service.exchangeCodeAndGetUser(request.getCode());
+    
+    // 生成 Tokens
+    String accessToken = jwtService.generateAccessToken(user);
+    RefreshTokenResponse refreshToken = jwtService.generateRefreshToken(
+        user.getId(), 
+        request.getRemoteAddr()
+    );
+    
+    // 設定 HttpOnly Cookie
+    ResponseCookie cookie = ResponseCookie.from("refresh_token", refreshToken.getToken())
+        .httpOnly(true)  // 防止 JavaScript 存取
+        .secure(true)  // 僅 HTTPS 傳輸
+        .sameSite("Strict")  // 防 CSRF 攻擊
+        .path("/api/v1/auth")  // 限制 Cookie 範圍
+        .maxAge(Duration.ofDays(1))
+        .build();
+    
+    return ResponseEntity.ok()
+        .header(HttpHeaders.SET_COOKIE, cookie.toString())
+        .body(new LoginResponse(accessToken, 900));
+}
+```
+
+**Refresh Token 驗證與撤銷**:
+```java
+public void validateRefreshToken(String token) {
+    Claims claims = Jwts.parserBuilder()
+        .setSigningKey(getSigningKey())
+        .build()
+        .parseClaimsJws(token)
+        .getBody();
+    
+    // 檢查 Token 類型
+    if (!"refresh".equals(claims.get("type"))) {
+        throw new UnauthorizedException("無效的 Token 類型");
+    }
+    
+    // 檢查 Redis 中是否存在 (防止已撤銷的 Token 被使用)
+    Long userId = Long.valueOf(claims.getSubject());
+    String tokenId = claims.getId();
+    
+    String metadataJson = (String) redisTemplate.opsForHash()
+        .get("refresh_tokens:" + userId, tokenId);
+    
+    if (metadataJson == null) {
+        throw new UnauthorizedException("Refresh Token 已被撤銷或過期");
+    }
+}
+
+public void revokeAllUserTokens(Long userId) {
+    // 撤銷使用者所有裝置的 Refresh Token (登出所有裝置功能)
+    redisTemplate.delete("refresh_tokens:" + userId);
+    log.info("已撤銷使用者 {} 的所有 Refresh Token", userId);
+}
+
+public void revokeToken(Long userId, String tokenId) {
+    // 撤銷單一 Token (登出當前裝置)
+    redisTemplate.opsForHash().delete("refresh_tokens:" + userId, tokenId);
+    log.info("已撤銷使用者 {} 的 Token {}", userId, tokenId);
+}
+```
+
+**Redis 資料結構**:
+```
+Key: refresh_tokens:{user_id}
+Type: Hash
+Fields:
+  {token_id_1}: {
+    "userId": 1001,
+    "tokenId": "uuid-1",
+    "issuedAt": "2025-11-24T10:00:00",
+    "expiresAt": "2025-11-25T10:00:00",
+    "ipAddress": "192.168.1.100"
+  }
+  {token_id_2}: {
+    "userId": 1001,
+    "tokenId": "uuid-2",
+    "issuedAt": "2025-11-24T11:00:00",
+    "expiresAt": "2025-11-25T11:00:00",
+    "ipAddress": "192.168.1.101"
+  }
+
+TTL: 24 小時 (自動過期清理)
+```
+
+**前端處理** (Axios 自動攜帶 Cookie):
+```typescript
+// axios 實例配置
+const apiClient = axios.create({
+  baseURL: import.meta.env.VITE_API_BASE_URL,
+  withCredentials: true  // 允許跨域攜帶 Cookie
+})
+
+// Refresh Token 請求 (Cookie 自動攜帶,無需手動處理)
+async function refreshAccessToken() {
+  const response = await apiClient.post('/auth/refresh')
+  return response.data.access_token
+}
+```
+
+#### 安全加固措施
+
+| 措施 | 說明 | 實作方式 |
+|------|------|----------|
+| **Token Rotation** | 每次 refresh 返回新 token,舊 token 立即失效 | Redis 刪除舊 tokenId,寫入新 tokenId |
+| **Device Fingerprint** | 記錄 IP + User-Agent,檢測異常存取 | 比對請求 IP 與儲存的 IP,不符則警告 |
+| **Rate Limiting** | 限制 /auth/refresh 請求頻率 | Spring Cloud Gateway / Bucket4j |
+| **審計日誌** | 記錄所有 refresh 操作 | AOP 攔截 + ELK Stack |
+| **Refresh Token 家族** | 檢測 Token 重用攻擊 | Redis 記錄 Token 使用歷史 |
+
+#### 考慮的替代方案
+
+| 方案 | 優點 | 缺點 | 拒絕理由 |
+|------|------|------|----------|
+| LocalStorage | 實作簡單 | 易受 XSS 攻擊 | 不符合安全要求 |
+| 僅後端 Session | 完全安全 | 無法跨域,不適合微服務 | 架構限制 |
+| JWT in Memory | 防 XSS,刷新後消失 | 用戶體驗差,需頻繁登入 | 違反易用性原則 |
+| PostgreSQL 儲存 | 持久化審計完整 | 查詢慢,無法承受高 QPS | 效能考量 |
+
+---
+
 ## 9. 總結
 
 ### 已解決的 NEEDS CLARIFICATION
@@ -830,6 +1204,9 @@ volumes:
 | 主資料庫 | **PostgreSQL 16** | 開源免費, JSONB 支援, 容器化友好, 成本低 |
 | 訊息佇列 | **RabbitMQ 3.13** | 簡單易用, 適合中小規模, 延遲佇列支援提醒功能 |
 | 微前端框架 | **Module Federation (預留能力)** | 原生整合 Vite, 依賴共享, MVP 階段先用單一 SPA |
+| **SSO 測試模擬** | **WireMock + Testcontainers + MSW** | 分層測試策略,平衡速度與真實性 |
+| **JWT Secret 管理** | **環境變數 (MVP) → Vault (未來)** | 漸進式安全改進,保留升級路徑 |
+| **Refresh Token 儲存** | **HttpOnly Cookie + Redis** | 防 XSS + 可撤銷 + 支援多裝置管理 |
 
 ### 技術棧最終確認
 

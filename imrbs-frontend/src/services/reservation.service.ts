@@ -7,7 +7,9 @@ import apiClient from './api'
 import type {
   Reservation,
   CreateReservationRequest,
-  CreateReservationResponse
+  CreateReservationResponse,
+  UpdateReservationRequest,
+  CancelReservationRequest
 } from '@/types/reservation'
 
 export const reservationService = {
@@ -38,5 +40,25 @@ export const reservationService = {
   async getReservationById(id: number): Promise<Reservation> {
     const response = await apiClient.get<Reservation>(`/reservations/${id}`)
     return response.data
+  },
+
+  /**
+   * 更新預約
+   * PUT /reservations/{id}
+   */
+  async updateReservation(
+    id: number,
+    request: UpdateReservationRequest
+  ): Promise<Reservation> {
+    const response = await apiClient.put<Reservation>(`/reservations/${id}`, request)
+    return response.data
+  },
+
+  /**
+   * 取消預約
+   * DELETE /reservations/{id}
+   */
+  async cancelReservation(id: number, request: CancelReservationRequest): Promise<void> {
+    await apiClient.delete(`/reservations/${id}`, { data: request })
   }
 }

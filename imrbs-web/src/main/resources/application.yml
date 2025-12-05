@@ -13,6 +13,9 @@ spring:
 
   profiles:
     active: dev
+  
+  main:
+    allow-bean-definition-overriding: true
 
   # Database Configuration
   datasource:
@@ -74,6 +77,34 @@ spring:
   # Session Configuration
   session:
     timeout: 8h
+    store-type: redis
+
+  # OAuth 2.0 / OIDC Configuration
+  security:
+    oauth2:
+      client:
+        registration:
+          keycloak:
+            client-id: ${OAUTH2_CLIENT_ID:imrbs-client}
+            client-secret: ${OAUTH2_CLIENT_SECRET}
+            redirect-uri: "{baseUrl}/auth/callback"
+            authorization-grant-type: authorization_code
+            scope: openid,profile,email
+        provider:
+          keycloak:
+            issuer-uri: ${OAUTH2_ISSUER_URI:http://localhost:8080/realms/imrbs}
+            token-uri: ${OAUTH2_ISSUER_URI}/protocol/openid-connect/token
+            authorization-uri: ${OAUTH2_ISSUER_URI}/protocol/openid-connect/auth
+            user-info-uri: ${OAUTH2_ISSUER_URI}/protocol/openid-connect/userinfo
+            jwk-set-uri: ${OAUTH2_ISSUER_URI}/protocol/openid-connect/certs
+
+# JWT Configuration
+jwt:
+  secret: ${JWT_SECRET}
+  expiration: 900 # 15 minutes (秒)
+  refresh-expiration: 86400 # 24 hours (秒)
+  issuer: imrbs-api
+  audience: imrbs-web
 
 # Actuator Configuration
 management:

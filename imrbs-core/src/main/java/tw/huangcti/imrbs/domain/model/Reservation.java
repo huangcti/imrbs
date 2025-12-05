@@ -111,6 +111,12 @@ public class Reservation {
     private LocalDateTime cancelledAt;
     
     /**
+     * 是否已發送提醒 (防止重複發送)
+     */
+    @Builder.Default
+    private Boolean reminderSent = false;
+    
+    /**
      * 預約狀態枚舉
      */
     public enum ReservationStatus {
@@ -127,7 +133,12 @@ public class Reservation {
         /**
          * 已取消
          */
-        CANCELLED
+        CANCELLED,
+        
+        /**
+         * 已完成 (會議結束後)
+         */
+        COMPLETED
     }
     
     /**

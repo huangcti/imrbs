@@ -1,13 +1,17 @@
 <!--
 T048 [P] 建立通用佈局元件 - Header
-頂部導航欄,包含 Logo、導航選單、使用者資訊
+T173 [P] [US8] 整合語言切換至 Header 元件
+頂部導航欄,包含 Logo、導航選單、語言切換、使用者資訊
 -->
 
 <script setup lang="ts">
 import { ref, computed } from 'vue'
 import { useRouter } from 'vue-router'
+import { useI18n } from 'vue-i18n'
+import LanguageSwitcher from '@/components/common/LanguageSwitcher.vue'
 
 const router = useRouter()
+const { t } = useI18n()
 
 // 使用者資訊 (從 localStorage 或 auth store 取得)
 const user = computed(() => {
@@ -20,11 +24,11 @@ const user = computed(() => {
 const showUserMenu = ref(false)
 
 // 導航選單
-const navItems = [
-  { label: '首頁', path: '/', icon: 'pi pi-home' },
-  { label: '查詢會議室', path: '/rooms', icon: 'pi pi-search' },
-  { label: '我的預約', path: '/reservations', icon: 'pi pi-calendar' }
-]
+const navItems = computed(() => [
+  { label: t('nav.home'), path: '/', icon: 'pi pi-home', dataCy: 'nav-home' },
+  { label: t('nav.rooms'), path: '/rooms', icon: 'pi pi-search', dataCy: 'nav-rooms' },
+  { label: t('nav.myReservations'), path: '/reservations', icon: 'pi pi-calendar', dataCy: 'nav-reservations' }
+])
 
 function navigateTo(path: string) {
   router.push(path)
@@ -48,7 +52,7 @@ function logout() {
         <div class="flex items-center space-x-4">
           <router-link to="/" class="flex items-center space-x-2">
             <i class="pi pi-building text-2xl text-blue-600"></i>
-            <span class="text-xl font-bold text-gray-800">IMRBS</span>
+            <span data-cy="page-title" class="text-xl font-bold text-gray-800">{{ t('app.title') }}</span>
           </router-link>
         </div>
 
@@ -58,6 +62,7 @@ function logout() {
             v-for="item in navItems"
             :key="item.path"
             :to="item.path"
+            :data-cy="item.dataCy"
             class="px-4 py-2 rounded-md text-gray-700 hover:bg-blue-50 hover:text-blue-600 transition-colors flex items-center space-x-2"
             active-class="bg-blue-100 text-blue-700"
           >
@@ -66,48 +71,54 @@ function logout() {
           </router-link>
         </nav>
 
-        <!-- 使用者選單 -->
-        <div class="relative">
-          <button
-            @click="toggleUserMenu"
-            class="flex items-center space-x-2 px-3 py-2 rounded-md hover:bg-gray-100 transition-colors"
-          >
-            <i class="pi pi-user text-gray-600"></i>
-            <span class="hidden md:inline text-sm text-gray-700">{{ user.name }}</span>
-            <i class="pi pi-chevron-down text-xs text-gray-500"></i>
-          </button>
+        <!-- 右側操作區 -->
+        <div class="flex items-center space-x-4">
+          <!-- 語言切換 -->
+          <LanguageSwitcher />
+          
+          <!-- 使用者選單 -->
+          <div class="relative">
+            <button
+              @click="toggleUserMenu"
+              class="flex items-center space-x-2 px-3 py-2 rounded-md hover:bg-gray-100 transition-colors"
+            >
+              <i class="pi pi-user text-gray-600"></i>
+              <span class="hidden md:inline text-sm text-gray-700">{{ user.name }}</span>
+              <i class="pi pi-chevron-down text-xs text-gray-500"></i>
+            </button>
 
-          <!-- 下拉選單 -->
-          <div
-            v-if="showUserMenu"
-            class="absolute right-0 mt-2 w-64 bg-white rounded-lg shadow-lg border border-gray-200 py-2"
-          >
-            <div class="px-4 py-3 border-b border-gray-200">
-              <p class="text-sm font-medium text-gray-900">{{ user.name }}</p>
-              <p class="text-xs text-gray-500">{{ user.email }}</p>
+            <!-- 下拉選單 -->
+            <div
+              v-if="showUserMenu"
+              class="absolute right-0 mt-2 w-64 bg-white rounded-lg shadow-lg border border-gray-200 py-2"
+            >
+              <div class="px-4 py-3 border-b border-gray-200">
+                <p class="text-sm font-medium text-gray-900">{{ user.name }}</p>
+                <p class="text-xs text-gray-500">{{ user.email }}</p>
+              </div>
+              <button
+                @click="navigateTo('/profile')"
+                class="w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 flex items-center space-x-2"
+              >
+                <i class="pi pi-user"></i>
+                <span>{{ t('nav.settings') }}</span>
+              </button>
+              <button
+                @click="navigateTo('/reservations')"
+                class="w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 flex items-center space-x-2"
+              >
+                  <i class="pi pi-calendar"></i>
+                <span>{{ t('nav.myReservations') }}</span>
+              </button>
+              <hr class="my-2" />
+              <button
+                @click="logout"
+                class="w-full text-left px-4 py-2 text-sm text-red-600 hover:bg-red-50 flex items-center space-x-2"
+              >
+                <i class="pi pi-sign-out"></i>
+                <span>{{ t('nav.logout') }}</span>
+              </button>
             </div>
-            <button
-              @click="navigateTo('/profile')"
-              class="w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 flex items-center space-x-2"
-            >
-              <i class="pi pi-user"></i>
-              <span>個人設定</span>
-            </button>
-            <button
-              @click="navigateTo('/reservations')"
-              class="w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 flex items-center space-x-2"
-            >
-              <i class="pi pi-calendar"></i>
-              <span>我的預約</span>
-            </button>
-            <hr class="my-2" />
-            <button
-              @click="logout"
-              class="w-full text-left px-4 py-2 text-sm text-red-600 hover:bg-red-50 flex items-center space-x-2"
-            >
-              <i class="pi pi-sign-out"></i>
-              <span>登出</span>
-            </button>
           </div>
         </div>
       </div>

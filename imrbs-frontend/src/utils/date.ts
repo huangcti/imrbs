@@ -107,3 +107,31 @@ export function getDateAfterDays(days: number): string {
 export function combineDateAndTime(date: string, time: string): string {
   return `${date}T${time}:00`
 }
+
+/**
+ * 檢查日期時間是否為未來
+ */
+export function isUpcoming(dateTime: Date | string): boolean {
+  const dateObj = typeof dateTime === 'string' ? new Date(dateTime) : dateTime
+  const now = new Date()
+  return isAfter(dateObj, now)
+}
+
+/**
+ * 檢查日期時間是否為過去
+ */
+export function isPast(dateTime: Date | string): boolean {
+  const dateObj = typeof dateTime === 'string' ? new Date(dateTime) : dateTime
+  const now = new Date()
+  return isBefore(dateObj, now)
+}
+
+/**
+ * 計算距離指定時間還有多少小時
+ */
+export function getHoursUntil(dateTime: Date | string): number {
+  const dateObj = typeof dateTime === 'string' ? new Date(dateTime) : dateTime
+  const now = new Date()
+  const diffMs = dateObj.getTime() - now.getTime()
+  return diffMs / (1000 * 60 * 60)
+}

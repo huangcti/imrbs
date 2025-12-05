@@ -25,6 +25,7 @@ import java.util.Optional;
 @Slf4j
 @Service
 @RequiredArgsConstructor
+@org.springframework.boot.autoconfigure.condition.ConditionalOnBean(OAuth2AuthorizedClientService.class)
 public class SsoIntegrationService {
     
     private final UserRepository userRepository;

@@ -87,6 +87,21 @@ public class GlobalExceptionHandler {
     }
     
     /**
+     * 處理業務邏輯異常 - 權限不足
+     */
+    @ExceptionHandler(ForbiddenException.class)
+    public ResponseEntity<ErrorResponse> handleForbiddenException(ForbiddenException ex, WebRequest request) {
+        log.warn("Forbidden: {}", ex.getMessage());
+        ErrorResponse errorResponse = new ErrorResponse(
+                HttpStatus.FORBIDDEN.value(),
+                ex.getMessage(),
+                request.getDescription(false),
+                LocalDateTime.now()
+        );
+        return new ResponseEntity<>(errorResponse, HttpStatus.FORBIDDEN);
+    }
+    
+    /**
      * 處理 Spring Validation 異常
      */
     @ExceptionHandler(MethodArgumentNotValidException.class)

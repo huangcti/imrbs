@@ -1,0 +1,272 @@
+{
+  "common": {
+    "hours": "小時",
+    "count": "次",
+    "selectAll": "全選",
+    "clear": "清除",
+    "loading": "載入中...",
+    "loadingMore": "載入更多...",
+    "allLoaded": "已載入全部",
+    "noData": "暫無資料",
+    "save": "儲存",
+    "cancel": "取消",
+    "confirm": "確認",
+    "delete": "刪除",
+    "edit": "編輯",
+    "add": "新增",
+    "search": "搜尋",
+    "export": "匯出",
+    "import": "匯入",
+    "back": "返回",
+    "next": "下一步",
+    "previous": "上一步",
+    "submit": "提交",
+    "reset": "重置",
+    "close": "關閉",
+    "refresh": "重新整理",
+    "submitting": "提交中...",
+    "processing": "處理中...",
+    "required": "必填",
+    "approve": "批准",
+    "reject": "拒絕",
+    "reason": "原因",
+    "status": "狀態",
+    "person": "人"
+  },
+  "app": {
+    "title": "會議室預約系統",
+    "description": "智慧會議室預約管理平台"
+  },
+  "language": {
+    "title": "語言",
+    "zhTW": "繁體中文",
+    "en": "English",
+    "switchSuccess": "語言已切換為繁體中文",
+    "switchFailed": "語言切換失敗"
+  },
+  "nav": {
+    "home": "首頁",
+    "rooms": "會議室",
+    "myReservations": "我的預約",
+    "admin": "管理",
+    "reports": "報告",
+    "settings": "設定",
+    "logout": "登出"
+  },
+  "report": {
+    "title": "會議室使用率報告",
+    "subtitle": "查看會議室使用統計數據，協助資源配置決策",
+    "reportPeriod": "報告期間",
+    "peakHours": "尖峰時段",
+    "offPeakHours": "離峰時段",
+    "noPeakHours": "無尖峰時段",
+    "noOffPeakHours": "無離峰時段",
+    "exporting": "正在匯出...",
+    "filter": {
+      "title": "篩選條件",
+      "periodType": "報告類型",
+      "startDate": "開始日期",
+      "endDate": "結束日期",
+      "rooms": "會議室",
+      "search": "查詢",
+      "exportExcel": "匯出 Excel",
+      "invalidDateRange": "結束日期不能早於開始日期"
+    },
+    "periodType": {
+      "daily": "日報表",
+      "weekly": "週報表",
+      "monthly": "月報表",
+      "custom": "自訂範圍"
+    },
+    "chart": {
+      "roomUsage": "會議室使用率",
+      "hourlyTrend": "時段趨勢",
+      "dayDistribution": "星期分佈",
+      "overallUsageRate": "整體使用率",
+      "roomUsageTitle": "各會議室使用率",
+      "hourlyTrendTitle": "每小時預約趨勢",
+      "dayDistributionTitle": "每週預約分佈",
+      "usageRate": "使用率",
+      "usageRatePercent": "使用率 (%)",
+      "roomName": "會議室",
+      "bookingCount": "預約次數",
+      "reservationCount": "預約數量",
+      "timeSlot": "時段",
+      "peakHour": "尖峰時段",
+      "noData": "暫無數據"
+    },
+    "table": {
+      "title": "會議室使用統計",
+      "roomName": "會議室名稱",
+      "location": "位置",
+      "usageRate": "使用率",
+      "usageHours": "使用時數",
+      "reservations": "預約次數",
+      "totalRooms": "會議室總數",
+      "totalHours": "總使用時數",
+      "totalReservations": "總預約次數",
+      "noData": "暫無統計數據"
+    },
+    "error": {
+      "loadFailed": "載入報告失敗",
+      "exportFailed": "匯出失敗",
+      "selectDateRange": "請選擇日期範圍"
+    },
+    "success": {
+      "exported": "報告已成功匯出"
+    }
+  },
+  "room": {
+    "title": "會議室列表",
+    "search": "搜尋會議室",
+    "capacity": "容量",
+    "location": "位置",
+    "equipment": "設備",
+    "available": "可預約",
+    "unavailable": "不可預約",
+    "details": "查看詳情",
+    "book": "立即預約",
+    "people": "人",
+    "noRoomsFound": "找不到會議室",
+    "tryDifferentCriteria": "請嘗試不同的搜尋條件",
+    "status": {
+      "available": "可用",
+      "maintenance": "維護中",
+      "unavailable": "不可用"
+    }
+  },
+  "reservation": {
+    "title": "預約管理",
+    "myReservations": "我的預約",
+    "newReservation": "新增預約",
+    "editReservation": "編輯預約",
+    "meetingTitle": "會議主題",
+    "date": "日期",
+    "startTime": "開始時間",
+    "endTime": "結束時間",
+    "attendees": "參與者",
+    "notes": "備註",
+    "status": {
+      "confirmed": "已確認",
+      "pending": "待處理",
+      "cancelled": "已取消"
+    }
+  },
+  "auth": {
+    "login": "登入",
+    "logout": "登出",
+    "ssoLogin": "使用公司帳號登入",
+    "welcome": "歡迎回來"
+  },
+  "admin": {
+    "title": "系統管理",
+    "roomManagement": "會議室管理",
+    "reports": "使用率報告",
+    "guestApproval": {
+      "title": "訪客預約審核",
+      "subtitle": "管理外部訪客的會議室預約申請",
+      "tabs": {
+        "pending": "待審核",
+        "all": "所有申請"
+      },
+      "stats": {
+        "pending": "待審核",
+        "approved": "已批准",
+        "rejected": "已拒絕"
+      }
+    },
+    "guestRequests": {
+      "filter": {
+        "status": "狀態",
+        "all": "全部"
+      },
+      "empty": "目前沒有訪客預約申請",
+      "guestName": "訪客姓名",
+      "guestEmail": "訪客信箱",
+      "company": "公司名稱",
+      "requestTime": "預約時間",
+      "submittedAt": "提交時間",
+      "rejectionReason": "拒絕原因",
+      "approve": "批准",
+      "reject": "拒絕",
+      "approveSuccess": "申請已批准",
+      "approveError": "批准失敗",
+      "rejectSuccess": "申請已拒絕",
+      "rejectError": "拒絕失敗",
+      "loadError": "載入申請清單失敗",
+      "rejectDialog": {
+        "title": "拒絕訪客申請",
+        "reasonLabel": "拒絕原因",
+        "reasonPlaceholder": "請輸入拒絕原因...",
+        "reasonRequired": "請填寫拒絕原因"
+      }
+    }
+  },
+  "guest": {
+    "page": {
+      "title": "訪客會議室預約",
+      "subtitle": "歡迎外部訪客預約我們的會議室",
+      "submitSuccess": "您的申請已成功提交！",
+      "requestId": "申請編號",
+      "statusPending": "您的申請正在審核中，我們會盡快以 Email 通知您結果。",
+      "submitAnother": "提交另一筆申請",
+      "checkStatus": "查詢申請狀態",
+      "requestIdLabel": "申請編號",
+      "requestIdPlaceholder": "輸入申請編號",
+      "emailLabel": "聯絡信箱",
+      "emailPlaceholder": "輸入申請時使用的信箱",
+      "checkButton": "查詢",
+      "requestDetails": "申請詳情",
+      "status": "狀態",
+      "meetingTitle": "會議主題",
+      "requestTime": "預約時間",
+      "rejectionReason": "拒絕原因",
+      "requestNotFound": "找不到此申請",
+      "emailNotMatch": "Email 不符",
+      "checkError": "查詢失敗",
+      "footer": "© 2024 智慧會議室預約系統. All rights reserved."
+    },
+    "requestForm": {
+      "title": "訪客預約申請表",
+      "guestInfo": "訪客資訊",
+      "meetingInfo": "會議資訊",
+      "guestName": "姓名",
+      "guestNamePlaceholder": "請輸入您的姓名",
+      "guestEmail": "Email",
+      "guestEmailPlaceholder": "請輸入您的 Email",
+      "guestPhone": "電話",
+      "guestPhonePlaceholder": "請輸入聯絡電話",
+      "guestCompany": "公司名稱",
+      "guestCompanyPlaceholder": "請輸入您的公司名稱",
+      "room": "會議室",
+      "selectRoom": "請選擇會議室",
+      "capacity": "容量",
+      "meetingTitle": "會議主題",
+      "meetingTitlePlaceholder": "請輸入會議主題",
+      "startTime": "開始時間",
+      "endTime": "結束時間",
+      "attendeeCount": "預計參與人數",
+      "purpose": "會議目的",
+      "purposePlaceholder": "請簡述會議目的...",
+      "submit": "提交申請",
+      "submitSuccess": "申請已成功提交！",
+      "submitError": "提交失敗，請稍後再試",
+      "errors": {
+        "guestNameRequired": "請輸入姓名",
+        "guestEmailRequired": "請輸入 Email",
+        "guestEmailInvalid": "Email 格式不正確",
+        "roomRequired": "請選擇會議室",
+        "meetingTitleRequired": "請輸入會議主題",
+        "startTimeRequired": "請選擇開始時間",
+        "endTimeRequired": "請選擇結束時間",
+        "endTimeInvalid": "結束時間必須晚於開始時間",
+        "timeConflict": "該時段已有預約，請選擇其他時間"
+      }
+    },
+    "status": {
+      "pending": "待審核",
+      "approved": "已批准",
+      "rejected": "已拒絕"
+    }
+  }
+}

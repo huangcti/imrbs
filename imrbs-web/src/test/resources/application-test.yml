@@ -1,0 +1,60 @@
+# 測試環境配置
+# 此配置僅用於單元測試和整合測試
+
+spring:
+  main:
+    allow-bean-definition-overriding: true
+  
+  # 關閉自動配置 - 使用 Mock beans 代替真實資料庫
+  autoconfigure:
+    exclude:
+      - org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration
+      - org.springframework.boot.autoconfigure.orm.jpa.HibernateJpaAutoConfiguration
+      - org.springframework.boot.autoconfigure.flyway.FlywayAutoConfiguration
+      - org.springframework.boot.autoconfigure.r2dbc.R2dbcAutoConfiguration
+  
+  # Redis 配置 (embedded)
+  data:
+    redis:
+      host: localhost
+      port: 6379
+  
+  # Session 配置
+  session:
+    store-type: none  # 測試環境不使用 Redis Session
+    timeout: 8h
+  
+  # OAuth2 配置 (測試用假值)
+  security:
+    oauth2:
+      client:
+        registration:
+          keycloak:
+            client-id: test-client
+            client-secret: test-secret
+            redirect-uri: "{baseUrl}/auth/callback"
+            authorization-grant-type: authorization_code
+            scope: openid,profile,email
+        provider:
+          keycloak:
+            issuer-uri: http://localhost:8080/realms/test
+            token-uri: http://localhost:8080/realms/test/protocol/openid-connect/token
+            authorization-uri: http://localhost:8080/realms/test/protocol/openid-connect/auth
+            user-info-uri: http://localhost:8080/realms/test/protocol/openid-connect/userinfo
+            jwk-set-uri: http://localhost:8080/realms/test/protocol/openid-connect/certs
+
+# JWT 配置
+jwt:
+  secret: this-is-a-very-secure-jwt-secret-key-with-at-least-256-bits-length-for-testing-purposes
+  expiration: 900  # 15 minutes
+  refresh-expiration: 86400  # 24 hours
+  issuer: imrbs-api
+  audience: imrbs-web
+
+# Logging 配置
+logging:
+  level:
+    root: INFO
+    tw.huangcti.imrbs: DEBUG
+    org.springframework.security: DEBUG
+    org.springframework.test: DEBUG

@@ -2,7 +2,11 @@ package tw.huangcti.imrbs.infrastructure.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import tw.huangcti.imrbs.application.usecase.CreateMaintenanceScheduleUseCase;
 import tw.huangcti.imrbs.application.usecase.CreateReservationUseCase;
+import tw.huangcti.imrbs.application.usecase.CreateRoomUseCase;
+import tw.huangcti.imrbs.application.usecase.DeleteRoomUseCase;
+import tw.huangcti.imrbs.application.usecase.UpdateRoomUseCase;
 import tw.huangcti.imrbs.domain.repository.MaintenanceScheduleRepository;
 import tw.huangcti.imrbs.domain.repository.ReservationRepository;
 import tw.huangcti.imrbs.domain.repository.RoomRepository;
@@ -64,6 +68,53 @@ public class DomainServiceConfiguration {
                 userRepository,
                 reservationRepository,
                 conflictDetectionService
+        );
+    }
+    
+    /**
+     * T114 [P] [US4] 創建會議室用例
+     */
+    @Bean
+    public CreateRoomUseCase createRoomUseCase(
+            RoomRepository roomRepository
+    ) {
+        return new CreateRoomUseCase(roomRepository);
+    }
+    
+    /**
+     * T115 [P] [US4] 更新會議室用例
+     */
+    @Bean
+    public UpdateRoomUseCase updateRoomUseCase(
+            RoomRepository roomRepository
+    ) {
+        return new UpdateRoomUseCase(roomRepository);
+    }
+    
+    /**
+     * T116 [P] [US4] 刪除會議室用例
+     */
+    @Bean
+    public DeleteRoomUseCase deleteRoomUseCase(
+            RoomRepository roomRepository,
+            ReservationRepository reservationRepository
+    ) {
+        return new DeleteRoomUseCase(roomRepository, reservationRepository);
+    }
+    
+    /**
+     * T117 [P] [US4] 創建維護時段用例
+     */
+    @Bean
+    public CreateMaintenanceScheduleUseCase createMaintenanceScheduleUseCase(
+            MaintenanceScheduleRepository maintenanceScheduleRepository,
+            RoomRepository roomRepository,
+            ReservationRepository reservationRepository
+    ) {
+        return new CreateMaintenanceScheduleUseCase(
+                maintenanceScheduleRepository,
+                roomRepository,
+                reservationRepository
         );
     }
 }

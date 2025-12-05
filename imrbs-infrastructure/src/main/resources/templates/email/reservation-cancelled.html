@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title th:text="#{email.reservation.cancelled.title}">Reservation Cancelled</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        .email-container {
+            background-color: #ffffff;
+            border-radius: 8px;
+            padding: 40px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+        .header {
+            text-align: center;
+            padding-bottom: 30px;
+            border-bottom: 2px solid #f44336;
+        }
+        .header h1 {
+            color: #f44336;
+            margin: 0;
+            font-size: 28px;
+        }
+        .cancel-icon {
+            font-size: 48px;
+            color: #f44336;
+            margin-bottom: 10px;
+        }
+        .content {
+            padding: 30px 0;
+        }
+        .info-section {
+            background-color: #fff5f5;
+            border-left: 4px solid #f44336;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 4px;
+        }
+        .info-row {
+            display: flex;
+            margin-bottom: 12px;
+            padding: 8px 0;
+        }
+        .info-label {
+            font-weight: 600;
+            color: #555;
+            min-width: 120px;
+        }
+        .info-value {
+            color: #333;
+        }
+        .highlight {
+            color: #f44336;
+            font-weight: 600;
+        }
+        .reason-box {
+            background-color: #fffacd;
+            border: 1px solid #ffd700;
+            border-radius: 4px;
+            padding: 15px;
+            margin: 20px 0;
+        }
+        .reason-box .label {
+            font-weight: 600;
+            color: #d68400;
+            margin-bottom: 8px;
+        }
+        .button {
+            display: inline-block;
+            padding: 12px 30px;
+            background-color: #2196F3;
+            color: #ffffff !important;
+            text-decoration: none;
+            border-radius: 4px;
+            margin: 20px 0;
+            font-weight: 600;
+        }
+        .button:hover {
+            background-color: #0b7dda;
+        }
+        .footer {
+            text-align: center;
+            padding-top: 30px;
+            border-top: 1px solid #eee;
+            color: #777;
+            font-size: 14px;
+        }
+        .footer a {
+            color: #2196F3;
+            text-decoration: none;
+        }
+        @media only screen and (max-width: 600px) {
+            body {
+                padding: 10px;
+            }
+            .email-container {
+                padding: 20px;
+            }
+            .info-row {
+                flex-direction: column;
+            }
+            .info-label {
+                margin-bottom: 4px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="email-container">
+        <div class="header">
+            <div class="cancel-icon">✕</div>
+            <h1 th:text="#{email.reservation.cancelled.title}">會議室預約已取消</h1>
+        </div>
+        
+        <div class="content">
+            <p th:text="#{email.reservation.cancelled.greeting(${userName})}">
+                您好，<span th:text="${userName}">User</span>：
+            </p>
+            
+            <p th:text="#{email.reservation.cancelled.message}">
+                您的會議室預約已被取消。以下是已取消的預約詳情：
+            </p>
+            
+            <div class="info-section">
+                <div class="info-row">
+                    <span class="info-label" th:text="#{email.reservation.confirmationNumber}">預約編號：</span>
+                    <span class="info-value highlight" th:text="${reservationId}">12345</span>
+                </div>
+                
+                <div class="info-row">
+                    <span class="info-label" th:text="#{email.reservation.meetingTitle}">會議主題：</span>
+                    <span class="info-value" th:text="${meetingTitle}">Team Meeting</span>
+                </div>
+                
+                <div class="info-row">
+                    <span class="info-label" th:text="#{email.reservation.room}">會議室：</span>
+                    <span class="info-value" th:text="${roomName}">Conference Room A</span>
+                </div>
+                
+                <div class="info-row">
+                    <span class="info-label" th:text="#{email.reservation.location}">地點：</span>
+                    <span class="info-value" th:text="${roomLocation}">3F-301</span>
+                </div>
+                
+                <div class="info-row">
+                    <span class="info-label" th:text="#{email.reservation.date}">日期：</span>
+                    <span class="info-value" th:text="${#temporals.format(startTime, 'yyyy-MM-dd')}">2025-11-24</span>
+                </div>
+                
+                <div class="info-row">
+                    <span class="info-label" th:text="#{email.reservation.time}">時間：</span>
+                    <span class="info-value">
+                        <span th:text="${#temporals.format(startTime, 'HH:mm')}">14:00</span>
+                        -
+                        <span th:text="${#temporals.format(endTime, 'HH:mm')}">16:00</span>
+                    </span>
+                </div>
+                
+                <div class="info-row">
+                    <span class="info-label" th:text="#{email.reservation.cancelledAt}">取消時間：</span>
+                    <span class="info-value" th:text="${#temporals.format(cancelledAt, 'yyyy-MM-dd HH:mm')}">2025-11-24 10:30</span>
+                </div>
+                
+                <div class="info-row" th:if="${cancelledBy != null}">
+                    <span class="info-label" th:text="#{email.reservation.cancelledBy}">取消者：</span>
+                    <span class="info-value" th:text="${cancelledBy}">John Doe</span>
+                </div>
+            </div>
+            
+            <div class="reason-box" th:if="${cancellationReason != null and !#strings.isEmpty(cancellationReason)}">
+                <div class="label" th:text="#{email.reservation.cancellationReason}">取消原因：</div>
+                <div th:text="${cancellationReason}">Meeting postponed to next week</div>
+            </div>
+            
+            <div style="text-align: center;">
+                <a th:href="${makeNewReservationUrl}" class="button" th:text="#{email.reservation.makeNewReservation}">
+                    建立新預約
+                </a>
+            </div>
+            
+            <p th:text="#{email.reservation.cancelled.note}">
+                <strong>提醒：</strong>此會議室時段現已開放給其他員工預約。
+            </p>
+            
+            <p th:text="#{email.reservation.cancelled.contact}" th:if="${!isUserCancelled}">
+                如您認為此取消有誤，請聯繫系統管理員或預約管理員。
+            </p>
+        </div>
+        
+        <div class="footer">
+            <p th:text="#{email.footer.autoGenerated}">
+                此郵件由系統自動發送，請勿直接回覆。
+            </p>
+            <p>
+                <a th:href="${systemUrl}" th:text="#{email.footer.visitSystem}">前往會議室預約系統</a>
+            </p>
+            <p th:text="#{email.footer.support(${supportEmail})}">
+                如有問題，請聯繫：<a th:href="'mailto:' + ${supportEmail}" th:text="${supportEmail}">support@example.com</a>
+            </p>
+        </div>
+    </div>
+</body>
+</html>
