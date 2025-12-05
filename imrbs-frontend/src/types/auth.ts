@@ -16,6 +16,7 @@ export interface User {
   username: string
   email: string
   fullName: string
+  name?: string // Alias for fullName for backward compatibility
   department: string
   roles: UserRole[]
   createdAt: string

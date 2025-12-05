@@ -50,8 +50,8 @@ const offPeakHoursDisplay = computed(() => {
 // Load rooms for filter
 const loadRooms = async () => {
   try {
-    const response = await roomService.getRooms()
-    rooms.value = response.map(r => ({
+    const response = await roomService.getAllRooms()
+    rooms.value = response.map((r) => ({
       id: r.id,
       name: r.name
     }))
@@ -113,8 +113,8 @@ onMounted(async () => {
   const firstOfMonth = new Date(today.getFullYear(), today.getMonth(), 1)
   
   currentFilter.value = {
-    startDate: firstOfMonth.toISOString().split('T')[0],
-    endDate: today.toISOString().split('T')[0],
+    startDate: firstOfMonth.toISOString().split('T')[0] ?? '',
+    endDate: today.toISOString().split('T')[0] ?? '',
     roomIds: [],
     periodType: 'monthly'
   }
@@ -140,9 +140,9 @@ onMounted(async () => {
       <ReportFilter
         :rooms="rooms"
         :loading="loading"
+        data-testid="report-filter"
         @filter-change="handleFilterChange"
         @export-excel="handleExportExcel"
-        data-testid="report-filter"
       />
 
       <!-- Report Period Info -->
@@ -160,12 +160,20 @@ onMounted(async () => {
           </div>
           <div class="flex gap-4">
             <div class="text-center">
-              <div class="text-sm text-gray-500">{{ t('report.peakHours') }}</div>
-              <div class="font-medium text-red-600">{{ peakHoursDisplay }}</div>
+              <div class="text-sm text-gray-500">
+                {{ t('report.peakHours') }}
+              </div>
+              <div class="font-medium text-red-600">
+                {{ peakHoursDisplay }}
+              </div>
             </div>
             <div class="text-center">
-              <div class="text-sm text-gray-500">{{ t('report.offPeakHours') }}</div>
-              <div class="font-medium text-green-600">{{ offPeakHoursDisplay }}</div>
+              <div class="text-sm text-gray-500">
+                {{ t('report.offPeakHours') }}
+              </div>
+              <div class="font-medium text-green-600">
+                {{ offPeakHoursDisplay }}
+              </div>
             </div>
           </div>
         </div>
@@ -200,7 +208,7 @@ onMounted(async () => {
         class="fixed bottom-4 right-4 bg-blue-600 text-white px-4 py-2 rounded-lg shadow-lg flex items-center gap-2"
         data-testid="export-status"
       >
-        <div class="animate-spin rounded-full h-4 w-4 border-b-2 border-white"></div>
+        <div class="animate-spin rounded-full h-4 w-4 border-b-2 border-white" />
         <span>{{ t('report.exporting') }}</span>
       </div>
     </div>

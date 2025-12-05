@@ -6,13 +6,16 @@ import tw.huangcti.imrbs.application.usecase.CreateMaintenanceScheduleUseCase;
 import tw.huangcti.imrbs.application.usecase.CreateReservationUseCase;
 import tw.huangcti.imrbs.application.usecase.CreateRoomUseCase;
 import tw.huangcti.imrbs.application.usecase.DeleteRoomUseCase;
+import tw.huangcti.imrbs.application.usecase.GenerateUsageReportUseCase;
 import tw.huangcti.imrbs.application.usecase.UpdateRoomUseCase;
 import tw.huangcti.imrbs.domain.repository.MaintenanceScheduleRepository;
 import tw.huangcti.imrbs.domain.repository.ReservationRepository;
 import tw.huangcti.imrbs.domain.repository.RoomRepository;
 import tw.huangcti.imrbs.domain.repository.UserRepository;
 import tw.huangcti.imrbs.domain.service.ConflictDetectionService;
+import tw.huangcti.imrbs.domain.service.PopularTimeSlotsService;
 import tw.huangcti.imrbs.domain.service.RoomAvailabilityService;
+import tw.huangcti.imrbs.domain.service.UsageStatisticsService;
 
 /**
  * Domain Service Configuration
@@ -116,5 +119,38 @@ public class DomainServiceConfiguration {
                 roomRepository,
                 reservationRepository
         );
+    }
+    
+    /**
+     * 使用率統計服務
+     */
+    @Bean
+    public UsageStatisticsService usageStatisticsService(
+            ReservationRepository reservationRepository,
+            RoomRepository roomRepository
+    ) {
+        return new UsageStatisticsService(reservationRepository, roomRepository);
+    }
+    
+    /**
+     * 熱門時段分析服務
+     */
+    @Bean
+    public PopularTimeSlotsService popularTimeSlotsService(
+            ReservationRepository reservationRepository,
+            RoomRepository roomRepository
+    ) {
+        return new PopularTimeSlotsService(reservationRepository, roomRepository);
+    }
+    
+    /**
+     * 生成使用報告用例
+     */
+    @Bean
+    public GenerateUsageReportUseCase generateUsageReportUseCase(
+            UsageStatisticsService usageStatisticsService,
+            PopularTimeSlotsService popularTimeSlotsService
+    ) {
+        return new GenerateUsageReportUseCase(usageStatisticsService, popularTimeSlotsService);
     }
 }

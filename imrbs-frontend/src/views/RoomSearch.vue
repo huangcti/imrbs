@@ -13,7 +13,7 @@ import RoomDetail from '@/components/room/RoomDetail.vue'
 import ReservationForm from '@/components/reservation/ReservationForm.vue'
 import type { RoomSearchParams, Room } from '@/types/room'
 
-const router = useRouter()
+const _router = useRouter()
 const roomStore = useRoomStore()
 
 // 視圖狀態
@@ -105,13 +105,13 @@ function resetToSearch(): void {
     <div class="container mx-auto px-4">
       <!-- 麵包屑導航 -->
       <nav class="mb-6 text-sm text-gray-600">
-        <button @click="resetToSearch" class="hover:text-blue-600 transition-colors">
-          <i class="pi pi-home mr-1"></i>首頁
+        <button class="hover:text-blue-600 transition-colors" @click="resetToSearch">
+          <i class="pi pi-home mr-1" />首頁
         </button>
         <span class="mx-2">/</span>
         <span v-if="currentView === 'search'" class="font-semibold text-gray-900">搜尋會議室</span>
         <template v-else>
-          <button @click="resetToSearch" class="hover:text-blue-600 transition-colors">
+          <button class="hover:text-blue-600 transition-colors" @click="resetToSearch">
             搜尋會議室
           </button>
           <span class="mx-2">/</span>
@@ -135,27 +135,35 @@ function resetToSearch(): void {
         <div class="lg:col-span-3">
           <!-- Loading 狀態 -->
           <div v-if="loading" class="text-center py-12">
-            <i class="pi pi-spin pi-spinner text-4xl text-blue-600"></i>
-            <p class="mt-4 text-gray-600">搜尋中...</p>
+            <i class="pi pi-spin pi-spinner text-4xl text-blue-600" />
+            <p class="mt-4 text-gray-600">
+              搜尋中...
+            </p>
           </div>
 
           <!-- 錯誤狀態 -->
           <div v-else-if="error" class="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded">
-            <i class="pi pi-exclamation-circle mr-2"></i>
+            <i class="pi pi-exclamation-circle mr-2" />
             {{ error }}
           </div>
 
           <!-- 空狀態 - 未搜尋 -->
           <div v-else-if="!searchPerformed" class="text-center py-12">
-            <i class="pi pi-search text-4xl text-gray-400"></i>
-            <p class="mt-4 text-gray-600">請在左側輸入搜尋條件</p>
+            <i class="pi pi-search text-4xl text-gray-400" />
+            <p class="mt-4 text-gray-600">
+              請在左側輸入搜尋條件
+            </p>
           </div>
 
           <!-- 空狀態 - 無結果 -->
           <div v-else-if="!hasRooms" class="text-center py-12">
-            <i class="pi pi-inbox text-4xl text-gray-400"></i>
-            <p class="mt-4 text-gray-600">找不到符合條件的會議室</p>
-            <p class="text-sm text-gray-500">請嘗試調整搜尋條件</p>
+            <i class="pi pi-inbox text-4xl text-gray-400" />
+            <p class="mt-4 text-gray-600">
+              找不到符合條件的會議室
+            </p>
+            <p class="text-sm text-gray-500">
+              請嘗試調整搜尋條件
+            </p>
           </div>
 
           <!-- 會議室列表 -->

@@ -19,9 +19,10 @@ CREATE INDEX IF NOT EXISTS idx_reservation_user_history
     ON reservations(user_id, start_time DESC, status);
 
 -- 已確認預約的時間排序索引 (用於首頁和通知)
+-- 注意: 移除 CURRENT_TIMESTAMP 條件，因為 PostgreSQL 要求索引謂詞必須是 IMMUTABLE
 CREATE INDEX IF NOT EXISTS idx_reservation_confirmed_upcoming 
     ON reservations(start_time) 
-    WHERE status = 'CONFIRMED' AND start_time > CURRENT_TIMESTAMP;
+    WHERE status = 'CONFIRMED';
 
 -- 待處理預約索引 (用於管理員審核列表)
 CREATE INDEX IF NOT EXISTS idx_reservation_pending_review 
@@ -107,21 +108,8 @@ CREATE INDEX IF NOT EXISTS idx_guest_request_company_lookup
 -- 6. 維護排程查詢優化索引
 -- ============================================
 
--- 檢查是否有 maintenance_schedules 表存在，若存在則加索引
-DO $$
-BEGIN
-    IF EXISTS (SELECT FROM information_schema.tables WHERE table_name = 'maintenance_schedules') THEN
-        -- 進行中的維護查詢
-        CREATE INDEX IF NOT EXISTS idx_maintenance_active 
-            ON maintenance_schedules(room_id, start_time, end_time) 
-            WHERE status = 'SCHEDULED';
-        
-        -- 維護歷史查詢
-        CREATE INDEX IF NOT EXISTS idx_maintenance_history 
-            ON maintenance_schedules(room_id, completed_at DESC);
-    END IF;
-END
-$$;
+-- 維護排程表只有基本欄位，已在 V4 中創建了基本索引
+-- 如果未來需要擴展，可在此處添加額外索引
 
 -- ============================================
 -- 索引說明註解

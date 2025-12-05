@@ -2,16 +2,20 @@
   <div class="container mx-auto px-4 py-8">
     <!-- 頁面標題 -->
     <div class="mb-8">
-      <h1 class="text-3xl font-bold text-gray-900">會議室管理</h1>
-      <p class="mt-2 text-gray-600">新增、編輯、刪除會議室及設定維護時段</p>
+      <h1 class="text-3xl font-bold text-gray-900">
+        會議室管理
+      </h1>
+      <p class="mt-2 text-gray-600">
+        新增、編輯、刪除會議室及設定維護時段
+      </p>
     </div>
 
     <!-- 操作按鈕 -->
     <div class="mb-6 flex justify-between items-center">
       <button
-        @click="openCreateModal"
         data-testid="create-room-btn"
         class="px-6 py-3 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors font-medium"
+        @click="openCreateModal"
       >
         + 新增會議室
       </button>
@@ -24,17 +28,21 @@
           placeholder="搜尋會議室..."
           data-testid="search-input"
           class="px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-        />
+        >
       </div>
     </div>
 
     <!-- 會議室列表 -->
     <div v-if="loading" class="text-center py-12">
-      <p class="text-gray-500">載入中...</p>
+      <p class="text-gray-500">
+        載入中...
+      </p>
     </div>
 
     <div v-else-if="filteredRooms.length === 0" class="text-center py-12">
-      <p class="text-gray-500">目前沒有會議室</p>
+      <p class="text-gray-500">
+        目前沒有會議室
+      </p>
     </div>
 
     <div v-else class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -51,10 +59,20 @@
             :src="room.photos[0]"
             :alt="room.name"
             class="w-full h-full object-cover"
-          />
+          >
           <div v-else class="flex items-center justify-center h-full text-gray-400">
-            <svg class="w-16 h-16" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+            <svg
+              class="w-16 h-16"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"
+              />
             </svg>
           </div>
         </div>
@@ -101,23 +119,23 @@
           <!-- 操作按鈕 -->
           <div class="flex gap-2">
             <button
-              @click="openEditModal(room)"
               :data-testid="`edit-btn-${room.id}`"
               class="flex-1 px-3 py-2 bg-white border border-gray-300 text-gray-700 rounded-md hover:bg-gray-50 transition-colors text-sm font-medium"
+              @click="openEditModal(room)"
             >
               編輯
             </button>
             <button
-              @click="openMaintenanceModal(room)"
               :data-testid="`maintenance-btn-${room.id}`"
               class="flex-1 px-3 py-2 bg-white border border-gray-300 text-gray-700 rounded-md hover:bg-gray-50 transition-colors text-sm font-medium"
+              @click="openMaintenanceModal(room)"
             >
               維護
             </button>
             <button
-              @click="confirmDelete(room)"
               :data-testid="`delete-btn-${room.id}`"
               class="px-3 py-2 bg-red-600 text-white rounded-md hover:bg-red-700 transition-colors text-sm font-medium"
+              @click="confirmDelete(room)"
             >
               刪除
             </button>
@@ -147,7 +165,9 @@
 
           <!-- 照片上傳 (編輯模式) -->
           <div v-if="editingRoom" class="mt-6 pt-6 border-t">
-            <h3 class="text-lg font-semibold text-gray-900 mb-4">照片管理</h3>
+            <h3 class="text-lg font-semibold text-gray-900 mb-4">
+              照片管理
+            </h3>
             <PhotoUpload
               :room-id="editingRoom.id!"
               :photos="editingRoom.photos || []"
@@ -168,8 +188,12 @@
     >
       <div class="bg-white rounded-lg shadow-xl max-w-2xl w-full mx-4">
         <div class="p-6">
-          <h2 class="text-2xl font-bold text-gray-900 mb-2">設定維護時段</h2>
-          <p class="text-gray-600 mb-6">{{ selectedRoom?.name }}</p>
+          <h2 class="text-2xl font-bold text-gray-900 mb-2">
+            設定維護時段
+          </h2>
+          <p class="text-gray-600 mb-6">
+            {{ selectedRoom?.name }}
+          </p>
           
           <MaintenanceScheduleForm
             :is-submitting="submitting"
@@ -283,7 +307,7 @@ const loadRooms = async () => {
     
     // Mock data for development
     rooms.value = []
-  } catch (error) {
+  } catch {
     showToast('載入會議室失敗', 'error')
   } finally {
     loading.value = false
@@ -309,7 +333,26 @@ const closeRoomModal = () => {
 }
 
 // 處理會議室提交
-const handleRoomSubmit = async (formData: Room) => {
+interface RoomFormData {
+  id?: number
+  name: string
+  capacity: number | null
+  building: string
+  floor: string
+  locationDescription: string
+  equipment: string[]
+  features: string[]
+  status: 'AVAILABLE' | 'MAINTENANCE' | 'DISABLED'
+  bookingRule: {
+    maxHoursPerReservation: number | null
+    maxAdvanceBookingDays: number | null
+    allowRecurring: boolean
+    requiresApproval: boolean
+  }
+  photos: string[]
+}
+
+const handleRoomSubmit = async (formData: RoomFormData) => {
   submitting.value = true
   try {
     if (editingRoom.value?.id) {
@@ -324,7 +367,7 @@ const handleRoomSubmit = async (formData: Room) => {
     
     closeRoomModal()
     await loadRooms()
-  } catch (error) {
+  } catch {
     showToast('操作失敗', 'error')
   } finally {
     submitting.value = false
@@ -339,7 +382,7 @@ const updateRoomPhotos = (photos: string[]) => {
 }
 
 // 照片上傳成功
-const handlePhotoUploadSuccess = (photoUrl: string) => {
+const handlePhotoUploadSuccess = (_photoUrl: string) => {
   showToast('照片上傳成功', 'success')
   loadRooms() // 重新載入會議室列表
 }
@@ -371,7 +414,7 @@ const handleMaintenanceSubmit = async (formData: MaintenanceSchedule) => {
     showToast('維護時段設定成功', 'success')
     closeMaintenanceModal()
     await loadRooms()
-  } catch (error) {
+  } catch {
     showToast('設定失敗', 'error')
   } finally {
     submitting.value = false
@@ -390,7 +433,7 @@ const confirmDelete = async (room: Room) => {
     await axios.delete(`/api/v1/rooms/${room.id}`)
     showToast('會議室已刪除', 'success')
     await loadRooms()
-  } catch (error) {
+  } catch {
     showToast('刪除失敗', 'error')
   }
 }

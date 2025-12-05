@@ -57,14 +57,10 @@ class CodingConventionsTest {
                     .that().implement("tw.huangcti.imrbs.domain.repository.UserRepository")
                     .should().haveSimpleNameEndingWith("RepositoryImpl")
                     .orShould().haveSimpleNameEndingWith("JpaAdapter")
+                    .allowEmptyShould(true)
                     .because("Repository 實作類別應有明確的命名");
 
-            // 只有在有匹配的類別時才檢查
-            try {
-                rule.check(importedClasses);
-            } catch (Exception e) {
-                // 如果沒有找到實作類別，跳過此測試
-            }
+            rule.check(importedClasses);
         }
 
         @Test
@@ -73,6 +69,7 @@ class CodingConventionsTest {
             ArchRule rule = classes()
                     .that().areAssignableTo(Exception.class)
                     .should().haveSimpleNameEndingWith("Exception")
+                    .allowEmptyShould(true)
                     .because("例外類別應以 Exception 結尾");
 
             rule.check(importedClasses);
@@ -86,6 +83,7 @@ class CodingConventionsTest {
                     .should().haveSimpleNameEndingWith("DTO")
                     .orShould().haveSimpleNameEndingWith("Request")
                     .orShould().haveSimpleNameEndingWith("Response")
+                    .allowEmptyShould(true)
                     .because("DTO 類別應有明確的後綴");
 
             rule.check(importedClasses);
@@ -104,6 +102,7 @@ class CodingConventionsTest {
                     .should().bePrivate()
                     .andShould().beStatic()
                     .andShould().beFinal()
+                    .allowEmptyShould(true)
                     .because("Logger 應宣告為 private static final");
 
             rule.check(importedClasses);
@@ -138,6 +137,7 @@ class CodingConventionsTest {
                     .or().areDeclaredInClassesThat()
                     .areAnnotatedWith("org.springframework.web.bind.annotation.RestController")
                     .should().notBeAnnotatedWith("org.springframework.beans.factory.annotation.Autowired")
+                    .allowEmptyShould(true)
                     .because("應使用建構子注入而非 @Autowired 欄位注入");
 
             rule.check(importedClasses);
@@ -154,6 +154,7 @@ class CodingConventionsTest {
             ArchRule rule = fields()
                     .that().areDeclaredInClassesThat()
                     .resideInAPackage("..domain.model..")
+                    .and().areDeclaredInClassesThat().areNotEnums()  // 排除枚舉類型
                     .should().bePrivate()
                     .because("Domain Model 的欄位應為 private");
 

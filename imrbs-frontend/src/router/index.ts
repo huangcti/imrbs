@@ -64,25 +64,24 @@ const router = createRouter({
         requiresAnyRole: ['ROOM_ADMIN', 'SYSTEM_ADMIN']
       }
     },
-    // TODO: US4 - 會議室管理功能實作後啟用
-    // {
-    //   path: '/admin/rooms',
-    //   name: 'admin-rooms',
-    //   component: () => import('../views/admin/RoomManagement.vue'),
-    //   meta: { 
-    //     requiresAuth: true,
-    //     requiresAnyRole: ['ROOM_ADMIN', 'SYSTEM_ADMIN']
-    //   }
-    // },
-    // {
-    //   path: '/admin/users',
-    //   name: 'admin-users',
-    //   component: () => import('../views/admin/UserManagement.vue'),
-    //   meta: { 
-    //     requiresAuth: true,
-    //     requiresRole: 'SYSTEM_ADMIN'
-    //   }
-    // }
+    {
+      path: '/admin/rooms',
+      name: 'admin-rooms',
+      component: () => import('../views/admin/RoomManagement.vue'),
+      meta: { 
+        requiresAuth: true,
+        requiresAnyRole: ['ROOM_ADMIN', 'SYSTEM_ADMIN']
+      }
+    },
+    {
+      path: '/admin/users',
+      name: 'admin-users',
+      component: () => import('../views/admin/UserManagement.vue'),
+      meta: { 
+        requiresAuth: true,
+        requiresRole: 'SYSTEM_ADMIN'
+      }
+    }
   ]
 })
 

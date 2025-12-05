@@ -51,7 +51,7 @@ function logout() {
         <!-- Logo -->
         <div class="flex items-center space-x-4">
           <router-link to="/" class="flex items-center space-x-2">
-            <i class="pi pi-building text-2xl text-blue-600"></i>
+            <i class="pi pi-building text-2xl text-blue-600" />
             <span data-cy="page-title" class="text-xl font-bold text-gray-800">{{ t('app.title') }}</span>
           </router-link>
         </div>
@@ -66,7 +66,7 @@ function logout() {
             class="px-4 py-2 rounded-md text-gray-700 hover:bg-blue-50 hover:text-blue-600 transition-colors flex items-center space-x-2"
             active-class="bg-blue-100 text-blue-700"
           >
-            <i :class="item.icon"></i>
+            <i :class="item.icon" />
             <span>{{ item.label }}</span>
           </router-link>
         </nav>
@@ -79,12 +79,12 @@ function logout() {
           <!-- 使用者選單 -->
           <div class="relative">
             <button
-              @click="toggleUserMenu"
               class="flex items-center space-x-2 px-3 py-2 rounded-md hover:bg-gray-100 transition-colors"
+              @click="toggleUserMenu"
             >
-              <i class="pi pi-user text-gray-600"></i>
+              <i class="pi pi-user text-gray-600" />
               <span class="hidden md:inline text-sm text-gray-700">{{ user.name }}</span>
-              <i class="pi pi-chevron-down text-xs text-gray-500"></i>
+              <i class="pi pi-chevron-down text-xs text-gray-500" />
             </button>
 
             <!-- 下拉選單 -->
@@ -93,29 +93,33 @@ function logout() {
               class="absolute right-0 mt-2 w-64 bg-white rounded-lg shadow-lg border border-gray-200 py-2"
             >
               <div class="px-4 py-3 border-b border-gray-200">
-                <p class="text-sm font-medium text-gray-900">{{ user.name }}</p>
-                <p class="text-xs text-gray-500">{{ user.email }}</p>
+                <p class="text-sm font-medium text-gray-900">
+                  {{ user.name }}
+                </p>
+                <p class="text-xs text-gray-500">
+                  {{ user.email }}
+                </p>
               </div>
               <button
-                @click="navigateTo('/profile')"
                 class="w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 flex items-center space-x-2"
+                @click="navigateTo('/profile')"
               >
-                <i class="pi pi-user"></i>
+                <i class="pi pi-user" />
                 <span>{{ t('nav.settings') }}</span>
               </button>
               <button
-                @click="navigateTo('/reservations')"
                 class="w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 flex items-center space-x-2"
+                @click="navigateTo('/reservations')"
               >
-                  <i class="pi pi-calendar"></i>
+                <i class="pi pi-calendar" />
                 <span>{{ t('nav.myReservations') }}</span>
               </button>
-              <hr class="my-2" />
+              <hr class="my-2">
               <button
-                @click="logout"
                 class="w-full text-left px-4 py-2 text-sm text-red-600 hover:bg-red-50 flex items-center space-x-2"
+                @click="logout"
               >
-                <i class="pi pi-sign-out"></i>
+                <i class="pi pi-sign-out" />
                 <span>{{ t('nav.logout') }}</span>
               </button>
             </div>

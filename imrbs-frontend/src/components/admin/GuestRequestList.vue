@@ -9,20 +9,28 @@
         <select
           id="statusFilter"
           v-model="selectedStatus"
-          @change="handleFilterChange"
           class="px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
+          @change="handleFilterChange"
         >
-          <option value="">{{ $t('admin.guestRequests.filter.all') }}</option>
-          <option value="PENDING">{{ $t('guest.status.pending') }}</option>
-          <option value="APPROVED">{{ $t('guest.status.approved') }}</option>
-          <option value="REJECTED">{{ $t('guest.status.rejected') }}</option>
+          <option value="">
+            {{ $t('admin.guestRequests.filter.all') }}
+          </option>
+          <option value="PENDING">
+            {{ $t('guest.status.pending') }}
+          </option>
+          <option value="APPROVED">
+            {{ $t('guest.status.approved') }}
+          </option>
+          <option value="REJECTED">
+            {{ $t('guest.status.rejected') }}
+          </option>
         </select>
       </div>
 
       <button
-        @click="refreshList"
         :disabled="isLoading"
         class="flex items-center px-4 py-2 text-gray-600 border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors"
+        @click="refreshList"
       >
         <svg
           class="w-4 h-4 mr-2"
@@ -44,7 +52,7 @@
 
     <!-- 載入中狀態 -->
     <div v-if="isLoading" class="flex justify-center py-12">
-      <div class="animate-spin rounded-full h-10 w-10 border-b-2 border-blue-600"></div>
+      <div class="animate-spin rounded-full h-10 w-10 border-b-2 border-blue-600" />
     </div>
 
     <!-- 空狀態 -->
@@ -65,7 +73,9 @@
           d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"
         />
       </svg>
-      <p class="mt-4 text-gray-500">{{ $t('admin.guestRequests.empty') }}</p>
+      <p class="mt-4 text-gray-500">
+        {{ $t('admin.guestRequests.empty') }}
+      </p>
     </div>
 
     <!-- 申請清單 -->
@@ -92,28 +102,42 @@
 
             <dl class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-x-6 gap-y-2 text-sm">
               <div>
-                <dt class="text-gray-500">{{ $t('admin.guestRequests.guestName') }}</dt>
-                <dd class="font-medium text-gray-900">{{ request.guestName }}</dd>
+                <dt class="text-gray-500">
+                  {{ $t('admin.guestRequests.guestName') }}
+                </dt>
+                <dd class="font-medium text-gray-900">
+                  {{ request.guestName }}
+                </dd>
               </div>
               <div>
-                <dt class="text-gray-500">{{ $t('admin.guestRequests.guestEmail') }}</dt>
-                <dd class="font-medium text-gray-900">{{ request.guestEmail }}</dd>
+                <dt class="text-gray-500">
+                  {{ $t('admin.guestRequests.guestEmail') }}
+                </dt>
+                <dd class="font-medium text-gray-900">
+                  {{ request.guestEmail }}
+                </dd>
               </div>
               <div>
-                <dt class="text-gray-500">{{ $t('admin.guestRequests.company') }}</dt>
+                <dt class="text-gray-500">
+                  {{ $t('admin.guestRequests.company') }}
+                </dt>
                 <dd class="font-medium text-gray-900">
                   {{ request.guestCompany || '-' }}
                 </dd>
               </div>
               <div>
-                <dt class="text-gray-500">{{ $t('admin.guestRequests.requestTime') }}</dt>
+                <dt class="text-gray-500">
+                  {{ $t('admin.guestRequests.requestTime') }}
+                </dt>
                 <dd class="font-medium text-gray-900">
                   {{ formatDateTime(request.requestedStartTime) }} -
                   {{ formatTime(request.requestedEndTime) }}
                 </dd>
               </div>
               <div>
-                <dt class="text-gray-500">{{ $t('admin.guestRequests.submittedAt') }}</dt>
+                <dt class="text-gray-500">
+                  {{ $t('admin.guestRequests.submittedAt') }}
+                </dt>
                 <dd class="font-medium text-gray-900">
                   {{ formatDateTime(request.createdAt) }}
                 </dd>
@@ -138,16 +162,16 @@
             class="flex flex-col sm:flex-row gap-2"
           >
             <button
-              @click="handleApprove(request)"
               :disabled="processingId === request.id"
               class="px-4 py-2 bg-green-600 text-white text-sm rounded-lg hover:bg-green-700 disabled:bg-gray-400 transition-colors"
+              @click="handleApprove(request)"
             >
               {{ $t('admin.guestRequests.approve') }}
             </button>
             <button
-              @click="handleRejectClick(request)"
               :disabled="processingId === request.id"
               class="px-4 py-2 bg-red-600 text-white text-sm rounded-lg hover:bg-red-700 disabled:bg-gray-400 transition-colors"
+              @click="handleRejectClick(request)"
             >
               {{ $t('admin.guestRequests.reject') }}
             </button>
@@ -166,7 +190,7 @@
         <div
           class="absolute inset-0 bg-black bg-opacity-50"
           @click="closeRejectDialog"
-        ></div>
+        />
 
         <!-- 對話框 -->
         <div class="relative bg-white rounded-lg shadow-xl max-w-md w-full mx-4 p-6">
@@ -186,21 +210,23 @@
               :placeholder="$t('admin.guestRequests.rejectDialog.reasonPlaceholder')"
               class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500"
               :class="{ 'border-red-500': rejectError }"
-            ></textarea>
-            <p v-if="rejectError" class="mt-1 text-sm text-red-500">{{ rejectError }}</p>
+            />
+            <p v-if="rejectError" class="mt-1 text-sm text-red-500">
+              {{ rejectError }}
+            </p>
           </div>
 
           <div class="flex justify-end space-x-3">
             <button
-              @click="closeRejectDialog"
               class="px-4 py-2 border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50"
+              @click="closeRejectDialog"
             >
               {{ $t('common.cancel') }}
             </button>
             <button
-              @click="confirmReject"
               :disabled="isRejecting"
               class="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 disabled:bg-gray-400"
+              @click="confirmReject"
             >
               {{ isRejecting ? $t('common.processing') : $t('admin.guestRequests.reject') }}
             </button>
@@ -231,8 +257,8 @@ const props = withDefaults(defineProps<Props>(), {
 
 // Emits
 const emit = defineEmits<{
-  (e: 'request-approved', request: GuestRequestResponse): void
-  (e: 'request-rejected', request: GuestRequestResponse): void
+  (_e: 'request-approved', _request: GuestRequestResponse): void
+  (_e: 'request-rejected', _request: GuestRequestResponse): void
 }>()
 
 // 狀態

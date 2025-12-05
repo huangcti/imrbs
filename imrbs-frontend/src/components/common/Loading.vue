@@ -10,7 +10,7 @@ interface Props {
   message?: string
 }
 
-const props = withDefaults(defineProps<Props>(), {
+const _props = withDefaults(defineProps<Props>(), {
   fullscreen: false,
   size: 'medium',
   message: '載入中...'

@@ -36,10 +36,13 @@ import java.util.List;
  * - 速率限制
  * - 安全標頭
  * - 無狀態 Session (Stateless)
+ * 
+ * 注意: 方法級安全 (@PreAuthorize) 在 dev profile 下由 DevMethodSecurityConfig 禁用
  */
 @Configuration
 @EnableWebSecurity
 @EnableMethodSecurity(prePostEnabled = true)
+@Profile("!dev")
 public class SecurityConfig {
     
     private final RateLimitingFilter rateLimitingFilter;
@@ -51,64 +54,6 @@ public class SecurityConfig {
     ) {
         this.rateLimitingFilter = rateLimitingFilter;
         this.securityHeadersFilter = securityHeadersFilter;
-    }
-    
-    /**
-     * 配置 HTTP 安全策略 (開發環境)
-     */
-    @Bean
-    @Profile("dev")
-    public SecurityFilterChain devSecurityFilterChain(
-            HttpSecurity http,
-            JwtAuthenticationFilter jwtAuthenticationFilter
-    ) throws Exception {
-        return http
-                // CORS 配置
-                .cors(cors -> cors.configurationSource(corsConfigurationSource()))
-                
-                // CSRF 保護 (開發環境關閉)
-                .csrf(AbstractHttpConfigurer::disable)
-                
-                // 請求授權配置
-                .authorizeHttpRequests(auth -> auth
-                        // 公開端點
-                        .requestMatchers(
-                                "/api/v1/auth/login",
-                                "/api/v1/auth/refresh",
-                                "/api/v1/public/**",
-                                "/api/v1/guest/**",
-                                "/api/v1/health",
-                                "/actuator/**",
-                                "/api-docs/**",
-                                "/swagger-ui/**",
-                                "/swagger-ui.html"
-                        ).permitAll()
-                        
-                        // 管理員端點
-                        .requestMatchers("/api/v1/admin/**").hasRole("ADMIN")
-                        
-                        // 其他端點需認證
-                        .anyRequest().authenticated()
-                )
-                
-                // JWT Resource Server 配置
-                .oauth2ResourceServer(oauth2 -> oauth2
-                        .jwt(jwt -> jwt
-                                .jwtAuthenticationConverter(jwtAuthenticationConverter())
-                        )
-                )
-                
-                // Session 管理 (無狀態)
-                .sessionManagement(session -> session
-                        .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-                )
-                
-                // 自訂過濾器
-                .addFilterBefore(securityHeadersFilter, UsernamePasswordAuthenticationFilter.class)
-                .addFilterBefore(rateLimitingFilter, SecurityHeadersFilter.class)
-                .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
-                
-                .build();
     }
     
     /**

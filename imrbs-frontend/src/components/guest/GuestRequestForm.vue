@@ -1,8 +1,10 @@
 <template>
   <div class="guest-request-form bg-white rounded-lg shadow-md p-6">
-    <h2 class="text-2xl font-bold text-gray-800 mb-6">{{ $t('guest.requestForm.title') }}</h2>
+    <h2 class="text-2xl font-bold text-gray-800 mb-6">
+      {{ $t('guest.requestForm.title') }}
+    </h2>
 
-    <form @submit.prevent="handleSubmit" class="space-y-6">
+    <form class="space-y-6" @submit.prevent="handleSubmit">
       <!-- 訪客資訊區塊 -->
       <fieldset class="border border-gray-200 rounded-lg p-4">
         <legend class="text-lg font-semibold text-gray-700 px-2">
@@ -23,8 +25,10 @@
               class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
               :class="{ 'border-red-500': errors.guestName }"
               required
-            />
-            <p v-if="errors.guestName" class="mt-1 text-sm text-red-500">{{ errors.guestName }}</p>
+            >
+            <p v-if="errors.guestName" class="mt-1 text-sm text-red-500">
+              {{ errors.guestName }}
+            </p>
           </div>
 
           <!-- 訪客 Email -->
@@ -40,8 +44,10 @@
               class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
               :class="{ 'border-red-500': errors.guestEmail }"
               required
-            />
-            <p v-if="errors.guestEmail" class="mt-1 text-sm text-red-500">{{ errors.guestEmail }}</p>
+            >
+            <p v-if="errors.guestEmail" class="mt-1 text-sm text-red-500">
+              {{ errors.guestEmail }}
+            </p>
           </div>
 
           <!-- 訪客電話 -->
@@ -55,7 +61,7 @@
               type="tel"
               :placeholder="$t('guest.requestForm.guestPhonePlaceholder')"
               class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-            />
+            >
           </div>
 
           <!-- 訪客公司 -->
@@ -69,7 +75,7 @@
               type="text"
               :placeholder="$t('guest.requestForm.guestCompanyPlaceholder')"
               class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-            />
+            >
           </div>
         </div>
       </fieldset>
@@ -93,12 +99,16 @@
               :class="{ 'border-red-500': errors.roomId }"
               required
             >
-              <option value="">{{ $t('guest.requestForm.selectRoom') }}</option>
+              <option value="">
+                {{ $t('guest.requestForm.selectRoom') }}
+              </option>
               <option v-for="room in rooms" :key="room.id" :value="room.id">
                 {{ room.name }} ({{ $t('guest.requestForm.capacity') }}: {{ room.capacity }})
               </option>
             </select>
-            <p v-if="errors.roomId" class="mt-1 text-sm text-red-500">{{ errors.roomId }}</p>
+            <p v-if="errors.roomId" class="mt-1 text-sm text-red-500">
+              {{ errors.roomId }}
+            </p>
           </div>
 
           <!-- 會議標題 -->
@@ -114,7 +124,7 @@
               class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
               :class="{ 'border-red-500': errors.meetingTitle }"
               required
-            />
+            >
             <p v-if="errors.meetingTitle" class="mt-1 text-sm text-red-500">
               {{ errors.meetingTitle }}
             </p>
@@ -133,7 +143,7 @@
               class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
               :class="{ 'border-red-500': errors.requestedStartTime }"
               required
-            />
+            >
             <p v-if="errors.requestedStartTime" class="mt-1 text-sm text-red-500">
               {{ errors.requestedStartTime }}
             </p>
@@ -152,7 +162,7 @@
               class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
               :class="{ 'border-red-500': errors.requestedEndTime }"
               required
-            />
+            >
             <p v-if="errors.requestedEndTime" class="mt-1 text-sm text-red-500">
               {{ errors.requestedEndTime }}
             </p>
@@ -170,7 +180,7 @@
               min="1"
               :max="selectedRoom?.capacity || 100"
               class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-            />
+            >
           </div>
 
           <!-- 會議目的 -->
@@ -184,7 +194,7 @@
               rows="3"
               :placeholder="$t('guest.requestForm.purposePlaceholder')"
               class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-            ></textarea>
+            />
           </div>
         </div>
       </fieldset>
@@ -193,8 +203,8 @@
       <div class="flex justify-end space-x-4">
         <button
           type="button"
-          @click="resetForm"
           class="px-6 py-2 border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50 transition-colors"
+          @click="resetForm"
         >
           {{ $t('common.reset') }}
         </button>
@@ -212,12 +222,12 @@
                 r="10"
                 stroke="currentColor"
                 stroke-width="4"
-              ></circle>
+              />
               <path
                 class="opacity-75"
                 fill="currentColor"
                 d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
-              ></path>
+              />
             </svg>
             {{ $t('common.submitting') }}
           </span>
@@ -229,7 +239,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, reactive, computed, onMounted } from 'vue'
+import { ref, reactive, computed } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { guestService, type GuestRequestData } from '@/services/guest.service'
 import { useToast } from '@/composables/useToast'
@@ -248,8 +258,8 @@ const props = withDefaults(defineProps<Props>(), {
 
 // Emits
 const emit = defineEmits<{
-  (e: 'submit-success', response: { id: number; status: string }): void
-  (e: 'submit-error', error: Error): void
+  (_e: 'submit-success', _response: { id: number; status: string }): void
+  (_e: 'submit-error', _error: Error): void
 }>()
 
 // 表單資料

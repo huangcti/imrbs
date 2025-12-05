@@ -21,12 +21,12 @@ const apiClient: AxiosInstance = axios.create({
 // 正在刷新 Token 的標記
 let isRefreshing = false
 // 等待刷新完成的請求佇列
-let refreshSubscribers: ((token: string) => void)[] = []
+let refreshSubscribers: ((_token: string) => void)[] = []
 
 /**
  * 訂閱 Token 刷新完成事件
  */
-function subscribeTokenRefresh(callback: (token: string) => void): void {
+function subscribeTokenRefresh(callback: (_token: string) => void): void {
   refreshSubscribers.push(callback)
 }
 

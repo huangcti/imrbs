@@ -3,6 +3,7 @@ import { createPinia } from 'pinia'
 import App from './App.vue'
 import router from './router'
 import { setupI18n } from './i18n'
+import { useAuthStore } from './stores/auth'
 
 // Tailwind CSS
 import './assets/main.css'
@@ -14,6 +15,16 @@ async function bootstrap() {
   // Pinia state management
   const pinia = createPinia()
   app.use(pinia)
+
+  // 初始化認證狀態 (必須在 router 之前)
+  const authStore = useAuthStore()
+  authStore.restoreAuth()
+  
+  console.log('🔐 Auth initialized:', {
+    isAuthenticated: authStore.isAuthenticated,
+    user: authStore.user?.fullName,
+    roles: authStore.userRoles
+  })
 
   // Vue Router
   app.use(router)

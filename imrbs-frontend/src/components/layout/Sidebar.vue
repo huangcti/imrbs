@@ -67,7 +67,7 @@ function isExpanded(path: string): boolean {
   return expandedItems.value.has(path)
 }
 
-function navigateTo(path: string) {
+function _navigateTo(path: string) {
   router.push(path)
 }
 </script>

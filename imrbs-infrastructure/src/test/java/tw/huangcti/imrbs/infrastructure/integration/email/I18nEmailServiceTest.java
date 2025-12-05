@@ -84,7 +84,7 @@ class I18nEmailServiceTest {
                 .startTime(LocalDateTime.of(2025, 12, 1, 14, 0))
                 .endTime(LocalDateTime.of(2025, 12, 1, 15, 0))
                 .description("討論 Q4 目標")
-                .participants(5)
+                .participants("user1@example.com,user2@example.com")
                 .status(Reservation.ReservationStatus.CONFIRMED)
                 .build();
     }
@@ -225,7 +225,7 @@ class I18nEmailServiceTest {
                     .meetingTitle("專案討論會議")
                     .startTime(LocalDateTime.now().plusMinutes(30))
                     .endTime(LocalDateTime.now().plusMinutes(90))
-                    .participants(5)
+                    .participants("user1@example.com,user2@example.com")
                     .build();
 
             when(mailSender.createMimeMessage()).thenReturn(mimeMessage);
@@ -261,7 +261,7 @@ class I18nEmailServiceTest {
                     .meetingTitle("Project Discussion Meeting")
                     .startTime(LocalDateTime.now().plusMinutes(30))
                     .endTime(LocalDateTime.now().plusMinutes(90))
-                    .participants(5)
+                    .participants("user1@example.com,user2@example.com")
                     .build();
 
             when(mailSender.createMimeMessage()).thenReturn(mimeMessage);
@@ -333,7 +333,6 @@ class I18nEmailServiceTest {
         void testEmailSubject_TranslatedCorrectly() throws Exception {
             // Given
             Locale zhLocale = Locale.TRADITIONAL_CHINESE;
-            Locale enLocale = Locale.ENGLISH;
 
             when(mailSender.createMimeMessage()).thenReturn(mimeMessage);
 
@@ -343,13 +342,6 @@ class I18nEmailServiceTest {
                     eq(new Object[]{"專案討論會議"}),
                     eq(zhLocale)))
                     .thenReturn("會議室預約確認 - 專案討論會議");
-
-            // 英文主旨
-            when(messageSource.getMessage(
-                    eq("email.reservation.confirmed.subject"),
-                    eq(new Object[]{"專案討論會議"}),
-                    eq(enLocale)))
-                    .thenReturn("Meeting Room Reservation Confirmed - 專案討論會議");
 
             when(templateEngine.process(any(String.class), any(Context.class)))
                     .thenReturn("<html>content</html>");

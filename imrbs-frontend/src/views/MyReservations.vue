@@ -100,7 +100,9 @@ function clearMessage(): void {
     <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
       <!-- 頁面標題 -->
       <div class="mb-8">
-        <h1 class="text-3xl font-bold text-gray-900">我的預約</h1>
+        <h1 class="text-3xl font-bold text-gray-900">
+          我的預約
+        </h1>
         <p class="mt-2 text-sm text-gray-600">
           查看、編輯或取消您的會議室預約
         </p>
@@ -123,11 +125,16 @@ function clearMessage(): void {
           <span>{{ successMessage }}</span>
         </div>
         <button
-          @click="clearMessage"
           class="text-green-700 hover:text-green-900"
           aria-label="關閉"
+          @click="clearMessage"
         >
-          <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <svg
+            class="h-5 w-5"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+          >
             <path
               stroke-linecap="round"
               stroke-linejoin="round"
@@ -155,11 +162,16 @@ function clearMessage(): void {
           <span>{{ errorMessage }}</span>
         </div>
         <button
-          @click="clearMessage"
           class="text-red-700 hover:text-red-900"
           aria-label="關閉"
+          @click="clearMessage"
         >
-          <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <svg
+            class="h-5 w-5"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+          >
             <path
               stroke-linecap="round"
               stroke-linejoin="round"
@@ -173,25 +185,33 @@ function clearMessage(): void {
       <!-- 統計資訊 -->
       <div class="mb-6 grid grid-cols-1 md:grid-cols-4 gap-4">
         <div class="bg-white rounded-lg shadow p-4">
-          <div class="text-sm text-gray-600">全部預約</div>
+          <div class="text-sm text-gray-600">
+            全部預約
+          </div>
           <div class="text-2xl font-bold text-gray-900">
             {{ reservationStore.reservations.length }}
           </div>
         </div>
         <div class="bg-white rounded-lg shadow p-4">
-          <div class="text-sm text-gray-600">待確認</div>
+          <div class="text-sm text-gray-600">
+            待確認
+          </div>
           <div class="text-2xl font-bold text-yellow-600">
             {{ reservationStore.reservations.filter((r) => r.status === 'PENDING').length }}
           </div>
         </div>
         <div class="bg-white rounded-lg shadow p-4">
-          <div class="text-sm text-gray-600">已確認</div>
+          <div class="text-sm text-gray-600">
+            已確認
+          </div>
           <div class="text-2xl font-bold text-green-600">
             {{ reservationStore.reservations.filter((r) => r.status === 'CONFIRMED').length }}
           </div>
         </div>
         <div class="bg-white rounded-lg shadow p-4">
-          <div class="text-sm text-gray-600">已取消</div>
+          <div class="text-sm text-gray-600">
+            已取消
+          </div>
           <div class="text-2xl font-bold text-red-600">
             {{ reservationStore.reservations.filter((r) => r.status === 'CANCELLED').length }}
           </div>
@@ -222,7 +242,9 @@ function clearMessage(): void {
             />
           </svg>
           <div class="text-sm">
-            <p class="font-medium mb-1">提醒事項：</p>
+            <p class="font-medium mb-1">
+              提醒事項：
+            </p>
             <ul class="list-disc list-inside space-y-1">
               <li>只能編輯或取消尚未開始的預約</li>
               <li>取消預約需在會議開始前 24 小時進行</li>

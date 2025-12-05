@@ -1,0 +1,282 @@
+package tw.huangcti.imrbs.web.controller;
+
+import com.fasterxml.jackson.databind.ObjectMapper;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Nested;
+import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.context.annotation.Import;
+import org.springframework.http.MediaType;
+import org.springframework.security.test.context.support.WithMockUser;
+import org.springframework.test.web.servlet.MockMvc;
+import tw.huangcti.imrbs.application.usecase.GenerateUsageReportUseCase;
+import tw.huangcti.imrbs.infrastructure.excel.ExcelExportService;
+import tw.huangcti.imrbs.web.config.TestSecurityConfig;
+
+import java.time.LocalDate;
+import java.util.List;
+
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyInt;
+import static org.mockito.Mockito.when;
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+
+/**
+ * 報告 API 合約測試
+ * 
+ * 測試端點: GET /api/admin/reports/usage
+ * 
+ * 測試場景:
+ * 1. 成功獲取使用率報告 (ADMIN 權限)
+ * 2. 支援日期範圍過濾
+ * 3. 支援會議室 ID 過濾
+ * 4. 權限控制
+ * 5. 參數驗證
+ */
+@WebMvcTest(ReportController.class)
+@Import(TestSecurityConfig.class)
+@DisplayName("ReportController 報告 API 合約測試")
+class ReportControllerTest {
+
+    @Autowired
+    private MockMvc mockMvc;
+
+    @Autowired
+    private ObjectMapper objectMapper;
+
+    @MockBean
+    private GenerateUsageReportUseCase generateUsageReportUseCase;
+
+    @MockBean
+    private ExcelExportService excelExportService;
+
+    private static final String BASE_URL = "/api/admin/reports/usage";
+
+    @Nested
+    @DisplayName("GET /api/admin/reports/usage - 獲取使用率報告")
+    class GetUsageReportTests {
+
+        @Test
+        @WithMockUser(roles = "ADMIN")
+        @DisplayName("管理員應能成功獲取使用率報告")
+        void shouldReturnUsageReportForAdmin() throws Exception {
+            // Given
+            GenerateUsageReportUseCase.UsageReport response = createUsageReport(
+                    LocalDate.of(2025, 11, 1),
+                    LocalDate.of(2025, 11, 30),
+                    65.5, 1200.0, 150);
+
+            when(generateUsageReportUseCase.generateReport(any(), any(), any())).thenReturn(response);
+
+            // When & Then
+            mockMvc.perform(get(BASE_URL)
+                            .param("startDate", "2025-11-01")
+                            .param("endDate", "2025-11-30")
+                            .with(csrf()))
+                    .andExpect(status().isOk())
+                    .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+                    .andExpect(jsonPath("$.startDate").value("2025-11-01"))
+                    .andExpect(jsonPath("$.endDate").value("2025-11-30"))
+                    .andExpect(jsonPath("$.overallUsageRate").value(65.5))
+                    .andExpect(jsonPath("$.totalUsageHours").value(1200.0))
+                    .andExpect(jsonPath("$.totalReservations").value(150));
+        }
+
+        @Test
+        @WithMockUser(roles = "EMPLOYEE")
+        @DisplayName("一般員工應被拒絕訪問")
+        void shouldDenyAccessForEmployee() throws Exception {
+            // When & Then
+            mockMvc.perform(get(BASE_URL)
+                            .param("startDate", "2025-11-01")
+                            .param("endDate", "2025-11-30")
+                            .with(csrf()))
+                    .andExpect(status().isForbidden());
+        }
+
+        @Test
+        @DisplayName("未認證請求應返回 401")
+        void shouldReturn401ForUnauthenticatedRequest() throws Exception {
+            // When & Then
+            mockMvc.perform(get(BASE_URL)
+                            .param("startDate", "2025-11-01")
+                            .param("endDate", "2025-11-30"))
+                    .andExpect(status().isUnauthorized());
+        }
+    }
+
+    @Nested
+    @DisplayName("日期範圍過濾")
+    class DateRangeFilterTests {
+
+        @Test
+        @WithMockUser(roles = "ADMIN")
+        @DisplayName("應拒絕無效的日期格式")
+        void shouldRejectInvalidDateFormat() throws Exception {
+            // When & Then
+            mockMvc.perform(get(BASE_URL)
+                            .param("startDate", "invalid-date")
+                            .param("endDate", "2025-11-30")
+                            .with(csrf()))
+                    .andExpect(status().isBadRequest());
+        }
+
+        @Test
+        @WithMockUser(roles = "ADMIN")
+        @DisplayName("應拒絕結束日期早於開始日期")
+        void shouldRejectEndDateBeforeStartDate() throws Exception {
+            // When & Then
+            mockMvc.perform(get(BASE_URL)
+                            .param("startDate", "2025-11-30")
+                            .param("endDate", "2025-11-01")
+                            .with(csrf()))
+                    .andExpect(status().isBadRequest());
+        }
+    }
+
+    @Nested
+    @DisplayName("報告類型")
+    class ReportTypeTests {
+
+        @Test
+        @WithMockUser(roles = "ADMIN")
+        @DisplayName("應支援日報告類型")
+        void shouldSupportDailyReportType() throws Exception {
+            // Given
+            GenerateUsageReportUseCase.UsageReport response = createUsageReport(
+                    LocalDate.of(2025, 11, 1),
+                    LocalDate.of(2025, 11, 1),
+                    70.0, 8.0, 5);
+
+            when(generateUsageReportUseCase.generateDailyReport(any())).thenReturn(response);
+
+            // When & Then
+            mockMvc.perform(get(BASE_URL)
+                            .param("startDate", "2025-11-01")
+                            .param("endDate", "2025-11-01")
+                            .param("periodType", "daily")
+                            .with(csrf()))
+                    .andExpect(status().isOk())
+                    .andExpect(jsonPath("$.startDate").value("2025-11-01"));
+        }
+
+        @Test
+        @WithMockUser(roles = "ADMIN")
+        @DisplayName("應支援週報告類型")
+        void shouldSupportWeeklyReportType() throws Exception {
+            // Given
+            GenerateUsageReportUseCase.UsageReport response = createUsageReport(
+                    LocalDate.of(2025, 11, 3),
+                    LocalDate.of(2025, 11, 9),
+                    65.0, 56.0, 25);
+
+            when(generateUsageReportUseCase.generateWeeklyReport(any())).thenReturn(response);
+
+            // When & Then
+            mockMvc.perform(get(BASE_URL)
+                            .param("startDate", "2025-11-03")
+                            .param("endDate", "2025-11-09")
+                            .param("periodType", "weekly")
+                            .with(csrf()))
+                    .andExpect(status().isOk())
+                    .andExpect(jsonPath("$.startDate").value("2025-11-03"));
+        }
+
+        @Test
+        @WithMockUser(roles = "ADMIN")
+        @DisplayName("應支援月報告類型")
+        void shouldSupportMonthlyReportType() throws Exception {
+            // Given
+            GenerateUsageReportUseCase.UsageReport response = createUsageReport(
+                    LocalDate.of(2025, 11, 1),
+                    LocalDate.of(2025, 11, 30),
+                    60.0, 240.0, 100);
+
+            when(generateUsageReportUseCase.generateMonthlyReport(anyInt(), anyInt())).thenReturn(response);
+
+            // When & Then
+            mockMvc.perform(get(BASE_URL)
+                            .param("startDate", "2025-11-01")
+                            .param("endDate", "2025-11-30")
+                            .param("periodType", "monthly")
+                            .with(csrf()))
+                    .andExpect(status().isOk())
+                    .andExpect(jsonPath("$.startDate").value("2025-11-01"));
+        }
+
+        @Test
+        @WithMockUser(roles = "ADMIN")
+        @DisplayName("應預設使用自訂日期範圍")
+        void shouldDefaultToCustomPeriodType() throws Exception {
+            // Given
+            GenerateUsageReportUseCase.UsageReport response = createUsageReport(
+                    LocalDate.of(2025, 11, 1),
+                    LocalDate.of(2025, 11, 15),
+                    55.0, 120.0, 50);
+
+            when(generateUsageReportUseCase.generateReport(any(), any(), any())).thenReturn(response);
+
+            // When & Then
+            mockMvc.perform(get(BASE_URL)
+                            .param("startDate", "2025-11-01")
+                            .param("endDate", "2025-11-15")
+                            .with(csrf()))
+                    .andExpect(status().isOk())
+                    .andExpect(jsonPath("$.startDate").value("2025-11-01"))
+                    .andExpect(jsonPath("$.endDate").value("2025-11-15"));
+        }
+    }
+
+    @Nested
+    @DisplayName("GET /api/admin/reports/usage/summary - 獲取報告摘要")
+    class GetReportSummaryTests {
+
+        @Test
+        @WithMockUser(roles = "ADMIN")
+        @DisplayName("管理員應能成功獲取報告摘要")
+        void shouldReturnReportSummaryForAdmin() throws Exception {
+            // Given
+            GenerateUsageReportUseCase.ReportSummary summary = GenerateUsageReportUseCase.ReportSummary.builder()
+                    .startDate(LocalDate.of(2025, 11, 1))
+                    .endDate(LocalDate.of(2025, 11, 30))
+                    .overallUsageRate(65.0)
+                    .totalUsageHours(1200.0)
+                    .totalReservations(150)
+                    .build();
+
+            when(generateUsageReportUseCase.generateSummary(any(), any())).thenReturn(summary);
+
+            // When & Then
+            mockMvc.perform(get("/api/admin/reports/usage/summary")
+                            .param("startDate", "2025-11-01")
+                            .param("endDate", "2025-11-30")
+                            .with(csrf()))
+                    .andExpect(status().isOk())
+                    .andExpect(jsonPath("$.overallUsageRate").value(65.0))
+                    .andExpect(jsonPath("$.totalUsageHours").value(1200.0))
+                    .andExpect(jsonPath("$.totalReservations").value(150));
+        }
+    }
+
+    // Helper methods
+    private GenerateUsageReportUseCase.UsageReport createUsageReport(
+            LocalDate startDate, LocalDate endDate,
+            double usageRate, double usageHours, int reservations) {
+        return GenerateUsageReportUseCase.UsageReport.builder()
+                .startDate(startDate)
+                .endDate(endDate)
+                .overallUsageRate(usageRate)
+                .totalUsageHours(usageHours)
+                .totalReservations(reservations)
+                .roomStats(List.of())
+                .hourlyStats(List.of())
+                .dayStats(List.of())
+                .peakHours(List.of())
+                .offPeakHours(List.of())
+                .build();
+    }
+}

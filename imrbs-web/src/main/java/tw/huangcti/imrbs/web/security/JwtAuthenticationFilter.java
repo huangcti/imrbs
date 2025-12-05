@@ -6,6 +6,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.context.annotation.Profile;
 import org.springframework.lang.NonNull;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -29,9 +30,12 @@ import java.util.stream.Collectors;
  * - 驗證 JWT 有效性 (簽章、過期時間)
  * - 將使用者資訊載入 SecurityContext
  * - 處理 JWT 驗證失敗的情況
+ * 
+ * 注意: 此過濾器在 dev profile 下被禁用
  */
 @Slf4j
 @Component
+@Profile("!dev")
 @RequiredArgsConstructor
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
     

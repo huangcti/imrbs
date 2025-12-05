@@ -172,7 +172,7 @@ class EmailServiceTest {
         assertThat(sentMessage.getTo()).containsExactly(testEmail);
         assertThat(sentMessage.getSubject()).contains("會議提醒");
         assertThat(sentMessage.getSubject()).contains("專案討論會議");
-        assertThat(sentMessage.getText()).contains("即將開始");
+        assertThat(sentMessage.getText()).contains("分鐘後開始");
     }
 
     @Test

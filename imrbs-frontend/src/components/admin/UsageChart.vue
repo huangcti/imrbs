@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, watch, computed, onMounted, onUnmounted } from 'vue'
+import { ref, computed } from 'vue'
 import { useI18n } from 'vue-i18n'
 import {
   Chart as ChartJS,
@@ -117,7 +117,7 @@ const roomUsageChartOptions = computed<ChartOptions<'bar'>>(() => ({
     },
     tooltip: {
       callbacks: {
-        label: (context) => `${context.parsed.y.toFixed(1)}%`
+        label: (context) => `${(context.parsed.y ?? 0).toFixed(1)}%`
       }
     }
   },
@@ -292,7 +292,6 @@ const gaugeBgColor = computed(() => {
         <button
           v-for="tab in chartTabs"
           :key="tab.key"
-          @click="activeChart = tab.key"
           :class="[
             'px-4 py-2 text-sm font-medium rounded-t-lg transition-colors',
             activeChart === tab.key
@@ -300,6 +299,7 @@ const gaugeBgColor = computed(() => {
               : 'text-gray-500 hover:text-gray-700 hover:bg-gray-50'
           ]"
           :data-testid="`chart-tab-${tab.key}`"
+          @click="activeChart = tab.key"
         >
           {{ tab.label }}
         </button>
@@ -312,7 +312,7 @@ const gaugeBgColor = computed(() => {
       class="h-80 flex items-center justify-center"
       data-testid="chart-loading"
     >
-      <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div>
+      <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600" />
     </div>
 
     <!-- Charts -->

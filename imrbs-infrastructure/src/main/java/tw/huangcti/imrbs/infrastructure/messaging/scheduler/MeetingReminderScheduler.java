@@ -2,6 +2,8 @@ package tw.huangcti.imrbs.infrastructure.messaging.scheduler;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
+import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 import tw.huangcti.imrbs.domain.model.Reservation;
@@ -32,6 +34,7 @@ import java.util.Locale;
 @Component
 @RequiredArgsConstructor
 @Slf4j
+@ConditionalOnBean(JavaMailSender.class)
 public class MeetingReminderScheduler {
 
     private final ReservationRepository reservationRepository;

@@ -80,9 +80,47 @@ export const useAuthStore = defineStore('auth', () => {
   // ==================== Actions ====================
 
   /**
+   * 開發模式自動登入
+   * 當 VITE_DEV_MODE=true 時，自動使用模擬使用者登入
+   */
+  function initDevMode(): boolean {
+    const isDevMode = import.meta.env.VITE_DEV_MODE === 'true'
+    
+    if (isDevMode) {
+      console.log('🔧 開發模式啟用 - 自動登入模擬使用者')
+      
+      const devUser: User = {
+        id: Number(import.meta.env.VITE_DEV_USER_ID) || 1,
+        username: 'dev-user',
+        fullName: import.meta.env.VITE_DEV_USER_NAME || '開發者',
+        email: import.meta.env.VITE_DEV_USER_EMAIL || 'dev@example.com',
+        roles: (import.meta.env.VITE_DEV_USER_ROLES || 'EMPLOYEE,ROOM_ADMIN').split(',') as UserRole[],
+        department: '開發部門',
+        createdAt: new Date().toISOString(),
+        updatedAt: new Date().toISOString()
+      }
+
+      // 設定模擬 Token (1小時有效)
+      accessToken.value = 'dev-mock-access-token'
+      refreshToken.value = 'dev-mock-refresh-token'
+      expiresAt.value = Date.now() + 3600000 // 1 小時
+      user.value = devUser
+      
+      return true
+    }
+    
+    return false
+  }
+
+  /**
    * 從 localStorage 恢復認證狀態
    */
   function restoreAuth(): void {
+    // 開發模式：自動登入
+    if (initDevMode()) {
+      return
+    }
+
     try {
       const storedToken = localStorage.getItem(STORAGE_KEYS.ACCESS_TOKEN)
       const storedRefreshToken = localStorage.getItem(STORAGE_KEYS.REFRESH_TOKEN)

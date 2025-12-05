@@ -30,16 +30,18 @@ const emit = defineEmits<{
         :src="room.photos[0]"
         :alt="room.name"
         class="w-full h-full object-cover"
-      />
+      >
       <div v-else class="flex items-center justify-center h-full text-gray-400">
-        <i class="pi pi-image text-4xl"></i>
+        <i class="pi pi-image text-4xl" />
       </div>
     </div>
 
     <!-- 會議室資訊 -->
     <div class="p-4">
       <div class="flex items-start justify-between mb-2">
-        <h3 class="text-lg font-semibold text-gray-900">{{ room.name }}</h3>
+        <h3 class="text-lg font-semibold text-gray-900">
+          {{ room.name }}
+        </h3>
         <span
           :class="{
             'px-2 py-1 text-xs rounded-full': true,
@@ -54,13 +56,13 @@ const emit = defineEmits<{
 
       <!-- 建築物與樓層 -->
       <p class="text-sm text-gray-600 mb-2">
-        <i class="pi pi-building mr-1"></i>
+        <i class="pi pi-building mr-1" />
         {{ room.building }} {{ room.floor }}樓
       </p>
 
       <!-- 容量 -->
       <p class="text-sm text-gray-600 mb-3">
-        <i class="pi pi-users mr-1"></i>
+        <i class="pi pi-users mr-1" />
         容納 {{ room.capacity }} 人
       </p>
 
@@ -91,15 +93,15 @@ const emit = defineEmits<{
       <!-- 操作按鈕 -->
       <div class="flex gap-2">
         <button
-          @click.stop="emit('viewDetail', room.id)"
           class="flex-1 bg-blue-600 text-white py-2 px-4 rounded-md hover:bg-blue-700 transition-colors text-sm"
+          @click.stop="emit('viewDetail', room.id)"
         >
           查看詳情
         </button>
         <button
           v-if="room.status === 'AVAILABLE'"
-          @click.stop="emit('select', room)"
           class="px-4 py-2 border border-blue-600 text-blue-600 rounded-md hover:bg-blue-50 transition-colors text-sm"
+          @click.stop="emit('select', room)"
         >
           預約
         </button>

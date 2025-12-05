@@ -74,7 +74,7 @@ public class RoomJpaEntity {
     
     @Type(JsonBinaryType.class)
     @Column(name = "booking_rule", columnDefinition = "jsonb")
-    private Room.BookingRule bookingRule;
+    private BookingRuleDto bookingRule;
     
     @Column(name = "created_at", nullable = false, updatable = false)
     private LocalDateTime createdAt;
@@ -126,7 +126,7 @@ public class RoomJpaEntity {
                 .photos(photos != null ? new ArrayList<>(photos) : new ArrayList<>())
                 .status(status)
                 .features(features != null ? new ArrayList<>(features) : new ArrayList<>())
-                .bookingRule(bookingRule)
+                .bookingRule(bookingRule != null ? bookingRule.toDomain() : null)
                 .createdAt(createdAt)
                 .updatedAt(updatedAt)
                 .build();
@@ -150,7 +150,7 @@ public class RoomJpaEntity {
                 .photos(room.getPhotos() != null ? new ArrayList<>(room.getPhotos()) : new ArrayList<>())
                 .status(room.getStatus())
                 .features(room.getFeatures() != null ? new ArrayList<>(room.getFeatures()) : new ArrayList<>())
-                .bookingRule(room.getBookingRule())
+                .bookingRule(BookingRuleDto.fromDomain(room.getBookingRule()))
                 .createdAt(room.getCreatedAt())
                 .updatedAt(room.getUpdatedAt())
                 .build();

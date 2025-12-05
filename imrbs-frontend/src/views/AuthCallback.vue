@@ -57,8 +57,8 @@
           {{ error }}
         </p>
         <button
-          @click="redirectToLogin"
           class="mt-4 px-6 py-2 bg-indigo-600 text-white rounded-md hover:bg-indigo-700 transition-colors"
+          @click="redirectToLogin"
         >
           返回登入頁面
         </button>

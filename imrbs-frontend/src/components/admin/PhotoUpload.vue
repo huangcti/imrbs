@@ -2,7 +2,9 @@
   <div class="space-y-4">
     <!-- 現有照片顯示 -->
     <div v-if="photos.length > 0" class="space-y-2">
-      <h3 class="text-sm font-medium text-gray-700">現有照片</h3>
+      <h3 class="text-sm font-medium text-gray-700">
+        現有照片
+      </h3>
       <div class="grid grid-cols-3 gap-4">
         <div
           v-for="(photo, index) in photos"
@@ -14,16 +16,26 @@
             :src="photo"
             :alt="`會議室照片 ${index + 1}`"
             class="w-full h-32 object-cover rounded-md border border-gray-300"
-          />
+          >
           <button
             type="button"
-            @click="removePhoto(index)"
             :data-testid="`remove-photo-${index}`"
             class="absolute top-2 right-2 p-1 bg-red-600 text-white rounded-full opacity-0 group-hover:opacity-100 transition-opacity hover:bg-red-700"
             title="刪除照片"
+            @click="removePhoto(index)"
           >
-            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+            <svg
+              class="w-4 h-4"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M6 18L18 6M6 6l12 12"
+              />
             </svg>
           </button>
         </div>
@@ -36,26 +48,26 @@
         上傳照片
       </label>
       <div
-        @dragover.prevent="isDragging = true"
-        @dragleave.prevent="isDragging = false"
-        @drop.prevent="handleDrop"
         :class="[
           'border-2 border-dashed rounded-md p-6 text-center cursor-pointer transition-colors',
           isDragging ? 'border-blue-500 bg-blue-50' : 'border-gray-300 hover:border-gray-400'
         ]"
         data-testid="upload-dropzone"
+        @dragover.prevent="isDragging = true"
+        @dragleave.prevent="isDragging = false"
+        @drop.prevent="handleDrop"
       >
         <input
           ref="fileInput"
           type="file"
           accept="image/jpeg,image/jpg,image/png,image/webp"
           multiple
-          @change="handleFileSelect"
           data-testid="file-input"
           class="hidden"
-        />
+          @change="handleFileSelect"
+        >
 
-        <div @click="triggerFileInput" class="space-y-2">
+        <div class="space-y-2" @click="triggerFileInput">
           <svg
             class="mx-auto h-12 w-12 text-gray-400"
             stroke="currentColor"
@@ -82,19 +94,23 @@
 
     <!-- 上傳進度 -->
     <div v-if="uploadingFiles.length > 0" class="space-y-2">
-      <h3 class="text-sm font-medium text-gray-700">上傳中...</h3>
+      <h3 class="text-sm font-medium text-gray-700">
+        上傳中...
+      </h3>
       <div
         v-for="file in uploadingFiles"
         :key="file.name"
         class="flex items-center gap-3 p-3 bg-gray-50 rounded-md"
       >
         <div class="flex-1">
-          <p class="text-sm font-medium text-gray-700">{{ file.name }}</p>
+          <p class="text-sm font-medium text-gray-700">
+            {{ file.name }}
+          </p>
           <div class="mt-1 w-full bg-gray-200 rounded-full h-2">
             <div
               class="bg-blue-600 h-2 rounded-full transition-all duration-300"
               :style="{ width: `${file.progress}%` }"
-            ></div>
+            />
           </div>
         </div>
         <span class="text-sm text-gray-500">{{ file.progress }}%</span>
@@ -103,7 +119,9 @@
 
     <!-- 錯誤訊息 -->
     <div v-if="errorMessage" class="p-3 bg-red-50 border border-red-200 rounded-md">
-      <p class="text-sm text-red-600" data-testid="error-message">{{ errorMessage }}</p>
+      <p class="text-sm text-red-600" data-testid="error-message">
+        {{ errorMessage }}
+      </p>
     </div>
   </div>
 </template>
@@ -120,9 +138,9 @@ interface Props {
 }
 
 interface Emits {
-  (event: 'update:photos', photos: string[]): void
-  (event: 'upload-success', photoUrl: string): void
-  (event: 'upload-error', error: string): void
+  (_event: 'update:photos', _photos: string[]): void
+  (_event: 'upload-success', _photoUrl: string): void
+  (_event: 'upload-error', _error: string): void
 }
 
 interface UploadingFile {

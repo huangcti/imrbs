@@ -5,7 +5,7 @@ T089 [P] [US2] 建立預約清單元件
 
 <script setup lang="ts">
 import { computed, ref } from 'vue'
-import { formatDateTime, formatDate, formatTime, isUpcoming, isPast } from '@/utils/date'
+import { formatTime, isUpcoming, formatDate } from '@/utils/date'
 import type { Reservation, ReservationStatus } from '@/types/reservation'
 
 interface Props {
@@ -83,18 +83,30 @@ function canCancel(reservation: Reservation): boolean {
         v-model="statusFilter"
         class="rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
       >
-        <option value="ALL">全部</option>
-        <option value="PENDING">待確認</option>
-        <option value="CONFIRMED">已確認</option>
-        <option value="CANCELLED">已取消</option>
-        <option value="COMPLETED">已完成</option>
+        <option value="ALL">
+          全部
+        </option>
+        <option value="PENDING">
+          待確認
+        </option>
+        <option value="CONFIRMED">
+          已確認
+        </option>
+        <option value="CANCELLED">
+          已取消
+        </option>
+        <option value="COMPLETED">
+          已完成
+        </option>
       </select>
     </div>
 
     <!-- Loading 狀態 -->
     <div v-if="loading" class="text-center py-8">
-      <div class="inline-block animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
-      <p class="mt-2 text-gray-600">載入中...</p>
+      <div class="inline-block animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600" />
+      <p class="mt-2 text-gray-600">
+        載入中...
+      </p>
     </div>
 
     <!-- 空狀態 -->
@@ -112,7 +124,9 @@ function canCancel(reservation: Reservation): boolean {
           d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"
         />
       </svg>
-      <p class="mt-2 text-gray-600">尚無預約記錄</p>
+      <p class="mt-2 text-gray-600">
+        尚無預約記錄
+      </p>
     </div>
 
     <!-- 預約清單 -->
@@ -136,7 +150,12 @@ function canCancel(reservation: Reservation): boolean {
 
             <div class="space-y-2 text-sm text-gray-600">
               <div class="flex items-center gap-2">
-                <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <svg
+                  class="h-4 w-4"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
                   <path
                     stroke-linecap="round"
                     stroke-linejoin="round"
@@ -154,7 +173,12 @@ function canCancel(reservation: Reservation): boolean {
               </div>
 
               <div class="flex items-center gap-2">
-                <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <svg
+                  class="h-4 w-4"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
                   <path
                     stroke-linecap="round"
                     stroke-linejoin="round"
@@ -166,7 +190,12 @@ function canCancel(reservation: Reservation): boolean {
               </div>
 
               <div class="flex items-center gap-2">
-                <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <svg
+                  class="h-4 w-4"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
                   <path
                     stroke-linecap="round"
                     stroke-linejoin="round"
@@ -178,7 +207,12 @@ function canCancel(reservation: Reservation): boolean {
               </div>
 
               <div v-if="reservation.participants.length > 0" class="flex items-center gap-2">
-                <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <svg
+                  class="h-4 w-4"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
                   <path
                     stroke-linecap="round"
                     stroke-linejoin="round"
@@ -195,24 +229,24 @@ function canCancel(reservation: Reservation): boolean {
           <div class="flex gap-2 ml-4">
             <button
               v-if="canEdit(reservation)"
-              @click="emit('edit', reservation)"
               class="px-3 py-2 text-sm font-medium text-blue-600 bg-blue-50 rounded-md hover:bg-blue-100 transition-colors"
               title="編輯預約"
+              @click="emit('edit', reservation)"
             >
               編輯
             </button>
             <button
               v-if="canCancel(reservation)"
-              @click="emit('cancel', reservation)"
               class="px-3 py-2 text-sm font-medium text-red-600 bg-red-50 rounded-md hover:bg-red-100 transition-colors"
               title="取消預約"
+              @click="emit('cancel', reservation)"
             >
               取消
             </button>
             <button
-              @click="emit('view', reservation)"
               class="px-3 py-2 text-sm font-medium text-gray-600 bg-gray-50 rounded-md hover:bg-gray-100 transition-colors"
               title="查看詳情"
+              @click="emit('view', reservation)"
             >
               詳情
             </button>

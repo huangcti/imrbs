@@ -14,7 +14,7 @@
  * />
  */
 
-import { ref, computed, watch } from 'vue'
+import { ref, watch } from 'vue'
 import { useI18n } from 'vue-i18n'
 import VirtualList from './VirtualList.vue'
 import type { Room } from '@/types/room'
@@ -47,11 +47,11 @@ const props = withDefaults(defineProps<Props>(), {
 
 const emit = defineEmits<{
   /** 選擇會議室 */
-  (e: 'select', room: Room): void
+  (_e: 'select', _room: Room): void
   /** 載入更多 */
-  (e: 'load-more'): void
+  (_e: 'load-more'): void
   /** 查看詳情 */
-  (e: 'view-details', room: Room): void
+  (_e: 'view-details', _room: Room): void
 }>()
 
 const { t } = useI18n()
@@ -139,7 +139,7 @@ watch(() => props.selectedRoomId, (newId) => {
       v-if="loading && rooms.length === 0"
       class="flex items-center justify-center py-12"
     >
-      <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
+      <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600" />
       <span class="ml-3 text-gray-600">{{ t('common.loading') }}</span>
     </div>
 
@@ -155,7 +155,7 @@ watch(() => props.selectedRoomId, (newId) => {
       @scroll-end="handleScrollEnd"
     >
       <!-- 會議室卡片 -->
-      <template #default="{ item: room, index }">
+      <template #default="{ item: room }">
         <div
           :class="[
             'room-card p-4 mx-2 my-1 bg-white rounded-lg border transition-all duration-200',
@@ -186,15 +186,40 @@ watch(() => props.selectedRoomId, (newId) => {
               <!-- 位置和容量 -->
               <div class="flex items-center gap-4 text-sm text-gray-600 mb-2">
                 <span v-if="showLocation" class="flex items-center gap-1">
-                  <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+                  <svg
+                    class="w-4 h-4"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="2"
+                      d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"
+                    />
+                    <path
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="2"
+                      d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"
+                    />
                   </svg>
                   {{ room.building }} {{ room.floor }}F
                 </span>
                 <span class="flex items-center gap-1">
-                  <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
+                  <svg
+                    class="w-4 h-4"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="2"
+                      d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"
+                    />
                   </svg>
                   {{ room.capacity }} {{ t('room.people') }}
                 </span>
@@ -243,11 +268,25 @@ watch(() => props.selectedRoomId, (newId) => {
       <!-- 空狀態 -->
       <template #empty>
         <div class="text-center py-12">
-          <svg class="mx-auto h-12 w-12 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
+          <svg
+            class="mx-auto h-12 w-12 text-gray-400"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"
+            />
           </svg>
-          <h3 class="mt-2 text-sm font-medium text-gray-900">{{ t('room.noRoomsFound') }}</h3>
-          <p class="mt-1 text-sm text-gray-500">{{ t('room.tryDifferentCriteria') }}</p>
+          <h3 class="mt-2 text-sm font-medium text-gray-900">
+            {{ t('room.noRoomsFound') }}
+          </h3>
+          <p class="mt-1 text-sm text-gray-500">
+            {{ t('room.tryDifferentCriteria') }}
+          </p>
         </div>
       </template>
     </VirtualList>
@@ -257,7 +296,7 @@ watch(() => props.selectedRoomId, (newId) => {
       v-if="loading && rooms.length > 0"
       class="flex items-center justify-center py-4"
     >
-      <div class="animate-spin rounded-full h-5 w-5 border-b-2 border-blue-600"></div>
+      <div class="animate-spin rounded-full h-5 w-5 border-b-2 border-blue-600" />
       <span class="ml-2 text-sm text-gray-500">{{ t('common.loadingMore') }}</span>
     </div>
 

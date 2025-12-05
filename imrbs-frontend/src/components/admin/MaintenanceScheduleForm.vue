@@ -1,5 +1,5 @@
 <template>
-  <form @submit.prevent="handleSubmit" class="space-y-6">
+  <form class="space-y-6" @submit.prevent="handleSubmit">
     <!-- 維護原因 -->
     <div>
       <label for="reason" class="block text-sm font-medium text-gray-700 mb-2">
@@ -14,8 +14,10 @@
         class="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent"
         :class="{ 'border-red-500': errors.reason }"
         placeholder="例如：空調維修"
-      />
-      <p v-if="errors.reason" class="mt-1 text-sm text-red-600">{{ errors.reason }}</p>
+      >
+      <p v-if="errors.reason" class="mt-1 text-sm text-red-600">
+        {{ errors.reason }}
+      </p>
     </div>
 
     <!-- 開始時間 -->
@@ -32,8 +34,10 @@
         :min="minDateTime"
         class="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent"
         :class="{ 'border-red-500': errors.startTime }"
-      />
-      <p v-if="errors.startTime" class="mt-1 text-sm text-red-600">{{ errors.startTime }}</p>
+      >
+      <p v-if="errors.startTime" class="mt-1 text-sm text-red-600">
+        {{ errors.startTime }}
+      </p>
     </div>
 
     <!-- 結束時間 -->
@@ -50,8 +54,10 @@
         :min="formData.startTime || minDateTime"
         class="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent"
         :class="{ 'border-red-500': errors.endTime }"
-      />
-      <p v-if="errors.endTime" class="mt-1 text-sm text-red-600">{{ errors.endTime }}</p>
+      >
+      <p v-if="errors.endTime" class="mt-1 text-sm text-red-600">
+        {{ errors.endTime }}
+      </p>
     </div>
 
     <!-- 備註 -->
@@ -66,11 +72,11 @@
         data-testid="maintenance-notes-textarea"
         class="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent"
         placeholder="維護詳細說明..."
-      ></textarea>
+      />
     </div>
 
     <!-- 預估維護時長 -->
-    <div class="bg-blue-50 p-4 rounded-md" v-if="estimatedDuration">
+    <div v-if="estimatedDuration" class="bg-blue-50 p-4 rounded-md">
       <p class="text-sm text-blue-700">
         <span class="font-medium">預估維護時長:</span> {{ estimatedDuration }}
       </p>
@@ -80,9 +86,9 @@
     <div class="flex justify-end gap-3 pt-4 border-t">
       <button
         type="button"
-        @click="$emit('cancel')"
         data-testid="cancel-btn"
         class="px-6 py-2 border border-gray-300 text-gray-700 rounded-md hover:bg-gray-50 transition-colors"
+        @click="$emit('cancel')"
       >
         取消
       </button>
@@ -116,8 +122,8 @@ interface Props {
 }
 
 interface Emits {
-  (event: 'submit', formData: MaintenanceScheduleFormData): void
-  (event: 'cancel'): void
+  (_event: 'submit', _formData: MaintenanceScheduleFormData): void
+  (_event: 'cancel'): void
 }
 
 const props = withDefaults(defineProps<Props>(), {

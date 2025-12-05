@@ -2,6 +2,7 @@ package tw.huangcti.imrbs.web.actuator;
 
 import org.springframework.boot.actuate.health.Health;
 import org.springframework.boot.actuate.health.HealthIndicator;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
 import org.springframework.data.redis.connection.RedisConnectionFactory;
 import org.springframework.stereotype.Component;
 
@@ -11,6 +12,7 @@ import org.springframework.stereotype.Component;
  * <p>檢查 Redis 連線狀態，用於 Actuator /health 端點。</p>
  */
 @Component("redisHealthIndicator")
+@ConditionalOnBean(RedisConnectionFactory.class)
 public class RedisHealthIndicator implements HealthIndicator {
 
     private final RedisConnectionFactory connectionFactory;

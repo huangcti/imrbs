@@ -3,8 +3,12 @@
     <!-- 頁面標頭 -->
     <header class="bg-white shadow-sm">
       <div class="max-w-4xl mx-auto px-4 py-6">
-        <h1 class="text-3xl font-bold text-gray-900">{{ $t('guest.page.title') }}</h1>
-        <p class="mt-2 text-gray-600">{{ $t('guest.page.subtitle') }}</p>
+        <h1 class="text-3xl font-bold text-gray-900">
+          {{ $t('guest.page.title') }}
+        </h1>
+        <p class="mt-2 text-gray-600">
+          {{ $t('guest.page.subtitle') }}
+        </p>
       </div>
     </header>
 
@@ -15,8 +19,18 @@
         class="mb-8 p-6 bg-green-50 border border-green-200 rounded-lg"
       >
         <div class="flex items-start">
-          <svg class="h-6 w-6 text-green-500 mr-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+          <svg
+            class="h-6 w-6 text-green-500 mr-3"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"
+            />
           </svg>
           <div>
             <h3 class="text-lg font-semibold text-green-800">
@@ -30,8 +44,8 @@
             </p>
             <div class="mt-4">
               <button
-                @click="submitResult = null"
                 class="text-green-600 hover:text-green-800 font-medium"
+                @click="submitResult = null"
               >
                 {{ $t('guest.page.submitAnother') }}
               </button>
@@ -65,7 +79,7 @@
               min="1"
               :placeholder="$t('guest.page.requestIdPlaceholder')"
               class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
-            />
+            >
           </div>
           <div class="flex-1">
             <label for="checkEmail" class="block text-sm font-medium text-gray-700 mb-1">
@@ -77,13 +91,13 @@
               type="email"
               :placeholder="$t('guest.page.emailPlaceholder')"
               class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
-            />
+            >
           </div>
           <div class="flex items-end">
             <button
-              @click="checkStatus"
               :disabled="isCheckingStatus || !checkRequestId || !checkEmail"
               class="px-6 py-2 bg-gray-600 text-white rounded-lg hover:bg-gray-700 disabled:bg-gray-400 disabled:cursor-not-allowed transition-colors"
+              @click="checkStatus"
             >
               <span v-if="isCheckingStatus">{{ $t('common.loading') }}</span>
               <span v-else>{{ $t('guest.page.checkButton') }}</span>
@@ -93,29 +107,49 @@
 
         <!-- 狀態查詢結果 -->
         <div v-if="statusResult" class="mt-6 p-4 border rounded-lg" :class="statusResultClass">
-          <h3 class="font-semibold mb-2">{{ $t('guest.page.requestDetails') }}</h3>
+          <h3 class="font-semibold mb-2">
+            {{ $t('guest.page.requestDetails') }}
+          </h3>
           <dl class="grid grid-cols-1 sm:grid-cols-2 gap-2 text-sm">
             <div>
-              <dt class="text-gray-500">{{ $t('guest.page.requestId') }}</dt>
-              <dd class="font-medium">#{{ statusResult.id }}</dd>
+              <dt class="text-gray-500">
+                {{ $t('guest.page.requestId') }}
+              </dt>
+              <dd class="font-medium">
+                #{{ statusResult.id }}
+              </dd>
             </div>
             <div>
-              <dt class="text-gray-500">{{ $t('guest.page.status') }}</dt>
+              <dt class="text-gray-500">
+                {{ $t('guest.page.status') }}
+              </dt>
               <dd class="font-medium">
                 <span :class="statusBadgeClass">{{ statusLabel }}</span>
               </dd>
             </div>
             <div>
-              <dt class="text-gray-500">{{ $t('guest.page.meetingTitle') }}</dt>
-              <dd class="font-medium">{{ statusResult.meetingTitle }}</dd>
+              <dt class="text-gray-500">
+                {{ $t('guest.page.meetingTitle') }}
+              </dt>
+              <dd class="font-medium">
+                {{ statusResult.meetingTitle }}
+              </dd>
             </div>
             <div>
-              <dt class="text-gray-500">{{ $t('guest.page.requestTime') }}</dt>
-              <dd class="font-medium">{{ formatDateTime(statusResult.requestedStartTime) }}</dd>
+              <dt class="text-gray-500">
+                {{ $t('guest.page.requestTime') }}
+              </dt>
+              <dd class="font-medium">
+                {{ formatDateTime(statusResult.requestedStartTime) }}
+              </dd>
             </div>
             <div v-if="statusResult.status === 'REJECTED'" class="sm:col-span-2">
-              <dt class="text-gray-500">{{ $t('guest.page.rejectionReason') }}</dt>
-              <dd class="font-medium text-red-600">{{ statusResult.rejectionReason }}</dd>
+              <dt class="text-gray-500">
+                {{ $t('guest.page.rejectionReason') }}
+              </dt>
+              <dd class="font-medium text-red-600">
+                {{ statusResult.rejectionReason }}
+              </dd>
             </div>
           </dl>
         </div>

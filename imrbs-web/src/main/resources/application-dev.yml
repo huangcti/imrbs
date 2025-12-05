@@ -32,10 +32,34 @@ spring:
       - org.springframework.boot.autoconfigure.data.redis.RedisAutoConfiguration
       - org.springframework.boot.autoconfigure.amqp.RabbitAutoConfiguration
       - org.springframework.boot.autoconfigure.security.oauth2.client.servlet.OAuth2ClientAutoConfiguration
+      - org.springframework.boot.autoconfigure.security.oauth2.resource.servlet.OAuth2ResourceServerAutoConfiguration
+
+  # Security (開發環境禁用 OAuth2)
+  security:
+    oauth2:
+      client:
+        registration:
+          keycloak:
+            client-id: dev-client
+            client-secret: dev-secret-not-used
+            redirect-uri: "{baseUrl}/auth/callback"
+            authorization-grant-type: authorization_code
+            scope: openid,profile,email
+        provider:
+          keycloak:
+            issuer-uri: http://localhost:8080/realms/imrbs
 
   # JPA
   jpa:
     show-sql: true
+
+# JWT (開發環境使用固定密鑰)
+jwt:
+  secret: dev-jwt-secret-key-for-local-development-only-minimum-32-characters
+  expiration: 900
+  refresh-expiration: 86400
+  issuer: imrbs-api
+  audience: imrbs-web
 
 logging:
   level:

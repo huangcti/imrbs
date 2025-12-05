@@ -146,13 +146,20 @@ function handleCancel(): void {
     <div class="bg-white rounded-lg shadow-xl w-full max-w-2xl max-h-[90vh] overflow-y-auto">
       <!-- Header -->
       <div class="flex items-center justify-between p-6 border-b border-gray-200">
-        <h2 class="text-2xl font-bold text-gray-900">編輯預約</h2>
+        <h2 class="text-2xl font-bold text-gray-900">
+          編輯預約
+        </h2>
         <button
-          @click="handleCancel"
           class="text-gray-400 hover:text-gray-600 transition-colors"
           aria-label="關閉"
+          @click="handleCancel"
         >
-          <svg class="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <svg
+            class="h-6 w-6"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+          >
             <path
               stroke-linecap="round"
               stroke-linejoin="round"
@@ -164,7 +171,7 @@ function handleCancel(): void {
       </div>
 
       <!-- Body -->
-      <form @submit.prevent="handleSubmit" class="p-6 space-y-6">
+      <form class="p-6 space-y-6" @submit.prevent="handleSubmit">
         <!-- 錯誤訊息 -->
         <div
           v-if="errorMessage"
@@ -187,8 +194,10 @@ function handleCancel(): void {
             maxlength="200"
             class="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent"
             placeholder="請輸入會議主題（5-200 字元）"
-          />
-          <p class="mt-1 text-sm text-gray-500">{{ form.meetingTitle.length }}/200</p>
+          >
+          <p class="mt-1 text-sm text-gray-500">
+            {{ form.meetingTitle.length }}/200
+          </p>
         </div>
 
         <!-- 開始時間 -->
@@ -202,7 +211,7 @@ function handleCancel(): void {
             type="datetime-local"
             required
             class="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-          />
+          >
         </div>
 
         <!-- 結束時間 -->
@@ -216,7 +225,7 @@ function handleCancel(): void {
             type="datetime-local"
             required
             class="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-          />
+          >
         </div>
 
         <!-- 參與者 -->
@@ -230,7 +239,7 @@ function handleCancel(): void {
             rows="3"
             class="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent"
             placeholder="請輸入參與者 Email，以逗號、分號或換行分隔&#10;例如: user1@example.com, user2@example.com"
-          ></textarea>
+          />
           <p class="mt-1 text-sm text-gray-500">
             已識別 {{ participants.length }} 位參與者
           </p>
@@ -240,9 +249,9 @@ function handleCancel(): void {
         <div class="flex items-center justify-end gap-3 pt-4 border-t border-gray-200">
           <button
             type="button"
-            @click="handleCancel"
             class="px-6 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-md hover:bg-gray-50 transition-colors"
             :disabled="submitting"
+            @click="handleCancel"
           >
             取消
           </button>

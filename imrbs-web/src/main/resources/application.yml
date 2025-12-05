@@ -86,21 +86,21 @@ spring:
         registration:
           keycloak:
             client-id: ${OAUTH2_CLIENT_ID:imrbs-client}
-            client-secret: ${OAUTH2_CLIENT_SECRET}
+            client-secret: ${OAUTH2_CLIENT_SECRET:dev-secret-not-used}
             redirect-uri: "{baseUrl}/auth/callback"
             authorization-grant-type: authorization_code
             scope: openid,profile,email
         provider:
           keycloak:
             issuer-uri: ${OAUTH2_ISSUER_URI:http://localhost:8080/realms/imrbs}
-            token-uri: ${OAUTH2_ISSUER_URI}/protocol/openid-connect/token
-            authorization-uri: ${OAUTH2_ISSUER_URI}/protocol/openid-connect/auth
-            user-info-uri: ${OAUTH2_ISSUER_URI}/protocol/openid-connect/userinfo
-            jwk-set-uri: ${OAUTH2_ISSUER_URI}/protocol/openid-connect/certs
+            token-uri: ${OAUTH2_ISSUER_URI:http://localhost:8080/realms/imrbs}/protocol/openid-connect/token
+            authorization-uri: ${OAUTH2_ISSUER_URI:http://localhost:8080/realms/imrbs}/protocol/openid-connect/auth
+            user-info-uri: ${OAUTH2_ISSUER_URI:http://localhost:8080/realms/imrbs}/protocol/openid-connect/userinfo
+            jwk-set-uri: ${OAUTH2_ISSUER_URI:http://localhost:8080/realms/imrbs}/protocol/openid-connect/certs
 
 # JWT Configuration
 jwt:
-  secret: ${JWT_SECRET}
+  secret: ${JWT_SECRET:dev-jwt-secret-key-for-local-development-only-minimum-32-characters}
   expiration: 900 # 15 minutes (秒)
   refresh-expiration: 86400 # 24 hours (秒)
   issuer: imrbs-api

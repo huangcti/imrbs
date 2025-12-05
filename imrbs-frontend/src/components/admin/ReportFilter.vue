@@ -16,8 +16,8 @@ const props = withDefaults(defineProps<Props>(), {
 
 // Emits
 const emit = defineEmits<{
-  (e: 'filter-change', filters: FilterParams): void
-  (e: 'export-excel'): void
+  (_e: 'filter-change', _filters: FilterParams): void
+  (_e: 'export-excel'): void
 }>()
 
 // Filter state
@@ -44,32 +44,32 @@ const periodTypeOptions = computed(() => [
 // Initialize dates
 const initializeDates = () => {
   const today = new Date()
-  endDate.value = today.toISOString().split('T')[0]
+  endDate.value = today.toISOString().split('T')[0] ?? ''
   
   // Default to this month
   const firstOfMonth = new Date(today.getFullYear(), today.getMonth(), 1)
-  startDate.value = firstOfMonth.toISOString().split('T')[0]
+  startDate.value = firstOfMonth.toISOString().split('T')[0] ?? ''
 }
 
 // Auto-adjust dates based on period type
 watch(periodType, (newType) => {
   const today = new Date()
-  endDate.value = today.toISOString().split('T')[0]
+  endDate.value = today.toISOString().split('T')[0] ?? ''
   
   switch (newType) {
     case 'daily':
-      startDate.value = today.toISOString().split('T')[0]
+      startDate.value = today.toISOString().split('T')[0] ?? ''
       break
     case 'weekly': {
       const dayOfWeek = today.getDay()
       const monday = new Date(today)
       monday.setDate(today.getDate() - (dayOfWeek === 0 ? 6 : dayOfWeek - 1))
-      startDate.value = monday.toISOString().split('T')[0]
+      startDate.value = monday.toISOString().split('T')[0] ?? ''
       break
     }
     case 'monthly': {
       const firstOfMonth = new Date(today.getFullYear(), today.getMonth(), 1)
-      startDate.value = firstOfMonth.toISOString().split('T')[0]
+      startDate.value = firstOfMonth.toISOString().split('T')[0] ?? ''
       break
     }
     // custom: keep current dates
@@ -107,7 +107,7 @@ const handleExport = () => {
 }
 
 // Room selection toggle
-const toggleRoom = (roomId: number) => {
+const _toggleRoom = (roomId: number) => {
   const index = selectedRoomIds.value.indexOf(roomId)
   if (index > -1) {
     selectedRoomIds.value.splice(index, 1)
@@ -168,7 +168,7 @@ initializeDates()
           :disabled="periodType !== 'custom'"
           class="w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 disabled:bg-gray-100 disabled:cursor-not-allowed"
           data-testid="start-date-input"
-        />
+        >
       </div>
 
       <!-- End Date -->
@@ -183,7 +183,7 @@ initializeDates()
           :min="startDate"
           class="w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 disabled:bg-gray-100 disabled:cursor-not-allowed"
           data-testid="end-date-input"
-        />
+        >
       </div>
 
       <!-- Room Filter -->
@@ -193,8 +193,8 @@ initializeDates()
         </label>
         <div class="relative">
           <select
-            multiple
             v-model="selectedRoomIds"
+            multiple
             class="w-full h-10 rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
             data-testid="room-select"
           >
@@ -205,15 +205,15 @@ initializeDates()
           <div class="mt-1 flex gap-2">
             <button
               type="button"
-              @click="selectAllRooms"
               class="text-xs text-blue-600 hover:text-blue-800"
+              @click="selectAllRooms"
             >
               {{ t('common.selectAll') }}
             </button>
             <button
               type="button"
-              @click="clearRoomSelection"
               class="text-xs text-gray-600 hover:text-gray-800"
+              @click="clearRoomSelection"
             >
               {{ t('common.clear') }}
             </button>
@@ -235,10 +235,10 @@ initializeDates()
     <div class="mt-4 flex flex-wrap gap-3">
       <button
         type="button"
-        @click="handleSearch"
         :disabled="!isValidDateRange || loading"
         class="inline-flex items-center px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed"
         data-testid="search-button"
+        @click="handleSearch"
       >
         <svg
           v-if="loading"
@@ -253,12 +253,12 @@ initializeDates()
             r="10"
             stroke="currentColor"
             stroke-width="4"
-          ></circle>
+          />
           <path
             class="opacity-75"
             fill="currentColor"
             d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
-          ></path>
+          />
         </svg>
         <span v-else class="mr-2">🔍</span>
         {{ t('report.filter.search') }}
@@ -266,10 +266,10 @@ initializeDates()
 
       <button
         type="button"
-        @click="handleExport"
         :disabled="!isValidDateRange || loading"
         class="inline-flex items-center px-4 py-2 bg-green-600 text-white rounded-md hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed"
         data-testid="export-button"
+        @click="handleExport"
       >
         <span class="mr-2">📊</span>
         {{ t('report.filter.exportExcel') }}

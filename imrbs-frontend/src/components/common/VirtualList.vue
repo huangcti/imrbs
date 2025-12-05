@@ -40,12 +40,12 @@ const props = withDefaults(defineProps<Props>(), {
 })
 
 const emit = defineEmits<{
-  /** 滾動到底部事件 */
-  (e: 'scroll-end'): void
-  /** 滾動事件 */
-  (e: 'scroll', scrollTop: number): void
+  /** 捲動到底部事件 */
+  (_e: 'scroll-end'): void
+  /** 捲動事件 */
+  (_e: 'scroll', _scrollTop: number): void
   /** 可見項目變更事件 */
-  (e: 'visible-change', startIndex: number, endIndex: number): void
+  (_e: 'visible-change', _startIndex: number, _endIndex: number): void
 }>()
 
 // 容器 ref
@@ -128,7 +128,7 @@ watch([startIndex, endIndex], ([newStart, newEnd]) => {
 })
 
 // 滾動到指定索引
-const scrollToIndex = (index: number, behavior: ScrollBehavior = 'smooth') => {
+const scrollToIndex = (index: number, behavior: 'auto' | 'smooth' = 'smooth') => {
   if (containerRef.value) {
     const targetScrollTop = index * props.itemHeight
     containerRef.value.scrollTo({
@@ -139,12 +139,12 @@ const scrollToIndex = (index: number, behavior: ScrollBehavior = 'smooth') => {
 }
 
 // 滾動到頂部
-const scrollToTop = (behavior: ScrollBehavior = 'smooth') => {
+const scrollToTop = (behavior: 'auto' | 'smooth' = 'smooth') => {
   scrollToIndex(0, behavior)
 }
 
 // 滾動到底部
-const scrollToBottom = (behavior: ScrollBehavior = 'smooth') => {
+const scrollToBottom = (behavior: 'auto' | 'smooth' = 'smooth') => {
   if (containerRef.value) {
     containerRef.value.scrollTo({
       top: totalHeight.value,

@@ -131,7 +131,7 @@ const formatHours = (hours: number) => {
       class="p-8 flex items-center justify-center"
       data-testid="table-loading"
     >
-      <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
+      <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600" />
     </div>
 
     <!-- Table -->
@@ -142,8 +142,8 @@ const formatHours = (hours: number) => {
             <th
               scope="col"
               class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer hover:bg-gray-100"
-              @click="handleSort('roomName')"
               data-testid="sort-roomName"
+              @click="handleSort('roomName')"
             >
               <div class="flex items-center gap-1">
                 {{ t('report.table.roomName') }}
@@ -159,8 +159,8 @@ const formatHours = (hours: number) => {
             <th
               scope="col"
               class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer hover:bg-gray-100"
-              @click="handleSort('usageRate')"
               data-testid="sort-usageRate"
+              @click="handleSort('usageRate')"
             >
               <div class="flex items-center gap-1">
                 {{ t('report.table.usageRate') }}
@@ -170,8 +170,8 @@ const formatHours = (hours: number) => {
             <th
               scope="col"
               class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer hover:bg-gray-100"
-              @click="handleSort('usageHours')"
               data-testid="sort-usageHours"
+              @click="handleSort('usageHours')"
             >
               <div class="flex items-center gap-1">
                 {{ t('report.table.usageHours') }}
@@ -181,8 +181,8 @@ const formatHours = (hours: number) => {
             <th
               scope="col"
               class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer hover:bg-gray-100"
-              @click="handleSort('reservationCount')"
               data-testid="sort-reservationCount"
+              @click="handleSort('reservationCount')"
             >
               <div class="flex items-center gap-1">
                 {{ t('report.table.reservations') }}
@@ -216,7 +216,7 @@ const formatHours = (hours: number) => {
                     class="h-full rounded-full transition-all duration-300"
                     :class="getProgressBarColor(room.usageRate)"
                     :style="{ width: `${Math.min(room.usageRate, 100)}%` }"
-                  ></div>
+                  />
                 </div>
                 <!-- Percentage Badge -->
                 <span

@@ -9,12 +9,15 @@ import tw.huangcti.imrbs.application.usecase.GetReservationUseCase;
 import tw.huangcti.imrbs.application.usecase.SyncUserFromSsoUseCase;
 import tw.huangcti.imrbs.application.usecase.UpdateReservationUseCase;
 import tw.huangcti.imrbs.domain.event.ReservationEventPublisher;
+import tw.huangcti.imrbs.domain.repository.GuestReservationRequestRepository;
 import tw.huangcti.imrbs.domain.repository.MaintenanceScheduleRepository;
+import tw.huangcti.imrbs.domain.repository.NotificationRepository;
 import tw.huangcti.imrbs.domain.repository.ReservationRepository;
 import tw.huangcti.imrbs.domain.repository.RoomRepository;
 import tw.huangcti.imrbs.domain.repository.UserRepository;
 import tw.huangcti.imrbs.domain.service.CancellationPolicyService;
 import tw.huangcti.imrbs.domain.service.ConflictDetectionService;
+import tw.huangcti.imrbs.infrastructure.persistence.adapter.*;
 import tw.huangcti.imrbs.infrastructure.persistence.jpa.repository.*;
 
 import java.util.Optional;
@@ -23,11 +26,13 @@ import static org.mockito.Mockito.mock;
 
 /**
  * 測試環境配置
- * 提供測試所需的 Mock Beans
+ * 提供測試所需的 Mock Beans，用於 Controller 測試
  */
 @TestConfiguration
 public class TestSecurityConfig {
 
+    // ========== Domain Repositories (Mocked) ==========
+    
     @Bean
     @Primary
     public RoomRepository roomRepository() {
@@ -54,6 +59,20 @@ public class TestSecurityConfig {
 
     @Bean
     @Primary
+    public NotificationRepository notificationRepository() {
+        return mock(NotificationRepository.class);
+    }
+
+    @Bean
+    @Primary
+    public GuestReservationRequestRepository guestReservationRequestRepository() {
+        return mock(GuestReservationRequestRepository.class);
+    }
+
+    // ========== Domain Services ==========
+    
+    @Bean
+    @Primary
     public ConflictDetectionService conflictDetectionService() {
         return new ConflictDetectionService(
             reservationRepository(),
@@ -73,6 +92,8 @@ public class TestSecurityConfig {
         return Optional.empty();
     }
 
+    // ========== Use Cases ==========
+    
     @Bean
     @Primary
     public CreateReservationUseCase createReservationUseCase() {
@@ -152,5 +173,63 @@ public class TestSecurityConfig {
     @Primary
     public GuestReservationRequestJpaRepository guestReservationRequestJpaRepository() {
         return mock(GuestReservationRequestJpaRepository.class);
+    }
+
+    // ========== Infrastructure Adapters (Mocked) ==========
+
+    @Bean
+    @Primary
+    public UserRepositoryAdapter userRepositoryAdapter() {
+        return mock(UserRepositoryAdapter.class);
+    }
+
+    @Bean
+    @Primary
+    public RoomRepositoryAdapter roomRepositoryAdapter() {
+        return mock(RoomRepositoryAdapter.class);
+    }
+
+    @Bean
+    @Primary
+    public ReservationRepositoryAdapter reservationRepositoryAdapter() {
+        return mock(ReservationRepositoryAdapter.class);
+    }
+
+    @Bean
+    @Primary
+    public MaintenanceScheduleRepositoryAdapter maintenanceScheduleRepositoryAdapter() {
+        return mock(MaintenanceScheduleRepositoryAdapter.class);
+    }
+
+    @Bean
+    @Primary
+    public NotificationRepositoryAdapter notificationRepositoryAdapter() {
+        return mock(NotificationRepositoryAdapter.class);
+    }
+
+    @Bean
+    @Primary
+    public GuestReservationRequestRepositoryAdapter guestReservationRequestRepositoryAdapter() {
+        return mock(GuestReservationRequestRepositoryAdapter.class);
+    }
+
+    // ========== Guest UseCase (Mocked) ==========
+
+    @Bean
+    @Primary
+    public tw.huangcti.imrbs.application.usecase.CreateGuestRequestUseCase createGuestRequestUseCase() {
+        return mock(tw.huangcti.imrbs.application.usecase.CreateGuestRequestUseCase.class);
+    }
+
+    @Bean
+    @Primary
+    public tw.huangcti.imrbs.application.usecase.ApproveGuestRequestUseCase approveGuestRequestUseCase() {
+        return mock(tw.huangcti.imrbs.application.usecase.ApproveGuestRequestUseCase.class);
+    }
+
+    @Bean
+    @Primary
+    public tw.huangcti.imrbs.application.usecase.RejectGuestRequestUseCase rejectGuestRequestUseCase() {
+        return mock(tw.huangcti.imrbs.application.usecase.RejectGuestRequestUseCase.class);
     }
 }

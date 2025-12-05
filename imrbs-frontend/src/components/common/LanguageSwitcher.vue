@@ -1,12 +1,17 @@
 <template>
-  <div class="relative" ref="dropdownRef">
+  <div ref="dropdownRef" class="relative">
     <!-- 語言切換按鈕 -->
     <button
       data-cy="language-switcher"
-      @click="toggleDropdown"
       class="flex items-center gap-2 px-3 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-md hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-primary-500"
+      @click="toggleDropdown"
     >
-      <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <svg
+        class="w-5 h-5"
+        fill="none"
+        stroke="currentColor"
+        viewBox="0 0 24 24"
+      >
         <path
           stroke-linecap="round"
           stroke-linejoin="round"
@@ -22,7 +27,12 @@
         stroke="currentColor"
         viewBox="0 0 24 24"
       >
-        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+        <path
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          stroke-width="2"
+          d="M19 9l-7 7-7-7"
+        />
       </svg>
     </button>
 
@@ -44,9 +54,9 @@
             v-for="lang in languages"
             :key="lang.code"
             :data-cy="`lang-option-${lang.code}`"
-            @click="switchLanguage(lang.code)"
             class="flex items-center w-full px-4 py-2 text-sm text-left hover:bg-gray-100"
             :class="{ 'bg-primary-50 text-primary-700': locale === lang.code }"
+            @click="switchLanguage(lang.code)"
           >
             <span class="mr-2">{{ lang.flag }}</span>
             <span>{{ lang.label }}</span>
@@ -57,7 +67,12 @@
               stroke="currentColor"
               viewBox="0 0 24 24"
             >
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M5 13l4 4L19 7"
+              />
             </svg>
           </button>
         </div>

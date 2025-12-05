@@ -6,7 +6,6 @@ T072 [P] [US1] 建立預約表單元件
 <script setup lang="ts">
 import { ref, reactive, computed } from 'vue'
 import { useReservationStore } from '@/stores/reservation'
-import { combineDateAndTime } from '@/utils/date'
 import { validateParticipants } from '@/utils/validation'
 import type { Room } from '@/types/room'
 import type { CreateReservationRequest } from '@/types/reservation'
@@ -97,26 +96,30 @@ function handleCancel(): void {
 
 <template>
   <div class="reservation-form bg-white rounded-lg shadow-lg p-6">
-    <h2 class="text-2xl font-bold mb-6">預約會議室</h2>
+    <h2 class="text-2xl font-bold mb-6">
+      預約會議室
+    </h2>
 
     <!-- 會議室資訊摘要 -->
     <div class="bg-blue-50 p-4 rounded-lg mb-6">
-      <h3 class="font-semibold text-blue-900 mb-2">{{ room.name }}</h3>
+      <h3 class="font-semibold text-blue-900 mb-2">
+        {{ room.name }}
+      </h3>
       <p class="text-sm text-blue-700">
-        <i class="pi pi-calendar mr-1"></i>{{ date }}
+        <i class="pi pi-calendar mr-1" />{{ date }}
       </p>
       <p class="text-sm text-blue-700">
-        <i class="pi pi-clock mr-1"></i>
+        <i class="pi pi-clock mr-1" />
         {{ timeSlot.startTime.split('T')[1]?.substring(0, 5) }} -
         {{ timeSlot.endTime.split('T')[1]?.substring(0, 5) }}
       </p>
       <p class="text-sm text-blue-700">
-        <i class="pi pi-users mr-1"></i>容納 {{ room.capacity }} 人
+        <i class="pi pi-users mr-1" />容納 {{ room.capacity }} 人
       </p>
     </div>
 
     <!-- 表單 -->
-    <form @submit.prevent="handleSubmit" class="space-y-4">
+    <form class="space-y-4" @submit.prevent="handleSubmit">
       <!-- 會議目的 -->
       <div>
         <label for="purpose" class="block text-sm font-medium mb-1">
@@ -131,7 +134,7 @@ function handleCancel(): void {
           maxlength="200"
           placeholder="請簡要說明會議目的..."
           class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-        ></textarea>
+        />
         <p class="text-xs text-gray-500 mt-1">
           {{ form.purpose.length }} / 200 字元
         </p>
@@ -148,7 +151,7 @@ function handleCancel(): void {
           rows="4"
           placeholder="example1@company.com&#10;example2@company.com"
           class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 font-mono text-sm"
-        ></textarea>
+        />
         <p class="text-xs text-gray-500 mt-1">
           已輸入 {{ participants.length }} 位參與者
           <span v-if="participants.length > 50" class="text-red-600">
@@ -159,7 +162,7 @@ function handleCancel(): void {
 
       <!-- 錯誤訊息 -->
       <div v-if="errorMessage" class="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded">
-        <i class="pi pi-exclamation-circle mr-2"></i>
+        <i class="pi pi-exclamation-circle mr-2" />
         {{ errorMessage }}
       </div>
 
@@ -175,15 +178,15 @@ function handleCancel(): void {
           }"
         >
           <span v-if="submitting">
-            <i class="pi pi-spin pi-spinner mr-2"></i>提交中...
+            <i class="pi pi-spin pi-spinner mr-2" />提交中...
           </span>
           <span v-else>確認預約</span>
         </button>
         <button
           type="button"
-          @click="handleCancel"
           :disabled="submitting"
           class="px-6 py-3 border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors"
+          @click="handleCancel"
         >
           取消
         </button>

@@ -8,6 +8,15 @@ import type { Room, RoomSearchParams, RoomSearchResult, RoomAvailability } from 
 
 export const roomService = {
   /**
+   * 取得所有會議室（用於報表篩選等）
+   * GET /rooms/all
+   */
+  async getAllRooms(): Promise<Room[]> {
+    const response = await apiClient.get<Room[]>('/rooms/all')
+    return response.data
+  },
+
+  /**
    * 查詢可用會議室
    * GET /rooms
    */

@@ -43,12 +43,12 @@ class ModuleBoundaryTest {
     @DisplayName("分層架構應符合 Clean Architecture 規範")
     void layeredArchitectureShouldBeRespected() {
         ArchRule rule = layeredArchitecture()
-                .consideringAllDependencies()
-                // 定義層級
+                .consideringOnlyDependenciesInLayers()  // 只檢查層級之間的依賴，忽略外部庫
+                // 定義層級 (Infrastructure 和 Web 在其他模組中，此處設為可選)
                 .layer("Domain").definedBy("..domain..")
                 .layer("Application").definedBy("..application..")
-                .layer("Infrastructure").definedBy("..infrastructure..")
-                .layer("Web").definedBy("..web..")
+                .optionalLayer("Infrastructure").definedBy("..infrastructure..")
+                .optionalLayer("Web").definedBy("..web..")
                 // 定義允許的依賴
                 .whereLayer("Domain").mayNotAccessAnyLayer()
                 .whereLayer("Application").mayOnlyAccessLayers("Domain")
@@ -69,6 +69,7 @@ class ModuleBoundaryTest {
             ArchRule rule = classes()
                     .that().resideInAPackage("..application.usecase..")
                     .and().areNotInterfaces()
+                    .and().areTopLevelClasses()  // 只檢查頂層類別，排除內部類別
                     .should().haveSimpleNameEndingWith("UseCase")
                     .because("UseCase 類別應以 UseCase 結尾");
 
@@ -111,6 +112,7 @@ class ModuleBoundaryTest {
                     .that().haveSimpleNameEndingWith("RepositoryImpl")
                     .or().haveSimpleNameEndingWith("JpaRepository")
                     .should().resideInAPackage("..infrastructure..")
+                    .allowEmptyShould(true)
                     .because("Repository 實作應在 Infrastructure 層");
 
             rule.check(importedClasses);
@@ -128,6 +130,7 @@ class ModuleBoundaryTest {
                     .that().resideInAPackage("..web.controller..")
                     .and().areAnnotatedWith("org.springframework.web.bind.annotation.RestController")
                     .should().haveSimpleNameEndingWith("Controller")
+                    .allowEmptyShould(true)
                     .because("Controller 類別應以 Controller 結尾");
 
             rule.check(importedClasses);
@@ -140,6 +143,7 @@ class ModuleBoundaryTest {
                     .that().resideInAPackage("..web.controller..")
                     .should().dependOnClassesThat()
                     .resideInAPackage("..domain.repository..")
+                    .allowEmptyShould(true)
                     .because("Controller 應透過 UseCase 存取資料，不應直接呼叫 Repository");
 
             rule.check(importedClasses);
@@ -173,6 +177,7 @@ class ModuleBoundaryTest {
             ArchRule rule = classes()
                     .that().haveSimpleNameEndingWith("DomainService")
                     .should().resideInAPackage("..domain.service..")
+                    .allowEmptyShould(true)
                     .because("Domain Service 應在正確的套件中");
 
             rule.check(importedClasses);

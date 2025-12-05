@@ -113,13 +113,20 @@ function handleCancel(): void {
     <div class="bg-white rounded-lg shadow-xl w-full max-w-lg">
       <!-- Header -->
       <div class="flex items-center justify-between p-6 border-b border-gray-200">
-        <h2 class="text-xl font-bold text-gray-900">取消預約</h2>
+        <h2 class="text-xl font-bold text-gray-900">
+          取消預約
+        </h2>
         <button
-          @click="handleCancel"
           class="text-gray-400 hover:text-gray-600 transition-colors"
           aria-label="關閉"
+          @click="handleCancel"
         >
-          <svg class="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <svg
+            class="h-6 w-6"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+          >
             <path
               stroke-linecap="round"
               stroke-linejoin="round"
@@ -131,14 +138,18 @@ function handleCancel(): void {
       </div>
 
       <!-- Body -->
-      <form @submit.prevent="handleSubmit" class="p-6 space-y-4">
+      <form class="p-6 space-y-4" @submit.prevent="handleSubmit">
         <!-- 預約資訊 -->
         <div class="bg-gray-50 rounded-md p-4 space-y-2">
-          <h3 class="font-medium text-gray-900">{{ reservation.purpose }}</h3>
+          <h3 class="font-medium text-gray-900">
+            {{ reservation.purpose }}
+          </h3>
           <p class="text-sm text-gray-600">
             {{ reservation.roomName || `會議室 #${reservation.roomId}` }}
           </p>
-          <p class="text-sm text-gray-600">{{ formatDateTime(reservation.startTime) }}</p>
+          <p class="text-sm text-gray-600">
+            {{ formatDateTime(reservation.startTime) }}
+          </p>
         </div>
 
         <!-- 警告訊息 -->
@@ -187,8 +198,10 @@ function handleCancel(): void {
             class="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-red-500 focus:border-transparent"
             placeholder="請說明取消此預約的原因（10-500 字元）"
             :disabled="!canCancelWithin24Hours"
-          ></textarea>
-          <p class="mt-1 text-sm text-gray-500">{{ cancellationReason.length }}/500</p>
+          />
+          <p class="mt-1 text-sm text-gray-500">
+            {{ cancellationReason.length }}/500
+          </p>
         </div>
 
         <!-- 確認提示 -->
@@ -202,9 +215,9 @@ function handleCancel(): void {
         <div class="flex items-center justify-end gap-3 pt-4 border-t border-gray-200">
           <button
             type="button"
-            @click="handleCancel"
             class="px-6 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-md hover:bg-gray-50 transition-colors"
             :disabled="submitting"
+            @click="handleCancel"
           >
             返回
           </button>

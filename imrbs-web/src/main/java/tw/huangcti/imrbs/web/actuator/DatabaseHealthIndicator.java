@@ -2,6 +2,7 @@ package tw.huangcti.imrbs.web.actuator;
 
 import org.springframework.boot.actuate.health.Health;
 import org.springframework.boot.actuate.health.HealthIndicator;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
 import org.springframework.stereotype.Component;
 
 import javax.sql.DataSource;
@@ -14,6 +15,7 @@ import java.sql.Statement;
  * <p>檢查資料庫連線狀態，用於 Actuator /health 端點。</p>
  */
 @Component("databaseHealthIndicator")
+@ConditionalOnBean(DataSource.class)
 public class DatabaseHealthIndicator implements HealthIndicator {
 
     private final DataSource dataSource;

@@ -21,14 +21,37 @@ const state = reactive<{
 
 let messageId = 0
 
+// Object-style toast options
+interface ToastOptions {
+  type: ToastType
+  message: string
+  duration?: number
+}
+
 export function useToast() {
-  function show(type: ToastType, message: string, duration = 3000) {
+  function show(type: ToastType, message: string, duration?: number): void
+  function show(options: ToastOptions): void
+  function show(typeOrOptions: ToastType | ToastOptions, message?: string, duration = 3000) {
+    let toastType: ToastType
+    let toastMessage: string
+    let toastDuration: number
+
+    if (typeof typeOrOptions === 'object') {
+      toastType = typeOrOptions.type
+      toastMessage = typeOrOptions.message
+      toastDuration = typeOrOptions.duration ?? 3000
+    } else {
+      toastType = typeOrOptions
+      toastMessage = message!
+      toastDuration = duration
+    }
+
     const id = messageId++
     const toast: ToastMessage = {
       id,
-      type,
-      message,
-      duration
+      type: toastType,
+      message: toastMessage,
+      duration: toastDuration
     }
 
     state.messages.push(toast)
@@ -36,7 +59,7 @@ export function useToast() {
     // 自動移除
     setTimeout(() => {
       remove(id)
-    }, duration + 500) // 多 500ms 等待動畫
+    }, toastDuration + 500) // 多 500ms 等待動畫
   }
 
   function remove(id: number) {
@@ -63,7 +86,7 @@ export function useToast() {
   }
 
   function clear() {
-    state.messages = []
+    state.messages.length = 0
   }
 
   return {
@@ -74,6 +97,12 @@ export function useToast() {
     error,
     warning,
     info,
-    clear
+    clear,
+    // Aliases for compatibility
+    showToast: show,
+    showSuccess: success,
+    showError: error,
+    showWarning: warning,
+    showInfo: info
   }
 }

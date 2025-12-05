@@ -69,8 +69,10 @@ onMounted(() => {
   <div class="room-detail bg-white rounded-lg shadow-lg">
     <!-- Loading 狀態 -->
     <div v-if="loading" class="p-8 text-center">
-      <i class="pi pi-spin pi-spinner text-4xl text-blue-600"></i>
-      <p class="mt-4 text-gray-600">載入中...</p>
+      <i class="pi pi-spin pi-spinner text-4xl text-blue-600" />
+      <p class="mt-4 text-gray-600">
+        載入中...
+      </p>
     </div>
 
     <!-- 會議室詳情 -->
@@ -78,18 +80,20 @@ onMounted(() => {
       <!-- 標題列 -->
       <div class="flex items-start justify-between mb-6">
         <div>
-          <h2 class="text-2xl font-bold text-gray-900">{{ room.name }}</h2>
+          <h2 class="text-2xl font-bold text-gray-900">
+            {{ room.name }}
+          </h2>
           <p class="text-gray-600 mt-1">
-            <i class="pi pi-building mr-1"></i>
+            <i class="pi pi-building mr-1" />
             {{ room.building }} {{ room.floor }}樓
           </p>
         </div>
         <button
-          @click="emit('close')"
           class="text-gray-400 hover:text-gray-600"
           aria-label="關閉"
+          @click="emit('close')"
         >
-          <i class="pi pi-times text-xl"></i>
+          <i class="pi pi-times text-xl" />
         </button>
       </div>
 
@@ -102,20 +106,24 @@ onMounted(() => {
             :src="photo"
             :alt="`${room.name} 照片 ${index + 1}`"
             class="w-full h-48 object-cover rounded-lg"
-          />
+          >
         </div>
       </div>
 
       <!-- 基本資訊 -->
       <div class="grid grid-cols-2 gap-4 mb-6">
         <div class="bg-gray-50 p-4 rounded-lg">
-          <p class="text-sm text-gray-600 mb-1">容量</p>
+          <p class="text-sm text-gray-600 mb-1">
+            容量
+          </p>
           <p class="text-xl font-semibold text-gray-900">
-            <i class="pi pi-users mr-2"></i>{{ room.capacity }} 人
+            <i class="pi pi-users mr-2" />{{ room.capacity }} 人
           </p>
         </div>
         <div class="bg-gray-50 p-4 rounded-lg">
-          <p class="text-sm text-gray-600 mb-1">狀態</p>
+          <p class="text-sm text-gray-600 mb-1">
+            狀態
+          </p>
           <p class="text-xl font-semibold">
             <span
               :class="{
@@ -132,7 +140,9 @@ onMounted(() => {
 
       <!-- 設備清單 -->
       <div v-if="room.equipment && room.equipment.length > 0" class="mb-6">
-        <h3 class="text-lg font-semibold mb-3">設備</h3>
+        <h3 class="text-lg font-semibold mb-3">
+          設備
+        </h3>
         <div class="flex flex-wrap gap-2">
           <span
             v-for="(item, index) in room.equipment"
@@ -146,13 +156,19 @@ onMounted(() => {
 
       <!-- 描述 -->
       <div v-if="room.description" class="mb-6">
-        <h3 class="text-lg font-semibold mb-3">描述</h3>
-        <p class="text-gray-700">{{ room.description }}</p>
+        <h3 class="text-lg font-semibold mb-3">
+          描述
+        </h3>
+        <p class="text-gray-700">
+          {{ room.description }}
+        </p>
       </div>
 
       <!-- 可用時段 -->
       <div v-if="availability" class="mb-6">
-        <h3 class="text-lg font-semibold mb-3">{{ formattedDate }} 可用時段</h3>
+        <h3 class="text-lg font-semibold mb-3">
+          {{ formattedDate }} 可用時段
+        </h3>
         <div v-if="availability.availableSlots.length === 0" class="text-center py-8 text-gray-500">
           當天無可用時段
         </div>
@@ -170,7 +186,9 @@ onMounted(() => {
             @click="selectTimeSlot(slot)"
           >
             <div>{{ slot.startTime.split('T')[1]?.substring(0, 5) }}</div>
-            <div class="text-xs">至</div>
+            <div class="text-xs">
+              至
+            </div>
             <div>{{ slot.endTime.split('T')[1]?.substring(0, 5) }}</div>
           </button>
         </div>
@@ -194,8 +212,10 @@ onMounted(() => {
 
     <!-- 錯誤狀態 -->
     <div v-else class="p-8 text-center text-red-600">
-      <i class="pi pi-exclamation-triangle text-4xl"></i>
-      <p class="mt-4">載入會議室詳情失敗</p>
+      <i class="pi pi-exclamation-triangle text-4xl" />
+      <p class="mt-4">
+        載入會議室詳情失敗
+      </p>
     </div>
   </div>
 </template>

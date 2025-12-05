@@ -1,5 +1,5 @@
 <template>
-  <form @submit.prevent="handleSubmit" class="space-y-6">
+  <form class="space-y-6" @submit.prevent="handleSubmit">
     <!-- 會議室名稱 -->
     <div>
       <label for="name" class="block text-sm font-medium text-gray-700 mb-2">
@@ -14,8 +14,10 @@
         class="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent"
         :class="{ 'border-red-500': errors.name }"
         placeholder="例如：A01 會議室"
-      />
-      <p v-if="errors.name" class="mt-1 text-sm text-red-600">{{ errors.name }}</p>
+      >
+      <p v-if="errors.name" class="mt-1 text-sm text-red-600">
+        {{ errors.name }}
+      </p>
     </div>
 
     <!-- 容納人數 -->
@@ -33,8 +35,10 @@
         class="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent"
         :class="{ 'border-red-500': errors.capacity }"
         placeholder="例如：10"
-      />
-      <p v-if="errors.capacity" class="mt-1 text-sm text-red-600">{{ errors.capacity }}</p>
+      >
+      <p v-if="errors.capacity" class="mt-1 text-sm text-red-600">
+        {{ errors.capacity }}
+      </p>
     </div>
 
     <!-- 建築與樓層 -->
@@ -50,7 +54,7 @@
           data-testid="room-building-input"
           class="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent"
           placeholder="例如：總部大樓"
-        />
+        >
       </div>
 
       <div>
@@ -66,8 +70,10 @@
           class="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent"
           :class="{ 'border-red-500': errors.floor }"
           placeholder="例如：3F"
-        />
-        <p v-if="errors.floor" class="mt-1 text-sm text-red-600">{{ errors.floor }}</p>
+        >
+        <p v-if="errors.floor" class="mt-1 text-sm text-red-600">
+          {{ errors.floor }}
+        </p>
       </div>
     </div>
 
@@ -83,7 +89,7 @@
         data-testid="room-location-input"
         class="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent"
         placeholder="例如：電梯旁，左轉第三間"
-      />
+      >
     </div>
 
     <!-- 設備清單 -->
@@ -99,20 +105,20 @@
             :data-testid="`equipment-input-${index}`"
             class="flex-1 px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent"
             placeholder="例如：投影機"
-          />
+          >
           <button
             type="button"
-            @click="removeEquipment(index)"
             class="px-4 py-2 bg-red-600 text-white rounded-md hover:bg-red-700 transition-colors"
+            @click="removeEquipment(index)"
           >
             移除
           </button>
         </div>
         <button
           type="button"
-          @click="addEquipment"
           data-testid="add-equipment-btn"
           class="w-full px-4 py-2 bg-gray-100 text-gray-700 rounded-md hover:bg-gray-200 transition-colors"
+          @click="addEquipment"
         >
           + 新增設備
         </button>
@@ -136,7 +142,7 @@
             :value="feature"
             :data-testid="`feature-${feature}`"
             class="rounded text-blue-600 focus:ring-2 focus:ring-blue-500"
-          />
+          >
           <span class="text-sm">{{ feature }}</span>
         </label>
       </div>
@@ -154,15 +160,23 @@
         required
         class="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent"
       >
-        <option value="AVAILABLE">可用</option>
-        <option value="MAINTENANCE">維護中</option>
-        <option value="DISABLED">停用</option>
+        <option value="AVAILABLE">
+          可用
+        </option>
+        <option value="MAINTENANCE">
+          維護中
+        </option>
+        <option value="DISABLED">
+          停用
+        </option>
       </select>
     </div>
 
     <!-- 預約規則 -->
     <div class="bg-gray-50 p-4 rounded-md space-y-4">
-      <h3 class="text-sm font-medium text-gray-700">預約規則</h3>
+      <h3 class="text-sm font-medium text-gray-700">
+        預約規則
+      </h3>
       
       <div class="grid grid-cols-2 gap-4">
         <div>
@@ -177,7 +191,7 @@
             min="1"
             class="w-full px-3 py-2 text-sm border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500"
             placeholder="4"
-          />
+          >
         </div>
 
         <div>
@@ -192,7 +206,7 @@
             min="1"
             class="w-full px-3 py-2 text-sm border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500"
             placeholder="30"
-          />
+          >
         </div>
       </div>
 
@@ -203,7 +217,7 @@
             type="checkbox"
             data-testid="allow-recurring-checkbox"
             class="rounded text-blue-600 focus:ring-2 focus:ring-blue-500"
-          />
+          >
           允許週期性預約
         </label>
 
@@ -213,7 +227,7 @@
             type="checkbox"
             data-testid="requires-approval-checkbox"
             class="rounded text-blue-600 focus:ring-2 focus:ring-blue-500"
-          />
+          >
           需要審核
         </label>
       </div>
@@ -223,9 +237,9 @@
     <div class="flex justify-end gap-3 pt-4 border-t">
       <button
         type="button"
-        @click="$emit('cancel')"
         data-testid="cancel-btn"
         class="px-6 py-2 border border-gray-300 text-gray-700 rounded-md hover:bg-gray-50 transition-colors"
+        @click="$emit('cancel')"
       >
         取消
       </button>
@@ -242,7 +256,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, watch, computed } from 'vue'
+import { ref, watch } from 'vue'
 
 // T123 [P] [US4] 會議室表單元件
 
@@ -271,8 +285,8 @@ interface Props {
 }
 
 interface Emits {
-  (event: 'submit', formData: RoomFormData): void
-  (event: 'cancel'): void
+  (_event: 'submit', _formData: RoomFormData): void
+  (_event: 'cancel'): void
 }
 
 const props = withDefaults(defineProps<Props>(), {

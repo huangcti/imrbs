@@ -2,6 +2,8 @@ package tw.huangcti.imrbs.infrastructure.messaging;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
+import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Service;
 import tw.huangcti.imrbs.domain.model.Reservation;
 import tw.huangcti.imrbs.infrastructure.integration.email.I18nEmailService;
@@ -26,6 +28,7 @@ import java.util.Locale;
 @Service
 @RequiredArgsConstructor
 @Slf4j
+@ConditionalOnBean(JavaMailSender.class)
 public class NotificationRetryService {
 
     private final I18nEmailService emailService;

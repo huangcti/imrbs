@@ -92,6 +92,7 @@ class UsageStatisticsServiceTest {
         @DisplayName("當會議室無預約時，使用率應為 0%")
         void shouldReturnZeroUsageWhenNoReservations() {
             // Given
+            when(roomRepository.findById(1L)).thenReturn(Optional.of(testRoom1));
             when(reservationRepository.findByRoomIdAndTimeRange(
                     eq(1L), any(LocalDateTime.class), any(LocalDateTime.class)))
                     .thenReturn(Collections.emptyList());
@@ -107,6 +108,7 @@ class UsageStatisticsServiceTest {
         @DisplayName("當會議室全天預約時，使用率應為 100%")
         void shouldReturnFullUsageWhenFullyBooked() {
             // Given - 假設營業時間 8:00-18:00 (10小時)
+            when(roomRepository.findById(1L)).thenReturn(Optional.of(testRoom1));
             Reservation fullDayReservation = createReservation(1L, 1L,
                     testDate.atTime(8, 0), testDate.atTime(18, 0),
                     Reservation.ReservationStatus.CONFIRMED);
@@ -126,6 +128,7 @@ class UsageStatisticsServiceTest {
         @DisplayName("當會議室有 5 小時預約 (營業時間 10 小時)，使用率應為 50%")
         void shouldCalculateCorrectUsageRateForPartialBooking() {
             // Given - 5 小時預約
+            when(roomRepository.findById(1L)).thenReturn(Optional.of(testRoom1));
             Reservation partialReservation = createReservation(1L, 1L,
                     testDate.atTime(9, 0), testDate.atTime(14, 0),
                     Reservation.ReservationStatus.CONFIRMED);
@@ -145,6 +148,7 @@ class UsageStatisticsServiceTest {
         @DisplayName("應排除已取消的預約")
         void shouldExcludeCancelledReservations() {
             // Given
+            when(roomRepository.findById(1L)).thenReturn(Optional.of(testRoom1));
             Reservation confirmedReservation = createReservation(1L, 1L,
                     testDate.atTime(9, 0), testDate.atTime(11, 0),
                     Reservation.ReservationStatus.CONFIRMED);
@@ -168,6 +172,7 @@ class UsageStatisticsServiceTest {
         @DisplayName("應正確處理跨多天的日期範圍")
         void shouldCalculateUsageForMultipleDays() {
             // Given - 2 天，每天 5 小時預約
+            when(roomRepository.findById(1L)).thenReturn(Optional.of(testRoom1));
             LocalDate endDate = testDate.plusDays(1);
             
             Reservation day1Reservation = createReservation(1L, 1L,
@@ -199,6 +204,8 @@ class UsageStatisticsServiceTest {
         void shouldCalculateAverageUsageAcrossAllRooms() {
             // Given
             when(roomRepository.findAll()).thenReturn(Arrays.asList(testRoom1, testRoom2));
+            when(roomRepository.findById(1L)).thenReturn(Optional.of(testRoom1));
+            when(roomRepository.findById(2L)).thenReturn(Optional.of(testRoom2));
 
             // Room 1: 50% 使用率 (5 小時)
             Reservation room1Reservation = createReservation(1L, 1L,
@@ -230,6 +237,8 @@ class UsageStatisticsServiceTest {
         void shouldReturnUsagePerRoom() {
             // Given
             when(roomRepository.findAll()).thenReturn(Arrays.asList(testRoom1, testRoom2));
+            when(roomRepository.findById(1L)).thenReturn(Optional.of(testRoom1));
+            when(roomRepository.findById(2L)).thenReturn(Optional.of(testRoom2));
 
             Reservation room1Reservation = createReservation(1L, 1L,
                     testDate.atTime(9, 0), testDate.atTime(14, 0),

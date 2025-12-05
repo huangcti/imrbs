@@ -5,7 +5,7 @@ T069 [P] [US1] 建立會議室篩選元件
 
 <script setup lang="ts">
 import { ref, reactive } from 'vue'
-import { formatDate, getToday } from '@/utils/date'
+import { getToday } from '@/utils/date'
 import type { RoomSearchParams } from '@/types/room'
 
 const emit = defineEmits<{
@@ -71,9 +71,11 @@ function handleReset(): void {
 
 <template>
   <div class="room-filter p-4 bg-white rounded-lg shadow">
-    <h2 class="text-xl font-bold mb-4">搜尋會議室</h2>
+    <h2 class="text-xl font-bold mb-4">
+      搜尋會議室
+    </h2>
 
-    <form @submit.prevent="handleSearch" class="space-y-4">
+    <form class="space-y-4" @submit.prevent="handleSearch">
       <!-- 日期選擇 -->
       <div>
         <label for="date" class="block text-sm font-medium mb-1">日期 *</label>
@@ -84,7 +86,7 @@ function handleReset(): void {
           :min="getToday()"
           required
           class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-        />
+        >
       </div>
 
       <!-- 時間範圍 -->
@@ -97,7 +99,7 @@ function handleReset(): void {
             type="time"
             required
             class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-          />
+          >
         </div>
         <div>
           <label for="end-time" class="block text-sm font-medium mb-1">結束時間 *</label>
@@ -107,7 +109,7 @@ function handleReset(): void {
             type="time"
             required
             class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-          />
+          >
         </div>
       </div>
 
@@ -121,7 +123,7 @@ function handleReset(): void {
           min="1"
           placeholder="最少容納人數"
           class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-        />
+        >
       </div>
 
       <!-- 設備選擇 -->
@@ -138,7 +140,7 @@ function handleReset(): void {
               type="checkbox"
               :value="option.value"
               class="mr-2"
-            />
+            >
             <span class="text-sm">{{ option.label }}</span>
           </label>
         </div>
@@ -154,7 +156,7 @@ function handleReset(): void {
             type="text"
             placeholder="例: A棟"
             class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-          />
+          >
         </div>
         <div>
           <label for="floor" class="block text-sm font-medium mb-1">樓層</label>
@@ -164,7 +166,7 @@ function handleReset(): void {
             type="number"
             placeholder="例: 3"
             class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-          />
+          >
         </div>
       </div>
 
@@ -178,8 +180,8 @@ function handleReset(): void {
         </button>
         <button
           type="button"
-          @click="handleReset"
           class="px-4 py-2 border border-gray-300 rounded-md hover:bg-gray-50 transition-colors"
+          @click="handleReset"
         >
           重置
         </button>

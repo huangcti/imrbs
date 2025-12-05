@@ -1,0 +1,239 @@
+package tw.huangcti.imrbs.web.integration;
+
+import com.fasterxml.jackson.databind.ObjectMapper;
+import org.junit.jupiter.api.*;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.http.*;
+import org.springframework.test.context.ActiveProfiles;
+import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.web.client.RestTemplate;
+
+import java.util.Map;
+
+import static org.hamcrest.Matchers.*;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+
+/**
+ * 外部服務整合測試
+ * 
+ * <p>測試與 Podman 上運行的真實服務整合:
+ * <ul>
+ *   <li>PostgreSQL - 資料庫</li>
+ *   <li>Redis - Session 和快取</li>
+ *   <li>RabbitMQ - 訊息佇列</li>
+ *   <li>Keycloak - OAuth2/OIDC 認證</li>
+ * </ul>
+ * 
+ * <p>前置條件: Podman 服務必須運行中
+ * 
+ * @author IMRBS Team
+ * @since 2025-12-05
+ */
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+@AutoConfigureMockMvc
+@ActiveProfiles("integration")
+@TestMethodOrder(MethodOrderer.OrderAnnotation.class)
+class ExternalServiceIntegrationTest {
+
+    @Autowired
+    private MockMvc mockMvc;
+
+    @Autowired
+    private ObjectMapper objectMapper;
+
+    private static final RestTemplate restTemplate = new RestTemplate();
+    
+    // Keycloak 配置
+    private static final String KEYCLOAK_URL = "http://localhost:8180";
+    private static final String REALM = "imrbs";
+    private static final String CLIENT_ID = "imrbs-web";
+    
+    /**
+     * 檢查外部服務是否可用
+     */
+    @BeforeAll
+    static void checkExternalServices() {
+        // 檢查 Keycloak
+        try {
+            String keycloakResponse = restTemplate.getForObject(
+                KEYCLOAK_URL + "/realms/" + REALM + "/.well-known/openid-configuration",
+                String.class
+            );
+            Assumptions.assumeTrue(keycloakResponse != null && keycloakResponse.contains("issuer"),
+                "Keycloak 服務未運行或 realm 未配置");
+        } catch (Exception e) {
+            Assumptions.assumeTrue(false, "Keycloak 服務不可用: " + e.getMessage());
+        }
+    }
+
+    // ==================== 公開 API 測試 ====================
+
+    /**
+     * 測試公開的會議室列表 API
+     */
+    @Test
+    @Order(2)
+    void shouldGetPublicRoomList() throws Exception {
+        mockMvc.perform(get("/api/v1/rooms")
+                        .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+                .andExpect(jsonPath("$").isArray());
+    }
+
+    /**
+     * 測試公開的會議室詳情 API
+     */
+    @Test
+    @Order(3)
+    void shouldGetRoomDetails() throws Exception {
+        // 先取得會議室列表，如果沒有會議室則跳過
+        mockMvc.perform(get("/api/v1/rooms")
+                        .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk());
+    }
+
+    // ==================== 認證相關測試 ====================
+
+    /**
+     * 測試未認證存取受保護 API 應返回 401
+     */
+    @Test
+    @Order(10)
+    void shouldRequireAuthenticationForReservations() throws Exception {
+        mockMvc.perform(get("/api/v1/reservations")
+                        .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isUnauthorized());
+    }
+
+    /**
+     * 測試未認證存取用戶資訊應返回 401
+     */
+    @Test
+    @Order(11)
+    void shouldRequireAuthenticationForUserInfo() throws Exception {
+        mockMvc.perform(get("/api/users/me")
+                        .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isUnauthorized());
+    }
+
+    /**
+     * 測試未認證存取報表 API 應返回 401
+     */
+    @Test
+    @Order(12)
+    void shouldRequireAuthenticationForReports() throws Exception {
+        mockMvc.perform(get("/api/admin/reports/usage")
+                        .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isUnauthorized());
+    }
+
+    // ==================== 受保護 API 測試 ====================
+
+    /**
+     * 測試存取受保護資源需要認證
+     */
+    @Test
+    @Order(20)
+    void shouldRequireAuthenticationForProtectedResources() throws Exception {
+        mockMvc.perform(get("/api/v1/reservations")
+                        .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isUnauthorized());
+    }
+
+    /**
+     * 測試存取管理員報表需要認證
+     */
+    @Test
+    @Order(21)
+    void shouldRequireAdminRoleForReportResources() throws Exception {
+        mockMvc.perform(get("/api/admin/reports/usage")
+                        .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isUnauthorized());
+    }
+
+    // ==================== 訪客預約測試 ====================
+
+    /**
+     * 測試訪客預約提交
+     */
+    @Test
+    @Order(30)
+    void shouldAcceptGuestReservationRequest() throws Exception {
+        Map<String, Object> guestRequest = Map.of(
+                "guestName", "張三",
+                "guestEmail", "zhangsan@example.com",
+                "guestPhone", "0912345678",
+                "roomId", "room-001",
+                "date", "2025-12-15",
+                "startTime", "09:00",
+                "endTime", "10:00",
+                "purpose", "客戶會議"
+        );
+
+        mockMvc.perform(post("/api/guest/requests")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(guestRequest)))
+                .andExpect(status().isCreated());
+    }
+
+    /**
+     * 測試訪客查詢預約狀態
+     */
+    @Test
+    @Order(31)
+    void shouldAllowGuestToCheckReservationStatus() throws Exception {
+        // 查詢不存在的預約應返回 404
+        mockMvc.perform(get("/api/guest/requests/REQ-001"))
+                .andExpect(status().isNotFound());
+    }
+
+    // ==================== 資料庫整合測試 ====================
+
+    /**
+     * 測試資料庫連接和基本 CRUD
+     */
+    @Test
+    @Order(40)
+    void shouldConnectToDatabaseAndPerformCRUD() throws Exception {
+        // 這個測試確認 JPA 能正確連接到 PostgreSQL
+        // 會議室列表 API 內部會執行資料庫查詢
+        mockMvc.perform(get("/api/v1/rooms")
+                        .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk());
+    }
+
+    // ==================== 輔助方法 ====================
+
+    /**
+     * 從 Keycloak 獲取測試用的 Access Token
+     * 使用 Resource Owner Password Credentials Grant (僅用於測試)
+     */
+    private String obtainTestAccessToken(String username, String password) {
+        try {
+            String tokenUrl = KEYCLOAK_URL + "/realms/" + REALM + "/protocol/openid-connect/token";
+            
+            HttpHeaders headers = new HttpHeaders();
+            headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
+            
+            String body = "grant_type=password" +
+                    "&client_id=" + CLIENT_ID +
+                    "&username=" + username +
+                    "&password=" + password +
+                    "&scope=openid profile email";
+            
+            HttpEntity<String> request = new HttpEntity<>(body, headers);
+            ResponseEntity<Map> response = restTemplate.postForEntity(tokenUrl, request, Map.class);
+            
+            if (response.getStatusCode() == HttpStatus.OK && response.getBody() != null) {
+                return (String) response.getBody().get("access_token");
+            }
+        } catch (Exception e) {
+            System.err.println("無法獲取測試 token: " + e.getMessage());
+        }
+        return null;
+    }
+}

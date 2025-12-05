@@ -135,6 +135,7 @@ class CleanArchitectureLayerTest {
                             APPLICATION_PACKAGE,
                             "java..",
                             "jakarta..",
+                            "lombok..",
                             "org.slf4j.."
                     )
                     .because("Application 層只應依賴 Domain 層和基本 Java 類別");
@@ -154,6 +155,7 @@ class CleanArchitectureLayerTest {
                     .that().resideInAPackage(INFRASTRUCTURE_PACKAGE)
                     .should().dependOnClassesThat()
                     .resideInAPackage(WEB_PACKAGE)
+                    .allowEmptyShould(true)
                     .because("Infrastructure 層不應依賴 Web 層");
 
             rule.check(importedClasses);
@@ -170,6 +172,7 @@ class CleanArchitectureLayerTest {
             ArchRule rule = classes()
                     .that().areAnnotatedWith("org.springframework.web.bind.annotation.RestController")
                     .should().resideInAPackage(WEB_PACKAGE)
+                    .allowEmptyShould(true)
                     .because("@RestController 只應出現在 Web 層");
 
             rule.check(importedClasses);

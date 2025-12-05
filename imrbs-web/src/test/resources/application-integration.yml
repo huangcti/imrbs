@@ -1,0 +1,88 @@
+# 整合測試環境配置
+# 此配置用於連接 Podman 上運行的真實服務
+
+spring:
+  main:
+    allow-bean-definition-overriding: true
+  
+  # 資料庫配置 - 連接 Podman PostgreSQL
+  datasource:
+    url: jdbc:postgresql://localhost:5432/imrbs
+    username: imrbs_user
+    password: imrbs_pass
+    driver-class-name: org.postgresql.Driver
+    hikari:
+      maximum-pool-size: 5
+      minimum-idle: 1
+      connection-timeout: 30000
+  
+  jpa:
+    hibernate:
+      ddl-auto: create-drop  # 測試時重建 schema
+    show-sql: true
+    properties:
+      hibernate:
+        format_sql: true
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+  
+  # Flyway 配置
+  flyway:
+    enabled: false  # 整合測試時禁用 Flyway，使用 ddl-auto
+  
+  # Redis 配置 - 連接 Podman Redis
+  data:
+    redis:
+      host: localhost
+      port: 6379
+  
+  # Session 配置
+  session:
+    store-type: redis
+    timeout: 8h
+  
+  # RabbitMQ 配置 - 連接 Podman RabbitMQ
+  rabbitmq:
+    host: localhost
+    port: 5672
+    username: guest
+    password: guest
+  
+  # OAuth2 配置 - 連接 Podman Keycloak
+  security:
+    oauth2:
+      client:
+        registration:
+          keycloak:
+            client-id: imrbs-web
+            client-secret: imrbs-secret
+            redirect-uri: "{baseUrl}/auth/callback"
+            authorization-grant-type: authorization_code
+            scope: openid,profile,email
+        provider:
+          keycloak:
+            issuer-uri: http://localhost:8180/realms/imrbs
+            token-uri: http://localhost:8180/realms/imrbs/protocol/openid-connect/token
+            authorization-uri: http://localhost:8180/realms/imrbs/protocol/openid-connect/auth
+            user-info-uri: http://localhost:8180/realms/imrbs/protocol/openid-connect/userinfo
+            jwk-set-uri: http://localhost:8180/realms/imrbs/protocol/openid-connect/certs
+      resourceserver:
+        jwt:
+          issuer-uri: http://localhost:8180/realms/imrbs
+          jwk-set-uri: http://localhost:8180/realms/imrbs/protocol/openid-connect/certs
+
+# JWT 配置
+jwt:
+  secret: integration-test-secret-key-with-at-least-256-bits-length-for-testing-purposes
+  expiration: 900  # 15 minutes
+  refresh-expiration: 86400  # 24 hours
+  issuer: imrbs-api
+  audience: imrbs-web
+
+# Logging 配置
+logging:
+  level:
+    root: INFO
+    tw.huangcti.imrbs: DEBUG
+    org.springframework.security: DEBUG
+    org.hibernate.SQL: DEBUG
+    org.hibernate.type.descriptor.sql.BasicBinder: TRACE

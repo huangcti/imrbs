@@ -1,6 +1,8 @@
 package tw.huangcti.imrbs.infrastructure.config;
 
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.cache.CacheManager;
 import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.context.annotation.Bean;
@@ -24,9 +26,13 @@ import java.time.Duration;
  * - 會議室清單: TTL 10 分鐘 (頻繁查詢, 中等變動)
  * - 使用者資訊: TTL 30 分鐘 (低變動)
  * - 可用時段查詢: TTL 5 分鐘 (高頻查詢, 即時性要求)
+ * 
+ * 注意: 此配置僅在 Redis 未被排除時啟用
  */
 @Configuration
 @EnableCaching
+@ConditionalOnClass(RedisConnectionFactory.class)
+@ConditionalOnProperty(name = "spring.data.redis.repositories.enabled", havingValue = "true", matchIfMissing = true)
 public class RedisConfig {
     
     @Value("${spring.data.redis.host:localhost}")

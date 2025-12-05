@@ -13,9 +13,10 @@ import tw.huangcti.imrbs.domain.model.User;
 import tw.huangcti.imrbs.domain.repository.ReservationRepository;
 import tw.huangcti.imrbs.domain.repository.RoomRepository;
 import tw.huangcti.imrbs.domain.repository.UserRepository;
-import tw.huangcti.imrbs.infrastructure.integration.email.EmailService;
+import tw.huangcti.imrbs.infrastructure.integration.email.I18nEmailService;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
@@ -51,7 +52,7 @@ class MeetingReminderSchedulerTest {
     private UserRepository userRepository;
 
     @Mock
-    private EmailService emailService;
+    private I18nEmailService emailService;
 
     @InjectMocks
     private MeetingReminderScheduler meetingReminderScheduler;
@@ -73,13 +74,16 @@ class MeetingReminderSchedulerTest {
                 .startTime(startTime)
                 .endTime(startTime.plusHours(1))
                 .status(Reservation.ReservationStatus.CONFIRMED)
+                .reminderSent(false)
                 .build();
 
         testRoom = Room.builder()
                 .id(10L)
                 .name("A01 會議室")
+                .building("總部大樓")
                 .floor("3F")
                 .capacity(10)
+                .equipment(new ArrayList<>())
                 .status(Room.RoomStatus.AVAILABLE)
                 .build();
 
@@ -88,6 +92,7 @@ class MeetingReminderSchedulerTest {
                 .employeeId("EMP001")
                 .fullName("張三")
                 .email("test@example.com")
+                .languagePreference("zh-TW")
                 .role(User.UserRole.EMPLOYEE)
                 .build();
     }
@@ -100,10 +105,9 @@ class MeetingReminderSchedulerTest {
                 .thenReturn(Arrays.asList(testReservation));
         when(roomRepository.findById(10L)).thenReturn(Optional.of(testRoom));
         when(userRepository.findById(100L)).thenReturn(Optional.of(testUser));
-        doNothing().when(emailService).sendMeetingReminder(any(), any(), any(), any());
 
         // When
-        meetingReminderScheduler.sendMeetingReminders();
+        meetingReminderScheduler.sendReminders();
 
         // Then
         verify(reservationRepository, times(1)).findUpcomingReservationsForReminder(30);
@@ -117,36 +121,37 @@ class MeetingReminderSchedulerTest {
                 .thenReturn(Arrays.asList(testReservation));
         when(roomRepository.findById(10L)).thenReturn(Optional.of(testRoom));
         when(userRepository.findById(100L)).thenReturn(Optional.of(testUser));
-        doNothing().when(emailService).sendMeetingReminder(any(), any(), any(), any());
 
         // When
-        meetingReminderScheduler.sendMeetingReminders();
+        meetingReminderScheduler.sendReminders();
 
         // Then
         verify(emailService, times(1)).sendMeetingReminder(
                 eq(testReservation),
                 eq("A01 會議室"),
+                any(String.class),  // roomLocation
+                any(String.class),  // roomEquipment
+                eq(10),             // roomCapacity
                 eq("張三"),
-                eq("test@example.com")
+                eq("test@example.com"),
+                any()
         );
     }
 
     @Test
     @DisplayName("3. 跳過已發送提醒的預約")
     void testSendReminders_SkipAlreadySentReminders() {
-        // Given - 設定為已發送提醒
-        testReservation = testReservation.toBuilder()
-                .reminderSent(true)
-                .build();
-
+        // Given - 已發送提醒的預約不會在查詢結果中返回
+        // Repository 直接返回空列表 (查詢已過濾 reminderSent=true 的預約)
         when(reservationRepository.findUpcomingReservationsForReminder(30))
-                .thenReturn(Arrays.asList(testReservation));
+                .thenReturn(Collections.emptyList());
 
         // When
-        meetingReminderScheduler.sendMeetingReminders();
+        meetingReminderScheduler.sendReminders();
 
-        // Then - 不應發送 Email
-        verify(emailService, never()).sendMeetingReminder(any(), any(), any(), any());
+        // Then - 不應發送 Email (因為沒有需要提醒的預約)
+        verify(emailService, never()).sendMeetingReminder(
+                any(), any(), any(), any(), any(), any(), any(), any());
     }
 
     @Test
@@ -157,11 +162,12 @@ class MeetingReminderSchedulerTest {
                 .thenReturn(Collections.emptyList());
 
         // When
-        meetingReminderScheduler.sendMeetingReminders();
+        meetingReminderScheduler.sendReminders();
 
         // Then
         verify(reservationRepository, times(1)).findUpcomingReservationsForReminder(30);
-        verify(emailService, never()).sendMeetingReminder(any(), any(), any(), any());
+        verify(emailService, never()).sendMeetingReminder(
+                any(), any(), any(), any(), any(), any(), any(), any());
     }
 
     @Test
@@ -171,13 +177,13 @@ class MeetingReminderSchedulerTest {
         when(reservationRepository.findUpcomingReservationsForReminder(30))
                 .thenReturn(Arrays.asList(testReservation));
         when(roomRepository.findById(10L)).thenReturn(Optional.empty());
-        when(userRepository.findById(100L)).thenReturn(Optional.of(testUser));
 
         // When
-        meetingReminderScheduler.sendMeetingReminders();
+        meetingReminderScheduler.sendReminders();
 
         // Then - 不應發送 Email
-        verify(emailService, never()).sendMeetingReminder(any(), any(), any(), any());
+        verify(emailService, never()).sendMeetingReminder(
+                any(), any(), any(), any(), any(), any(), any(), any());
     }
 
     @Test
@@ -190,24 +196,35 @@ class MeetingReminderSchedulerTest {
         when(userRepository.findById(100L)).thenReturn(Optional.empty());
 
         // When
-        meetingReminderScheduler.sendMeetingReminders();
+        meetingReminderScheduler.sendReminders();
 
         // Then - 不應發送 Email
-        verify(emailService, never()).sendMeetingReminder(any(), any(), any(), any());
+        verify(emailService, never()).sendMeetingReminder(
+                any(), any(), any(), any(), any(), any(), any(), any());
     }
 
     @Test
     @DisplayName("7. Email 發送失敗不影響其他提醒")
     void testSendReminders_EmailFailureDoesNotAffectOthers() {
         // Given - 兩個預約
-        Reservation reservation2 = testReservation.toBuilder()
+        Reservation reservation2 = Reservation.builder()
                 .id(2L)
+                .roomId(10L)
                 .userId(101L)
+                .meetingTitle("第二個會議")
+                .startTime(testReservation.getStartTime())
+                .endTime(testReservation.getEndTime())
+                .status(Reservation.ReservationStatus.CONFIRMED)
+                .reminderSent(false)
                 .build();
 
-        User user2 = testUser.toBuilder()
+        User user2 = User.builder()
                 .id(101L)
+                .employeeId("EMP002")
+                .fullName("李四")
                 .email("user2@example.com")
+                .languagePreference("zh-TW")
+                .role(User.UserRole.EMPLOYEE)
                 .build();
 
         when(reservationRepository.findUpcomingReservationsForReminder(30))
@@ -216,24 +233,21 @@ class MeetingReminderSchedulerTest {
         when(userRepository.findById(100L)).thenReturn(Optional.of(testUser));
         when(userRepository.findById(101L)).thenReturn(Optional.of(user2));
 
-        // 第一個發送失敗,第二個成功
+        // 第一個發送失敗
         doThrow(new RuntimeException("SMTP failure"))
                 .when(emailService).sendMeetingReminder(
-                        eq(testReservation), any(), any(), any()
+                        eq(testReservation), any(), any(), any(), any(), any(), any(), any()
                 );
-        doNothing().when(emailService).sendMeetingReminder(
-                eq(reservation2), any(), any(), any()
-        );
 
         // When
-        meetingReminderScheduler.sendMeetingReminders();
+        meetingReminderScheduler.sendReminders();
 
         // Then - 兩個都應嘗試發送
         verify(emailService, times(1)).sendMeetingReminder(
-                eq(testReservation), any(), any(), any()
+                eq(testReservation), any(), any(), any(), any(), any(), any(), any()
         );
         verify(emailService, times(1)).sendMeetingReminder(
-                eq(reservation2), any(), any(), any()
+                eq(reservation2), any(), any(), any(), any(), any(), any(), any()
         );
     }
 
@@ -245,10 +259,9 @@ class MeetingReminderSchedulerTest {
                 .thenReturn(Arrays.asList(testReservation));
         when(roomRepository.findById(10L)).thenReturn(Optional.of(testRoom));
         when(userRepository.findById(100L)).thenReturn(Optional.of(testUser));
-        doNothing().when(emailService).sendMeetingReminder(any(), any(), any(), any());
 
         // When
-        meetingReminderScheduler.sendMeetingReminders();
+        meetingReminderScheduler.sendReminders();
 
         // Then - 應更新 reminderSent 標記
         verify(reservationRepository, times(1)).save(argThat(reservation ->
