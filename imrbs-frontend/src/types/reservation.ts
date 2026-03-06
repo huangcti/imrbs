@@ -21,10 +21,12 @@ export interface Reservation {
 
 export interface CreateReservationRequest {
   roomId: number
+  userId: number
+  meetingTitle: string
   startTime: string
   endTime: string
-  purpose: string
-  participants: string[]
+  participants: string
+  recurringRule?: string
 }
 
 export interface CreateReservationResponse {

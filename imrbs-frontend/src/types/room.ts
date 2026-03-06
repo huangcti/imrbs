@@ -37,6 +37,7 @@ export interface RoomSearchParams {
   equipment?: string[]
   building?: string
   floor?: number
+  name?: string
 }
 
 export interface RoomSearchResult {

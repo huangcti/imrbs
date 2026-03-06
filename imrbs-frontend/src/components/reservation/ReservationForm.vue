@@ -5,6 +5,7 @@ T072 [P] [US1] 建立預約表單元件
 
 <script setup lang="ts">
 import { ref, reactive, computed } from 'vue'
+import axios from 'axios'
 import { useReservationStore } from '@/stores/reservation'
 import { validateParticipants } from '@/utils/validation'
 import type { Room } from '@/types/room'
@@ -69,16 +70,19 @@ async function handleSubmit(): Promise<void> {
   try {
     const request: CreateReservationRequest = {
       roomId: props.room.id,
+      userId: 1,
+      meetingTitle: form.purpose,
       startTime: props.timeSlot.startTime,
       endTime: props.timeSlot.endTime,
-      purpose: form.purpose,
-      participants: participants.value
+      participants: participants.value.join(',')
     }
 
     const reservationId = await reservationStore.createReservation(request)
     emit('success', reservationId)
   } catch (error) {
-    if (error instanceof Error) {
+    if (axios.isAxiosError(error) && error.response?.data?.message) {
+      errorMessage.value = error.response.data.message
+    } else if (error instanceof Error) {
       errorMessage.value = error.message
     } else {
       errorMessage.value = '預約失敗，請稍後再試'

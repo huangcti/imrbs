@@ -25,11 +25,16 @@ public class RoomAvailabilityService {
     private final MaintenanceScheduleRepository maintenanceScheduleRepository;
     
     public List<Room> findAvailableRooms(LocalDateTime startTime, LocalDateTime endTime, Integer minCapacity) {
+        return findAvailableRooms(startTime, endTime, minCapacity, null);
+    }
+    
+    public List<Room> findAvailableRooms(LocalDateTime startTime, LocalDateTime endTime, Integer minCapacity, String name) {
         List<Room> rooms = roomRepository.findAll();
         
         return rooms.stream()
                 .filter(room -> room.getStatus() == Room.RoomStatus.AVAILABLE)
                 .filter(room -> minCapacity == null || room.getCapacity() >= minCapacity)
+                .filter(room -> name == null || name.isBlank() || room.getName().toLowerCase().contains(name.toLowerCase()))
                 .filter(room -> !hasConflict(room.getId(), startTime, endTime))
                 .collect(Collectors.toList());
     }

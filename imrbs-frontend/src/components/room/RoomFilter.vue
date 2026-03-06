@@ -14,6 +14,7 @@ const emit = defineEmits<{
 
 // 表單資料
 const searchForm = reactive<{
+  name: string
   date: string
   startTime: string
   endTime: string
@@ -22,6 +23,7 @@ const searchForm = reactive<{
   building: string
   floor: number | null
 }>({
+  name: '',
   date: getToday(),
   startTime: '09:00',
   endTime: '10:00',
@@ -49,6 +51,7 @@ function handleSearch(): void {
   }
 
   // 可選參數
+  if (searchForm.name) params.name = searchForm.name
   if (searchForm.capacity) params.capacity = searchForm.capacity
   if (searchForm.equipment.length > 0) params.equipment = searchForm.equipment
   if (searchForm.building) params.building = searchForm.building
@@ -59,6 +62,7 @@ function handleSearch(): void {
 
 // 重置表單
 function handleReset(): void {
+  searchForm.name = ''
   searchForm.date = getToday()
   searchForm.startTime = '09:00'
   searchForm.endTime = '10:00'
@@ -76,6 +80,18 @@ function handleReset(): void {
     </h2>
 
     <form class="space-y-4" @submit.prevent="handleSearch">
+      <!-- 會議室名稱搜尋 -->
+      <div>
+        <label for="name" class="block text-sm font-medium mb-1">會議室名稱</label>
+        <input
+          id="name"
+          v-model="searchForm.name"
+          type="text"
+          placeholder="輸入會議室名稱關鍵字"
+          class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+        >
+      </div>
+
       <!-- 日期選擇 -->
       <div>
         <label for="date" class="block text-sm font-medium mb-1">日期 *</label>

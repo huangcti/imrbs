@@ -62,9 +62,12 @@ public class RoomController {
             @RequestParam("endTime") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime endTime,
             
             @Parameter(description = "最小容量")
-            @RequestParam(value = "minCapacity", required = false) Integer minCapacity
+            @RequestParam(value = "minCapacity", required = false) Integer minCapacity,
+            
+            @Parameter(description = "會議室名稱關鍵字")
+            @RequestParam(value = "name", required = false) String name
     ) {
-        List<Room> rooms = roomAvailabilityService.findAvailableRooms(startTime, endTime, minCapacity);
+        List<Room> rooms = roomAvailabilityService.findAvailableRooms(startTime, endTime, minCapacity, name);
         List<RoomDTO> roomDTOs = roomMapper.toDTOList(rooms);
 
         return ResponseEntity.ok(Map.of(
